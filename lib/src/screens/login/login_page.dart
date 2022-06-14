@@ -30,11 +30,6 @@ class LoginPage extends StatelessWidget {
                     ),
                     SizedBox(height: 30),
                     _LoginForm()
-                    // ChangeNotifierProvider(
-                    //   create: ( _ ) => {},
-                    //   // create: ( _ ) => LoginFormProvider(),
-                    //   child: _LoginForm()
-                    // ),
                   ],
                 )
               ),
@@ -63,14 +58,9 @@ class _LoginForm extends StatefulWidget {
 
 class _LoginFormState extends State<_LoginForm> {
 
-  @override
-  void initState() {
-    super.initState();
-    // SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-    //   _con.init(context);
-    // });
-  }
+  LoginController loginController = new LoginController();
 
+  bool isLoading = false;
   bool _obscureText = false;
   void _toggle() {
     setState(() {
@@ -80,11 +70,9 @@ class _LoginFormState extends State<_LoginForm> {
 
   @override
   Widget build(BuildContext context) {
-    // final loginForm = Provider.of<LoginFormProvider>(context);
 
     return Container(
       child: Form(
-        // key: loginForm.formKey,
         autovalidateMode: AutovalidateMode.onUserInteraction,
         child: Column(
           children: [
@@ -103,7 +91,7 @@ class _LoginFormState extends State<_LoginForm> {
 
   Widget _textEmail() {
     return TextFormField(
-      // controller: loginController.emailController,
+      controller: loginController.emailController,
       cursorRadius: Radius.circular(8.0),
       autocorrect: false,
       keyboardType: TextInputType.emailAddress,
@@ -126,7 +114,7 @@ class _LoginFormState extends State<_LoginForm> {
 
   Widget _textPassword() {
     return TextFormField(
-      // controller: loginController.passwordController,
+      controller: loginController.passwordController,
       cursorRadius: Radius.circular(8.0),
       autocorrect: false,
       obscureText: !_obscureText,
@@ -149,7 +137,6 @@ class _LoginFormState extends State<_LoginForm> {
           onPressed: _toggle
         ),
       ),
-      // onChanged: ( value ) => loginForm.password = value,
       validator: (value) {
         return (value != null && value.length >= 6)
           ? null
@@ -164,17 +151,32 @@ class _LoginFormState extends State<_LoginForm> {
       disabledColor: Colors.grey,
       elevation: 0,
       color: Colors.indigo.shade300,
-      onPressed: () {},
+      onPressed: loginController.isEnable 
+        ? () {
+        loginController.login();
+          setState(() {
+            isLoading = true;
+          });
+          Future.delayed(const Duration( milliseconds: 500 ), (){
+            setState(() {
+              isLoading = false;
+            });
+          });
+        }
+        : null,
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 80, vertical: 15),
-        // child: Text(
-        //   loginForm.isLoading
-        //     ? 'Espere...'
-        //     : 'Ingresar',
-        //   style: TextStyle( color: Colors.white ),
-        // )
+        padding: const EdgeInsets.symmetric( horizontal: 80, vertical: 15 ),
+        child: isLoading
+          ? Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text('Espere...', style: TextStyle( color: Colors.white ),),
+              const SizedBox(width: 10),
+              SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color:  Colors.orange[300]))
+            ],
+          )
+          : const Text('Ingresar', style: TextStyle( color: Colors.white ))
       ),
-      // onPressed: () => loginController.login()
       // }
     );
   }

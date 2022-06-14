@@ -31,7 +31,7 @@ class RegisterPage extends StatelessWidget {
                 child: Column(
                   children: [
                     const SizedBox( height: 10 ),
-                    Text( 'Registrarse', style: Theme.of(context).textTheme.headline4 ),
+                    Text( 'Crear cuenta', style: Theme.of(context).textTheme.headline4 ),
                     const SizedBox( height: 30 ),
                     _RegisterForm()
                   ],
@@ -58,6 +58,8 @@ class _RegisterFormState extends State<_RegisterForm> {
 
   bool _obscureText = false;
   bool _obscureText2 = false;
+  bool isLoading = false;
+
   void _toggle() {
     setState(() {
       _obscureText = !_obscureText;
@@ -183,6 +185,7 @@ class _RegisterFormState extends State<_RegisterForm> {
   }
 
   Widget _textPassword() {
+
     return TextFormField(
       controller: registerController.passwordController,
       cursorRadius: const Radius.circular(8.0),
@@ -261,18 +264,32 @@ class _RegisterFormState extends State<_RegisterForm> {
       disabledColor: Colors.grey,
       elevation: 0,
       color: Colors.indigo[300],
-      onPressed: () => registerController.register(),
+      onPressed: registerController.isEnable 
+        ? () {
+        registerController.register(context);
+          setState(() {
+            isLoading = true;
+          });
+          Future.delayed(const Duration( milliseconds: 3500 ), (){
+            setState(() {
+              isLoading = false;
+            });
+          });
+        }
+        : null,
       child: Container(
         padding: const EdgeInsets.symmetric( horizontal: 80, vertical: 15 ),
-        child: Text(
-          registerController.isEnable
-            ? 'Ingresar'
-            : 'Espera...',
-          style: const TextStyle( color: Colors.white ),
-        )
+        child: isLoading
+          ? Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text('Espere...', style: TextStyle( color: Colors.white ),),
+              const SizedBox(width: 10),
+              SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color:  Colors.orange[300]))
+            ],
+          )
+          : const Text('Registrarse', style: TextStyle( color: Colors.white ))
       ),
-      // onPressed: registerController.login
-        // }
 
       
     );

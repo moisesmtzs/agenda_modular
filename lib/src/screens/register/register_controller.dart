@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:agenda_app/src/models/user.dart';
+import 'package:agenda_app/src/models/response_api.dart';
 import 'package:agenda_app/src/providers/usersProvider.dart';
 
 class RegisterController extends GetxController {
@@ -18,7 +19,7 @@ class RegisterController extends GetxController {
 
   bool isEnable = true;
 
-  void register() async {
+  void register( BuildContext context ) async {
 
     String name = nameController.text;
     String lastName = lastNameController.text;
@@ -39,20 +40,33 @@ class RegisterController extends GetxController {
         password: password
       );
       
-      Response? response = await usersProvider.create(user);
+      ResponseApi? responseApi = await usersProvider.create(user);
 
+      if (responseApi?.success == true) {
+        Get.snackbar(responseApi?.message ?? '', 'Inicia sesión');
+        Future.delayed(const Duration(milliseconds: 1000), () {
+          Get.offNamed('/');
+        });
+      } else {
+        Get.snackbar(
+          'Datos no válidos',
+          responseApi?.message ?? '',
+          backgroundColor: Colors.red[200],
+          colorText: Colors.white
+        );
+        isEnable = true;
+      }
 
-      Get.snackbar("Datos válidos", "Sesión iniciada");
     }
 
   }
 
   bool isValidForm( String name, String lastName, String phone, String email, String password, String confirmPassword ) {
 
-    // if ( !GetUtils.isEmail(email) ) {
-    //   Get.snackbar("Datos no válidos", "Email no válido");
-    //   return false;
-    // }
+    if ( !GetUtils.isEmail(email) ) {
+      Get.snackbar("Datos no válidos", "Email no válido");
+      return false;
+    }
     if ( name.isEmpty ) {
       Get.snackbar("Datos no válidos", "Debes ingresar un nombre");
       return false;

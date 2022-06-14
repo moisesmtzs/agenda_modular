@@ -13,6 +13,7 @@ class User {
     String? email;
     String? password;
     String? image;
+    String? sessionToken;
     
     User({
         this.id,
@@ -22,6 +23,7 @@ class User {
         this.email,
         this.password,
         this.image,
+        this.sessionToken,
     });
 
 
@@ -33,6 +35,7 @@ class User {
         email: json["email"],
         password: json["password"],
         image: json["image"],
+        sessionToken: json["session_token"],
     );
 
     Map<String, dynamic> toJson() => {
@@ -43,5 +46,6 @@ class User {
         "email": email,
         "password": password,
         "image": image,
+        "session_token": sessionToken,
     };
 }
