@@ -26,18 +26,21 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       title: 'Agenda App',
       initialRoute: userSession.id != null ? '/home' : '/',
-      getPages: [
-        GetPage( name: '/', page: () => LoginPage() ),
-        GetPage( name: '/register', page: () => RegisterPage() ),
-        GetPage( name: '/home', page: () => HomePage() ),
-        GetPage( name: '/updateProfile', page: () => UpdateProfilePage() ),
-      ],
       navigatorKey: Get.key,
+      defaultTransition:  Transition.rightToLeft,
+      getPages: [
+        GetPage( name: '/', page: () => LoginPage() , transition: Transition.leftToRight ),
+        GetPage( name: '/register', page: () => RegisterPage(), transition: Transition.rightToLeft ),
+        GetPage( name: '/home', page: () => HomePage(), transition: Transition.noTransition ),
+        GetPage( name: '/updateProfile', page: () => UpdateProfilePage(), transition: Transition.noTransition ),
+      ],
       theme: ThemeData.light().copyWith(
         appBarTheme: AppBarTheme( color: Colors.grey[200] ),
         scaffoldBackgroundColor: Colors.grey[200],
         textTheme: GoogleFonts.openSansTextTheme( Theme.of(context).textTheme ) ,
         primaryColor: Colors.indigo[300],
+        // dividerColor: Colors.grey[200],
+        splashColor: Colors.indigo,
         colorScheme: ColorScheme(
           // backgroundColor: Colors.orange[300], elevation: 0
           primary: Colors.indigo.shade300,

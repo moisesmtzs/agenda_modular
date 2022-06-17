@@ -17,7 +17,10 @@ class RegisterController extends GetxController {
 
   UsersProvider usersProvider = UsersProvider();
 
-  bool isEnable = true;
+  var isEnable = true.obs;
+  var obscureText = true.obs;
+  var obscureText2 = true.obs;
+  var isLoading = false.obs;
 
   void register( BuildContext context ) async {
 
@@ -30,7 +33,7 @@ class RegisterController extends GetxController {
 
     if ( isValidForm(name, lastName, phone, email, password, confirmPassword) ) {
 
-      isEnable = false;
+      isEnable.value = false;
 
       User user = User(
         name: name,
@@ -54,7 +57,7 @@ class RegisterController extends GetxController {
           backgroundColor: Colors.red[200],
           colorText: Colors.white
         );
-        isEnable = true;
+        isEnable.value = true;
       }
 
     }

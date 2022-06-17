@@ -10,70 +10,53 @@ import 'package:agenda_app/src/screens/update/update_profile_controller.dart';
 import 'package:agenda_app/src/ui/input_decoration.dart';
 import 'package:agenda_app/src/widgets/card_container.dart';
 
-class UpdateProfilePage extends StatefulWidget {
-
-  @override
-  State<UpdateProfilePage> createState() => _UpdateProfilePageState();
-}
-
-class _UpdateProfilePageState extends State<UpdateProfilePage> {
+class UpdateProfilePage extends StatelessWidget {
 
   UpdateProfileController updatePageController = Get.put(UpdateProfileController());
+
+  int _selectedIndex = 2;
  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // floatingActionButton: FloatingActionButton(
-      //   elevation: 0,
-      //   backgroundColor: Color.fromRGBO(63, 63, 156, 0),
-      //   child: Icon(Icons.arrow_back_ios_new_rounded),
-      //   onPressed: (){
-      //     Navigator.pop(context);
-      //   }),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
-      body: SizedBox(
-        width: double.infinity,
-        height: double.infinity,
-        child: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-            child: Column(
-              children: [
-                _purpleBox(),
-                SizedBox(height: 10),
-                CardContainer(
-                  child: Column(
-                    children: [
-                      SizedBox( height: 10 ),
-                      Text( 'Editar Perfil', style: Theme.of(context).textTheme.headline4 ),
-                      SizedBox( height: 30 ),
-                      _updateForm(context)
-                    ],
-                  )
-                ),
-                SizedBox( height: 25 ),
-              ],
-            )
-          
-        ),
+      body: SingleChildScrollView(
+        // physics: BouncingScrollPhysics(),
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+          child: Column(
+            children: [
+              _purpleBox(context),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.006),
+              CardContainer(
+                child: Column(
+                  children: [
+                    SizedBox( height: 10 ),
+                    Text( 'Editar Perfil', style: Theme.of(context).textTheme.headline4 ),
+                    SizedBox( height: 30 ),
+                    _updateForm(context)
+                  ],
+                )
+              ),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+            ],
+          )
+        
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.only( left: 15, right: 15, bottom: 20, top: 10 ),
         child: GNav(
-          selectedIndex: 2,
+          selectedIndex: _selectedIndex,
           padding: const EdgeInsets.all(15),
           tabBorderRadius: 18,
           color: Colors.black,
-          tabBackgroundColor: Colors.orange.shade100,
-          activeColor: Colors.orange[300],
+          tabBackgroundColor: Colors.indigo.shade100,
+          activeColor: Colors.indigo[300],
           gap: 8,
           onTabChange: (index) {
-            if ( index == 0 ) {
-              updatePageController.goToHomePage();
-            }
+            _selectedIndex = index;
           },
-          tabs: const [
+          tabs: [
             GButton(
-              // onPressed: () => updatePageController.goToHomePage(),
+              onPressed: () => updatePageController.goToHomePage(),
               // iconActiveColor: Colors.white,
               icon: Icons.home_outlined,
               text: 'Página Principal'
@@ -83,7 +66,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
               text: 'Buscar'
             ),
             GButton(
-              active: true,
+              // active: true,
               icon: Icons.person_outline_rounded,
               text: 'Perfil'
             ),
@@ -92,26 +75,39 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
       ),
     );
   }
-  Widget _headerIcon() {
+  Widget _headerIcon(BuildContext context) {
   
-    return Container(
-      margin: EdgeInsets.only(top: 50),
-      child: GestureDetector(
-        onTap: () {},
-        child: CircleAvatar(),
-        
+    return SafeArea(
+      child: Container(
+        // width: double.infinity,
+        height: MediaQuery.of(context).size.height * 0.12,
+        margin: EdgeInsets.only(top: 50),
+        child: GestureDetector(
+          onTap: () => updatePageController.showAlertDialog(context),
+          child: GetBuilder<UpdateProfileController> (
+            builder: (value) => CircleAvatar(
+              backgroundImage: updatePageController.imageFile != null
+                ? FileImage(updatePageController.imageFile!)
+                : updatePageController.userSession.image != null
+                  ? NetworkImage(updatePageController.userSession.image!)
+                  : AssetImage('assets/img/user_profile_2.png') as ImageProvider,
+              radius: 50,
+              backgroundColor: Colors.indigo[100],
+            ),
+          )
+        ),
       ),
     );
     
   }
 
-  Widget _purpleBox() {
+  Widget _purpleBox(BuildContext context) {
       
     final size = MediaQuery.of(context).size;
     
     return Container(
       width: double.infinity,
-      height: size.height * 0.28,
+      height: size.height * 0.23,
       decoration: BoxDecoration(
         gradient: LinearGradient(
           // ignore: prefer_const_literals_to_create_immutables
@@ -129,7 +125,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
           Positioned(child: _Bubble(), top: -50, right: 10),
           Positioned(child: _Bubble(), bottom: -50, left: 10),
           Positioned(child: _Bubble(), bottom: 75, right: 20),
-          _headerIcon(),
+          _headerIcon(context),
         ]
       ),
     );
@@ -158,12 +154,12 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
         child: Column(
           children: [
             TextFormField(
-              // controller: _con.nameController,
+              controller: updatePageController.nameController,
               cursorRadius: Radius.circular(8.0),
               autocorrect: false,
               keyboardType: TextInputType.name,
               decoration: InputDecorations.authInputDecoration(
-                hintText: "Will Smith",
+                hintText: "Will",
                 labelText: "Nombre",
                 prefixIcon: Icons.perm_identity_sharp
               ),
@@ -175,9 +171,27 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                   : 'Nombre no válido';
               }
             ),
-            SizedBox( height: 16 ),
             TextFormField(
-              // controller: _con.phoneController,
+              controller: updatePageController.lastNameController,
+              cursorRadius: const Radius.circular(8.0),
+              autocorrect: false,
+              keyboardType: TextInputType.name,
+              decoration: InputDecorations.authInputDecoration(
+                hintText: "Smith",
+                labelText: "Apellido",
+                prefixIcon: Icons.co_present_outlined
+              ),
+              validator: ( value ){
+                String pattern = r"\b([a-zA-ZÀ-ÿ][-,a-z. ']+[ ]*)+";
+                RegExp nameregExp  = RegExp(pattern);
+                return nameregExp.hasMatch( value ?? '' ) 
+                  ? null 
+                  : 'Apellido no válido';
+              }
+            ),
+            // SizedBox( height: 16 ),
+            TextFormField(
+              controller: updatePageController.phoneController,
               cursorRadius: Radius.circular(8.0),
               autocorrect: false,
               keyboardType: TextInputType.phone,
@@ -192,23 +206,25 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                   : 'Número no válido, deben ser 10 dígitos';
               }
             ),
-            SizedBox( height: 16, ),
-            TextFormField(
-              // controller: _con.addressController,
-              cursorRadius: Radius.circular(8.0),
-              autocorrect: false,
-              keyboardType: TextInputType.streetAddress,
-              decoration: InputDecorations.authInputDecoration(
-                hintText: "St Petris",
-                labelText: "Dirección de domicilio",
-                prefixIcon: Icons.place_sharp
-              ),
-              validator: ( value ){
-                return ( value != null && value.length >= 10 ) 
-                  ? null
-                  : 'Dirección no válida';
-              }
-            ),
+            // SizedBox( height: 16, ),
+            // TextFormField(
+            //   controller: updatePageController.emailController,
+            //   cursorRadius: const Radius.circular(8.0),
+            //   autocorrect: false,
+            //   keyboardType: TextInputType.emailAddress,
+            //   decoration: InputDecorations.authInputDecoration(
+            //     hintText: "ejemplo@ejemplo.com",
+            //     labelText: "Correo Electrónico",
+            //     prefixIcon: Icons.alternate_email_sharp
+            //   ),
+            //   validator: ( value ){
+            //     String pattern = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+            //     RegExp regExp  = RegExp(pattern);
+            //     return regExp.hasMatch( value ?? '' )
+            //       ? null
+            //       : 'El correo no es válido';
+            //   }
+            // ),
             SizedBox( height: 25 ),
             MaterialButton(
               shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(10) ),
@@ -218,13 +234,14 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                 padding: EdgeInsets.symmetric( horizontal: 30, vertical: 15 ),
                 child: Text('Guardar cambios', style: TextStyle( color: Colors.white ))
               ),
-              onPressed: () {},
+              onPressed: () => updatePageController.updateProfile(context),
             ),
             SizedBox( height: 25 ),
             MaterialButton(
               shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(10) ),
               disabledColor: Colors.grey,
               color: Colors.red[300],
+              splashColor: Colors.red,
               child: Container(
                 padding: EdgeInsets.symmetric( horizontal: 20, vertical: 15 ),
                 child: Text('Eliminar cuenta', style: TextStyle( color: Colors.white ))
@@ -236,12 +253,6 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
       )
     );
 
-  }
-
-  void refresh() {
-    setState(() {
-
-    });
   }
 
 }

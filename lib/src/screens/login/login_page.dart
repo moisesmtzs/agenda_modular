@@ -29,7 +29,7 @@ class LoginPage extends StatelessWidget {
                       style: Theme.of(context).textTheme.headline4
                     ),
                     SizedBox(height: 30),
-                    _LoginForm()
+                    _loginForm(context)
                   ],
                 )
               ),
@@ -49,27 +49,8 @@ class LoginPage extends StatelessWidget {
       )
     );
   }
-}
 
-class _LoginForm extends StatefulWidget {
-  @override
-  State<_LoginForm> createState() => _LoginFormState();
-}
-
-class _LoginFormState extends State<_LoginForm> {
-
-  LoginController loginController = new LoginController();
-
-  bool isLoading = false;
-  bool _obscureText = false;
-  void _toggle() {
-    setState(() {
-      _obscureText = !_obscureText;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _loginForm(BuildContext context) {
 
     return Container(
       child: Form(
@@ -82,7 +63,7 @@ class _LoginFormState extends State<_LoginForm> {
             ),
             _textPassword(),
             SizedBox(height: 32),
-            _loginButton(),
+            _loginButton(context),
           ]
         )
       )
@@ -113,71 +94,71 @@ class _LoginFormState extends State<_LoginForm> {
   }
 
   Widget _textPassword() {
-    return TextFormField(
-      controller: loginController.passwordController,
-      cursorRadius: Radius.circular(8.0),
-      autocorrect: false,
-      obscureText: !_obscureText,
-      keyboardType: TextInputType.visiblePassword,
-      decoration: InputDecoration(
-        enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.indigo.shade300),
-        ),
-        focusedBorder: UnderlineInputBorder(borderSide: BorderSide(width: 2, color: Colors.indigo)),
-        hintText: "**********",
-        hintStyle: TextStyle(color: Colors.grey[400]),
-        labelText: "Contraseña",
-        labelStyle: TextStyle(color: Colors.blueGrey),
-        prefixIcon: Icon(Icons.lock_rounded, color: Colors.indigo.shade300),
-        suffixIcon: IconButton(
-          icon: Icon(
-            _obscureText ? Icons.visibility : Icons.visibility_off,
-            color: Colors.indigo.shade300,
+    return Obx( () =>
+      TextFormField(
+        controller: loginController.passwordController,
+        cursorRadius: Radius.circular(8.0),
+        autocorrect: false,
+        obscureText: loginController.obscureText.value,
+        keyboardType: TextInputType.visiblePassword,
+        decoration: InputDecoration(
+          enabledBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.indigo.shade300),
           ),
-          onPressed: _toggle
+          focusedBorder: UnderlineInputBorder(borderSide: BorderSide(width: 2, color: Colors.indigo)),
+          hintText: "**********",
+          hintStyle: TextStyle(color: Colors.grey[400]),
+          labelText: "Contraseña",
+          labelStyle: TextStyle(color: Colors.blueGrey),
+          prefixIcon: Icon(Icons.lock_rounded, color: Colors.indigo.shade300),
+          suffixIcon: IconButton(
+            icon: Icon(
+              loginController.obscureText.value ? Icons.visibility : Icons.visibility_off,
+              color: Colors.indigo.shade300,
+            ),
+            onPressed: () => loginController.obscureText.value = !loginController.obscureText.value
+          ),
         ),
+        validator: (value) {
+          return (value != null && value.length >= 6)
+            ? null
+            : 'Contraseña no válida, deben ser 6 caracteres';
+        }
       ),
-      validator: (value) {
-        return (value != null && value.length >= 6)
-          ? null
-          : 'Contraseña no válida, deben ser 6 caracteres';
-      }
     );
   }
 
-  Widget _loginButton() {
-    return MaterialButton(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      disabledColor: Colors.grey,
-      elevation: 0,
-      color: Colors.indigo.shade300,
-      onPressed: loginController.isEnable 
-        ? () {
-        loginController.login();
-          setState(() {
-            isLoading = true;
-          });
-          Future.delayed(const Duration( milliseconds: 500 ), (){
-            setState(() {
-              isLoading = false;
+  Widget _loginButton(BuildContext context) {
+    return Obx( () =>
+      MaterialButton(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        disabledColor: Colors.grey,
+        elevation: 0,
+        color: Colors.indigo.shade300,
+        onPressed: loginController.isEnable.value
+          ? () {
+          loginController.login();
+            loginController.isLoading.value = true;
+            Future.delayed(const Duration( milliseconds: 500 ), (){
+              loginController.isLoading.value = false;
             });
-          });
-        }
-        : null,
-      child: Container(
-        padding: const EdgeInsets.symmetric( horizontal: 80, vertical: 15 ),
-        child: isLoading
-          ? Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text('Espere...', style: TextStyle( color: Colors.white ),),
-              const SizedBox(width: 10),
-              SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color:  Colors.orange[300]))
-            ],
-          )
-          : const Text('Ingresar', style: TextStyle( color: Colors.white ))
+          }
+          : null,
+        child: Container(
+          padding: const EdgeInsets.symmetric( horizontal: 80, vertical: 15 ),
+          child: loginController.isLoading.value
+            ? Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text('Espere...', style: TextStyle( color: Colors.white ),),
+                SizedBox(width: MediaQuery.of(context).size.width * 0.006),
+                SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color:  Colors.orange[300]))
+              ],
+            )
+            : const Text('Ingresar', style: TextStyle( color: Colors.white ))
+        ),
+        // }
       ),
-      // }
     );
   }
 }

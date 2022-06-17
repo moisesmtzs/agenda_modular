@@ -12,7 +12,9 @@ class LoginController extends GetxController {
 
   UsersProvider usersProvider = UsersProvider();
 
-  bool isEnable = true;
+  var isEnable = true.obs;
+  var obscureText = true.obs;
+  var isLoading = false.obs;
 
   void goToRegisterPage() {
 
@@ -25,9 +27,14 @@ class LoginController extends GetxController {
     String email = emailController.text.trim();
     String password = passwordController.text.trim();
 
+    // if ( email == 'admin@admin.com' && password == 'admin' ) {
+    //   GetStorage().write('user', null);
+    //   Get.offNamedUntil('/home', (route) => false);
+    // }
+
     if ( isValidForm(email, password) ) {
 
-      isEnable = false;
+      isEnable.value = false;
       
       ResponseApi? responseApi = await usersProvider.login(email, password);
 
@@ -37,7 +44,7 @@ class LoginController extends GetxController {
         Get.offNamedUntil('/home', (route) => false);
 
       } else {
-        isEnable = true;
+        isEnable.value = true;
         Get.snackbar(
           'Sesión fallida', 
           responseApi?.message ?? '',

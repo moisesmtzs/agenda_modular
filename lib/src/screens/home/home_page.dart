@@ -1,60 +1,127 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'package:agenda_app/src/screens/home/home_controller.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+
+import 'package:agenda_app/src/screens/home/home_controller.dart';
+import 'package:agenda_app/src/widgets/card_container.dart';
+import 'package:agenda_app/src/widgets/custom_painters.dart';
+
 
 class HomePage extends StatelessWidget {
 
   HomeController homeController = Get.put(HomeController());
 
+  int _selectedIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       drawer: _drawer(context),
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
         // automaticallyImplyLeading: true,
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.black, size: 30.0),
-        title: const Text('Task Manager', style: TextStyle( color: Colors.black, fontSize: 22 ),),
+        title: const Text(
+          'Task Manager', 
+          style: TextStyle(
+            color: Colors.white, 
+            fontSize: 22 ,
+            fontWeight: FontWeight.bold
+          ),
+        ),
       ),
-      body: Center(
-        child: _buttonAssistant(context),
+      body: Stack(
+        children: <Widget> [
+          drawCircles(context),
+          ListView(
+            physics: const BouncingScrollPhysics(),
+            children: [
+              _buttonAssistant(context),
+            ] 
+          ),
+        ]
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.only( left: 15, right: 15, bottom: 20, top: 10 ),
         child: GNav(
-          selectedIndex: 0,
+          selectedIndex: _selectedIndex,
           padding: const EdgeInsets.all(15),
           tabBorderRadius: 18,
           color: Colors.black,
-          tabBackgroundColor: Colors.orange.shade100,
-          activeColor: Colors.orange[300],
+          tabBackgroundColor: Colors.indigo.shade100,
+          activeColor: Colors.indigo[300],
           gap: 8,
           onTabChange: (index) {
-            if ( index == 2 ) {
-              homeController.goToUpdatePage();
-            }
+            _selectedIndex = index;
           },
-          tabs: const [
-            GButton(
-              active: true,
+          tabs: [
+            const GButton(
+              // active: true,
               // iconActiveColor: Colors.white,
               icon: Icons.home_outlined,
               text: 'Página Principal'
             ),
-            GButton(
+            const GButton(
               icon: Icons.search_rounded,
               text: 'Buscar'
             ),
             GButton(
-              // onPressed: () => homeController.goToUpdatePage(),
+              onPressed: () => homeController.goToUpdatePage(),
               icon: Icons.person_outline_rounded,
               text: 'Perfil'
             ),
           ]
         ),
       ),
+    );
+  }
+
+  Widget drawCircles(BuildContext context) {
+
+    var heightOfScreen = MediaQuery.of(context).size.height;
+    var widthOfScreen = MediaQuery.of(context).size.width;
+    return Column(
+      children: <Widget>[
+        CustomPaint(
+          painter: DrawCircle(
+            offset: Offset(widthOfScreen * 0.04, heightOfScreen * 0.08),
+            radius: widthOfScreen * 0.2,
+            color: Colors.indigo.shade300,
+            hasShadow: true,
+            shadowColor: Colors.indigo[200],
+          ),
+        ),
+        CustomPaint(
+          painter: DrawCircle(
+            offset: Offset(widthOfScreen * 0.75, heightOfScreen * 0.05),
+            radius: widthOfScreen * 0.5,
+            color: Colors.indigo.shade300,
+            hasShadow: true,
+            shadowColor: Colors.indigo[200],
+          ),
+        ),
+        CustomPaint(
+          painter: DrawCircle(
+            offset: Offset(widthOfScreen * 0.1, heightOfScreen * 0.95),
+            radius: widthOfScreen * 0.175,
+            color: Colors.indigo.shade300,
+            hasShadow: true,
+            shadowColor: Colors.indigo[200],
+          ),
+        ),
+        CustomPaint(
+          painter: DrawCircle(
+            offset: Offset(widthOfScreen * 0.35, heightOfScreen * 0.85),
+            radius: widthOfScreen * 0.1,
+            color: Colors.indigo.shade300,
+            hasShadow: true,
+            shadowColor: Colors.indigo[200],
+          ),
+        ),
+      ],
     );
   }
 
@@ -114,9 +181,9 @@ class HomePage extends StatelessWidget {
             )
           ),
           Divider( 
-            indent: MediaQuery.of(context).size.width * 0.06, 
-            endIndent: MediaQuery.of(context).size.width * 0.06, 
-            color: Colors.grey[200] 
+            indent: MediaQuery.of(context).size.width * 0.06,
+            endIndent: MediaQuery.of(context).size.width * 0.06,
+            color: Colors.grey[200],
           ),
           // SizedBox(height: MediaQuery.of(context).size.height * 0.005),
           ListTile(
@@ -145,24 +212,39 @@ class HomePage extends StatelessWidget {
   Widget _buttonAssistant(BuildContext context) {
 
     return Container(
-      padding: const EdgeInsets.symmetric( vertical: 15, horizontal: 20 ),
-      margin: const EdgeInsets.symmetric(vertical: 25),
+      padding: EdgeInsets.symmetric(
+        vertical: MediaQuery.of(context).size.height * 0.002, 
+        horizontal: MediaQuery.of(context).size.width * 0.001
+      ),
+      margin: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.height * 0.06),
       child: Column(
         children: [
-          ElevatedButton(
-            style: ButtonStyle(
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))),
-              padding: MaterialStateProperty.all<EdgeInsets>(const EdgeInsets.symmetric(vertical: 15)),
-              fixedSize: MaterialStateProperty.all<Size>(Size.fromWidth(MediaQuery.of(context).size.width *  0.34 ), ),
-              backgroundColor: MaterialStateProperty.all<Color>(Colors.indigo.shade300),
-              foregroundColor: MaterialStateProperty.all<Color>(Colors.white)
+          const CardContainer(
+            child: Text(
+              'Habla aquíHabla aquí aquíHabla aquíHabla aquíHabla aquí aquíHabla aquíHabla aquíHabla aquí aquíHabla aquíHabla aquíHabla aquí aquíHabla aquí', 
+              style: TextStyle( fontSize: 20 )
             ),
-            // isExtended: true,
-            onPressed: () {}, 
-            child: const Icon(Icons.keyboard_voice_sharp, size: 30,),
           ),
-          const SizedBox(height: 25,),
-          const Text('Habla aquí', style: TextStyle( fontSize: 20 ))
+          SizedBox(height: MediaQuery.of(context).size.height * 0.05,),
+          Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: MediaQuery.of(context).size.width * 0.36
+            ),
+            child: ElevatedButton(
+              style: ButtonStyle(
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))),
+                padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.symmetric(
+                  vertical: MediaQuery.of(context).size.height * 0.023
+                )),
+                fixedSize: MaterialStateProperty.all<Size>(Size.fromWidth(MediaQuery.of(context).size.width *  0.37 ), ),
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.indigo),
+                foregroundColor: MaterialStateProperty.all<Color>(Colors.white)
+              ),
+              // isExtended: true,
+              onPressed: () {}, 
+              child: Icon(Icons.keyboard_voice_sharp, size: MediaQuery.of(context).size.height * 0.04,),
+            ),
+          ),
         ],
       ),
     );
