@@ -16,6 +16,11 @@ class UpdateProfileController extends GetxController {
 
   final UsersProvider _usersProvider = UsersProvider();
 
+  var isEnable = true.obs;
+  var isEnable2 = true.obs;
+  var isLoading = false.obs;
+  var isLoading2 = false.obs;
+
   ImagePicker pickedFile = ImagePicker();
   File? imageFile;
 
@@ -23,8 +28,6 @@ class UpdateProfileController extends GetxController {
   TextEditingController lastNameController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   TextEditingController emailController = TextEditingController();
-
-  var isEnable = true.obs;
 
   UpdateProfileController() {
     nameController.text = userSession.name ?? '';
@@ -35,6 +38,25 @@ class UpdateProfileController extends GetxController {
   void goToHomePage() {
 
     Get.offNamedUntil('/home', (route) => false);
+
+  }
+
+  void deleteAccount() async {
+
+    ResponseApi? responseApi = await _usersProvider.deleteUser(userSession.id);
+    if ( responseApi?.success == true ) {
+      Get.snackbar(responseApi?.message ?? '', '');
+      GetStorage().remove('user');
+      Get.offNamedUntil('/', (route) => false);
+    } else {
+      Get.snackbar(
+        'No se eliminó la cuenta',
+        responseApi?.message ?? '',
+        backgroundColor: Colors.red[200],
+        colorText: Colors.white
+      );
+      isEnable2.value = true;
+    }
 
   }
 
@@ -120,6 +142,41 @@ class UpdateProfileController extends GetxController {
       imageFile = File(image.path);
       update();
     }
+  }
+
+  void confirmationDialog( BuildContext context ) {
+
+    Widget cancelButton = ElevatedButton(
+      onPressed: () {
+        Get.back();
+      },
+      child: const Text('Cancelar')
+    );
+
+    Widget confirmButton = ElevatedButton(
+      onPressed: () {
+        isEnable2.value = false;
+        deleteAccount();
+      },
+      child: const Text('Confirmar')
+    );
+
+    AlertDialog alertDialog = AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      title: const Text('¿Estás seguro que quieres eliminar la cuenta?'),
+      actions: [
+        cancelButton,
+        confirmButton
+      ],
+    );
+
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alertDialog;
+        }
+    );
+
   }
 
   void showAlertDialog( BuildContext context ) {

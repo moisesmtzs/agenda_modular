@@ -254,7 +254,7 @@ class RegisterPage extends StatelessWidget {
         color: Colors.indigo[300],
         onPressed: registerController.isEnable.value 
           ? () {
-          registerController.register(context);
+            registerController.register(context);
             registerController.isLoading.value = true ;
             Future.delayed(const Duration( milliseconds: 3500 ), (){
               registerController.isLoading.value = false;

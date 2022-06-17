@@ -18,9 +18,9 @@ class RegisterController extends GetxController {
   UsersProvider usersProvider = UsersProvider();
 
   var isEnable = true.obs;
+  var isLoading = false.obs;
   var obscureText = true.obs;
   var obscureText2 = true.obs;
-  var isLoading = false.obs;
 
   void register( BuildContext context ) async {
 

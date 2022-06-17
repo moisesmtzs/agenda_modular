@@ -147,110 +147,127 @@ class UpdateProfilePage extends StatelessWidget {
 
   Widget _updateForm(BuildContext context) {
 
-    return Container(
-      child: Form(
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-
-        child: Column(
-          children: [
-            TextFormField(
-              controller: updatePageController.nameController,
-              cursorRadius: Radius.circular(8.0),
-              autocorrect: false,
-              keyboardType: TextInputType.name,
-              decoration: InputDecorations.authInputDecoration(
-                hintText: "Will",
-                labelText: "Nombre",
-                prefixIcon: Icons.perm_identity_sharp
+    return Obx( () =>
+      Container(
+        child: Form(
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+    
+          child: Column(
+            children: [
+              TextFormField(
+                controller: updatePageController.nameController,
+                cursorRadius: Radius.circular(8.0),
+                autocorrect: false,
+                keyboardType: TextInputType.name,
+                decoration: InputDecorations.authInputDecoration(
+                  hintText: "Will",
+                  labelText: "Nombre",
+                  prefixIcon: Icons.perm_identity_sharp
+                ),
+                validator: ( value ){
+                  String pattern = r"\b([a-zA-ZÀ-ÿ][-,a-z. ']+[ ]*)+";
+                  RegExp nameregExp  = RegExp(pattern);
+                  return nameregExp.hasMatch( value ?? '' ) 
+                    ? null 
+                    : 'Nombre no válido';
+                }
               ),
-              validator: ( value ){
-                String pattern = r"\b([a-zA-ZÀ-ÿ][-,a-z. ']+[ ]*)+";
-                RegExp nameregExp  = RegExp(pattern);
-                return nameregExp.hasMatch( value ?? '' ) 
-                  ? null 
-                  : 'Nombre no válido';
-              }
-            ),
-            TextFormField(
-              controller: updatePageController.lastNameController,
-              cursorRadius: const Radius.circular(8.0),
-              autocorrect: false,
-              keyboardType: TextInputType.name,
-              decoration: InputDecorations.authInputDecoration(
-                hintText: "Smith",
-                labelText: "Apellido",
-                prefixIcon: Icons.co_present_outlined
+              TextFormField(
+                controller: updatePageController.lastNameController,
+                cursorRadius: const Radius.circular(8.0),
+                autocorrect: false,
+                keyboardType: TextInputType.name,
+                decoration: InputDecorations.authInputDecoration(
+                  hintText: "Smith",
+                  labelText: "Apellido",
+                  prefixIcon: Icons.co_present_outlined
+                ),
+                validator: ( value ){
+                  String pattern = r"\b([a-zA-ZÀ-ÿ][-,a-z. ']+[ ]*)+";
+                  RegExp nameregExp  = RegExp(pattern);
+                  return nameregExp.hasMatch( value ?? '' ) 
+                    ? null 
+                    : 'Apellido no válido';
+                }
               ),
-              validator: ( value ){
-                String pattern = r"\b([a-zA-ZÀ-ÿ][-,a-z. ']+[ ]*)+";
-                RegExp nameregExp  = RegExp(pattern);
-                return nameregExp.hasMatch( value ?? '' ) 
-                  ? null 
-                  : 'Apellido no válido';
-              }
-            ),
-            // SizedBox( height: 16 ),
-            TextFormField(
-              controller: updatePageController.phoneController,
-              cursorRadius: Radius.circular(8.0),
-              autocorrect: false,
-              keyboardType: TextInputType.phone,
-              decoration: InputDecorations.authInputDecoration(
-                hintText: "5555555555",
-                labelText: "Número de teléfono",
-                prefixIcon: Icons.call
+              TextFormField(
+                controller: updatePageController.phoneController,
+                cursorRadius: Radius.circular(8.0),
+                autocorrect: false,
+                keyboardType: TextInputType.phone,
+                decoration: InputDecorations.authInputDecoration(
+                  hintText: "5555555555",
+                  labelText: "Número de teléfono",
+                  prefixIcon: Icons.call
+                ),
+                validator: ( value ){
+                  return ( value != null && value.length == 10 ) 
+                    ? null
+                    : 'Número no válido, deben ser 10 dígitos';
+                }
               ),
-              validator: ( value ){
-                return ( value != null && value.length == 10 ) 
-                  ? null
-                  : 'Número no válido, deben ser 10 dígitos';
-              }
-            ),
-            // SizedBox( height: 16, ),
-            // TextFormField(
-            //   controller: updatePageController.emailController,
-            //   cursorRadius: const Radius.circular(8.0),
-            //   autocorrect: false,
-            //   keyboardType: TextInputType.emailAddress,
-            //   decoration: InputDecorations.authInputDecoration(
-            //     hintText: "ejemplo@ejemplo.com",
-            //     labelText: "Correo Electrónico",
-            //     prefixIcon: Icons.alternate_email_sharp
-            //   ),
-            //   validator: ( value ){
-            //     String pattern = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-            //     RegExp regExp  = RegExp(pattern);
-            //     return regExp.hasMatch( value ?? '' )
-            //       ? null
-            //       : 'El correo no es válido';
-            //   }
-            // ),
-            SizedBox( height: 25 ),
-            MaterialButton(
-              shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(10) ),
-              disabledColor: Colors.grey,
-              color: Colors.indigo[300],
-              child: Container(
-                padding: EdgeInsets.symmetric( horizontal: 30, vertical: 15 ),
-                child: Text('Guardar cambios', style: TextStyle( color: Colors.white ))
+              SizedBox( height: 25 ),
+              MaterialButton(
+                shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(10) ),
+                disabledColor: Colors.grey,
+                color: Colors.indigo[300],
+                child: Container(
+                  padding: EdgeInsets.symmetric( horizontal: 30, vertical: 15 ),
+                  child: updatePageController.isLoading.value
+                    ? Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text('Espere...', style: TextStyle( color: Colors.white ),),
+                        SizedBox(width: MediaQuery.of(context).size.width * 0.006),
+                        SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color:  Colors.orange[300]))
+                      ],
+                    )
+                    : Text('Guardar cambios', style: TextStyle( color: Colors.white ))
+                ),
+                onPressed: updatePageController.isEnable.value 
+                  ? () {
+                    updatePageController.updateProfile(context);
+                    updatePageController.isLoading.value = true;
+                    Future.delayed(const Duration( milliseconds: 3500 ), (){
+                      updatePageController.isLoading.value = false;
+                    });
+                  } 
+                  : null
               ),
-              onPressed: () => updatePageController.updateProfile(context),
-            ),
-            SizedBox( height: 25 ),
-            MaterialButton(
-              shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(10) ),
-              disabledColor: Colors.grey,
-              color: Colors.red[300],
-              splashColor: Colors.red,
-              child: Container(
-                padding: EdgeInsets.symmetric( horizontal: 20, vertical: 15 ),
-                child: Text('Eliminar cuenta', style: TextStyle( color: Colors.white ))
+              SizedBox( height: 25 ),
+              MaterialButton(
+                shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(10) ),
+                disabledColor: Colors.grey,
+                color: Colors.red[300],
+                splashColor: Colors.red,
+                child: Container(
+                  padding: EdgeInsets.symmetric( horizontal: 20, vertical: 15 ),
+                  child: updatePageController.isLoading2.value
+                    ? Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text('Espere...', style: TextStyle( color: Colors.white ),),
+                        SizedBox(width: MediaQuery.of(context).size.width * 0.006),
+                        SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color:  Colors.orange[300]))
+                      ],
+                    )
+                    : Text('Eliminar cuenta', style: TextStyle( color: Colors.white ))
+                ),
+                onPressed: updatePageController.isEnable2.value 
+                  ? () {
+                    updatePageController.confirmationDialog(context);
+                    updatePageController.isLoading2.value = true;
+                    Future.delayed(const Duration( milliseconds: 5000 ), (){
+                      updatePageController.isLoading2.value = false;
+                    });
+                  } 
+                  : null
+                
               ),
-              onPressed: () {},
-            ),
-          ],
+            ],
+          )
         )
-      )
+      ),
     );
 
   }
