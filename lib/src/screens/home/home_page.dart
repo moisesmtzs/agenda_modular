@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
 import 'package:agenda_app/src/screens/home/home_controller.dart';
@@ -16,12 +17,20 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
+    var scaffoldKey = GlobalKey<ScaffoldState>();
+
     return Scaffold(
+      key: scaffoldKey,
       extendBodyBehindAppBar: true,
       drawer: _drawer(context),
       appBar: AppBar(
+        leading: IconButton(
+          onPressed: () => scaffoldKey.currentState?.openDrawer(), 
+          icon: SvgPicture.asset("assets/icons/menu.svg")
+        ),
         backgroundColor: Colors.transparent,
-        // automaticallyImplyLeading: true,
+        automaticallyImplyLeading: true,
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.black, size: 30.0),
         title: const Text(
@@ -144,9 +153,28 @@ class HomePage extends StatelessWidget {
                   alignment: Alignment.topLeft,
                   height: 60,
                   margin: const EdgeInsets.only(top: 10),
-                  child: CircleAvatar(
-                    maxRadius: 25,
-                    backgroundColor: Colors.orange[300],
+                  child: AspectRatio(
+                    aspectRatio: 1/1,
+                    child: ClipOval(
+                      child: GetBuilder<HomeController>(
+                        builder: (value) => FadeInImage(
+                          fit: BoxFit.cover,
+                          fadeInDuration: const Duration(milliseconds: 50),
+                          placeholder: const AssetImage('assets/img/no-image.png'),
+                          image: homeController.userSession.image != null
+                            ? NetworkImage(homeController.userSession.image!)
+                            : const AssetImage('assets/img/user_profile_2.png') as ImageProvider,
+                        )
+                      )
+                      // child: FadeInImage(
+                      //   fit: BoxFit.cover,
+                      //   fadeInDuration: const Duration(milliseconds: 50),
+                      //   placeholder: const AssetImage('assets/img/no-image.png'),
+                      //   image: homeController.userSession.image != null
+                      //     ? NetworkImage(homeController.userSession.image!)
+                      //     : const AssetImage('assets/img/user_profile_2.png') as ImageProvider,
+                      // ),
+                    ),
                   )
                   
                 ),
@@ -154,9 +182,9 @@ class HomePage extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Moises', 
-                      style: TextStyle(
+                    Text(
+                      homeController.userSession.name ?? '', 
+                      style: const TextStyle(
                         fontSize: 24.0, 
                         color: Colors.white, 
                         fontWeight: FontWeight.bold 
@@ -166,7 +194,7 @@ class HomePage extends StatelessWidget {
                     ),
                     // const SizedBox(height: 5),
                     Text(
-                      'Correo', 
+                      homeController.userSession.email ?? '', 
                       style: TextStyle(
                         fontSize: 14.0, 
                         color: Colors.grey[200], 

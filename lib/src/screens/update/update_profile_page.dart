@@ -75,6 +75,7 @@ class UpdateProfilePage extends StatelessWidget {
       ),
     );
   }
+  
   Widget _headerIcon(BuildContext context) {
   
     return SafeArea(
@@ -228,7 +229,7 @@ class UpdateProfilePage extends StatelessWidget {
                   ? () {
                     updatePageController.updateProfile(context);
                     updatePageController.isLoading.value = true;
-                    Future.delayed(const Duration( milliseconds: 3500 ), (){
+                    Future.delayed(const Duration( milliseconds: 1500 ), (){
                       updatePageController.isLoading.value = false;
                     });
                   } 
@@ -242,24 +243,11 @@ class UpdateProfilePage extends StatelessWidget {
                 splashColor: Colors.red,
                 child: Container(
                   padding: EdgeInsets.symmetric( horizontal: 20, vertical: 15 ),
-                  child: updatePageController.isLoading2.value
-                    ? Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text('Espere...', style: TextStyle( color: Colors.white ),),
-                        SizedBox(width: MediaQuery.of(context).size.width * 0.006),
-                        SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color:  Colors.orange[300]))
-                      ],
-                    )
-                    : Text('Eliminar cuenta', style: TextStyle( color: Colors.white ))
+                  child: Text('Eliminar cuenta', style: TextStyle( color: Colors.white ))
                 ),
                 onPressed: updatePageController.isEnable2.value 
                   ? () {
                     updatePageController.confirmationDialog(context);
-                    updatePageController.isLoading2.value = true;
-                    Future.delayed(const Duration( milliseconds: 5000 ), (){
-                      updatePageController.isLoading2.value = false;
-                    });
                   } 
                   : null
                 

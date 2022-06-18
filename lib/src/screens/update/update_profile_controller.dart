@@ -19,7 +19,6 @@ class UpdateProfileController extends GetxController {
   var isEnable = true.obs;
   var isEnable2 = true.obs;
   var isLoading = false.obs;
-  var isLoading2 = false.obs;
 
   ImagePicker pickedFile = ImagePicker();
   File? imageFile;
@@ -83,6 +82,8 @@ class UpdateProfileController extends GetxController {
         if ( responseApi?.success == true ) {
           GetStorage().write('user', responseApi?.data);
           Get.snackbar(responseApi?.message ?? '', '');
+          isEnable.value = true;
+          // await _usersProvider.findById(userSession.id);
         } else {
           Get.snackbar(
             'Datos no válidos',
@@ -90,6 +91,7 @@ class UpdateProfileController extends GetxController {
             backgroundColor: Colors.red[200],
             colorText: Colors.white
           );
+          isEnable.value = true;
         }
       } else {
 
@@ -101,6 +103,7 @@ class UpdateProfileController extends GetxController {
           if (responseApi.success == true) {
             GetStorage().write('user', responseApi.data);
             Get.snackbar( 'Actualización finalizada' ,responseApi.message ?? '');
+            isEnable.value = true;
           } else {
             Get.snackbar(
               'Datos no válidos',

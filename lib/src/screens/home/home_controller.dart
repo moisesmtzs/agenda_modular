@@ -7,9 +7,9 @@ class HomeController extends GetxController {
 
   User userSession = User.fromJson(GetStorage().read('user') ?? {});
 
-  // HomeController() {
-
-  // }
+  HomeController() {
+    print('${userSession.toJson()}');
+  }
 
   void goToUpdatePage() {
 
