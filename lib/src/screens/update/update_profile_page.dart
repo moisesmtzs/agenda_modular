@@ -19,27 +19,32 @@ class UpdateProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        // physics: BouncingScrollPhysics(),
-        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-          child: Column(
-            children: [
-              _purpleBox(context),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.006),
-              CardContainer(
-                child: Column(
-                  children: [
-                    SizedBox( height: 10 ),
-                    Text( 'Editar Perfil', style: Theme.of(context).textTheme.headline4 ),
-                    SizedBox( height: 30 ),
-                    _updateForm(context)
-                  ],
-                )
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.03),
-            ],
-          )
-        
+      body: Stack(
+        children: [
+          _purpleBox(context),
+          SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+              child: Column(
+                children: [
+                  // SizedBox(height: MediaQuery.of(context).size.height * 0.006),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.23),
+                  CardContainer(
+                    child: Column(
+                      children: [
+                        SizedBox( height: 10 ),
+                        Text( 'Editar Perfil', style: Theme.of(context).textTheme.headline4 ),
+                        SizedBox( height: 30 ),
+                        _updateForm(context)
+                      ],
+                    )
+                  ),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+                ],
+              )
+            
+          ),
+        ],
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.only( left: 15, right: 15, bottom: 20, top: 10 ),
@@ -112,8 +117,7 @@ class UpdateProfilePage extends StatelessWidget {
       height: size.height * 0.23,
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          // ignore: prefer_const_literals_to_create_immutables
-          colors: [
+          colors: const [
             Color.fromARGB(255, 40, 71, 221),
             Color.fromARGB(255, 121, 102, 206),
           ]

@@ -12,14 +12,6 @@ class RegisterPage extends StatelessWidget {
 
   RegisterController registerController = Get.put(RegisterController());
 
-
-  // void _toggle() {
-  //   _obscureText = !_obscureText;
-  // }
-  // void _toggle2() {
-  //   _obscureText2 = !_obscureText2;
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -255,8 +247,8 @@ class RegisterPage extends StatelessWidget {
         onPressed: registerController.isEnable.value 
           ? () {
             registerController.register(context);
-            registerController.isLoading.value = true ;
-            Future.delayed(const Duration( milliseconds: 3500 ), (){
+            registerController.isLoading.value = true;
+            Future.delayed(const Duration( milliseconds: 1500 ), (){
               registerController.isLoading.value = false;
             });
           }

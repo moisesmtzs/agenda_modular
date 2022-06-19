@@ -45,11 +45,10 @@ class HomePage extends StatelessWidget {
       body: Stack(
         children: <Widget> [
           drawCircles(context),
-          ListView(
+          // SizedBox( height: MediaQuery.of(context).size.height * 0.4 ),
+          SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
-            children: [
-              _buttonAssistant(context),
-            ] 
+            child: _buttonAssistant(context),
           ),
         ]
       ),
@@ -234,10 +233,10 @@ class HomePage extends StatelessWidget {
 
     return Container(
       padding: EdgeInsets.symmetric(
-        vertical: MediaQuery.of(context).size.height * 0.002, 
+        // vertical: MediaQuery.of(context).size.height * 0.0009, 
         horizontal: MediaQuery.of(context).size.width * 0.001
       ),
-      margin: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.height * 0.06),
+      margin: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.height * 0.11),
       child: Column(
         children: [
           const CardContainer(
