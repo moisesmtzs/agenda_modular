@@ -267,12 +267,12 @@ class RegisterPage extends StatelessWidget {
             ? Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text('Espere...', style: TextStyle( color: Colors.white ),),
+                const FittedBox(child: Text('Espere...', style: TextStyle( color: Colors.white ),)),
                 SizedBox(width: MediaQuery.of(context).size.width * 0.006),
                 SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color:  Colors.orange[300]))
               ],
             )
-            : const Text('Registrarse', style: TextStyle( color: Colors.white ))
+            : const FittedBox(child: Text('Registrarse', style: TextStyle( color: Colors.white )))
         ),
     
       ),

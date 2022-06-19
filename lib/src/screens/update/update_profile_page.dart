@@ -63,7 +63,8 @@ class UpdateProfilePage extends StatelessWidget {
             ),
             GButton(
               icon: Icons.search_rounded,
-              text: 'Buscar'
+              text: 'Buscar',
+              onPressed: () => updatePageController.goToSearchPage(),
             ),
             GButton(
               // active: true,
@@ -75,7 +76,7 @@ class UpdateProfilePage extends StatelessWidget {
       ),
     );
   }
-  
+
   Widget _headerIcon(BuildContext context) {
   
     return SafeArea(
@@ -218,12 +219,12 @@ class UpdateProfilePage extends StatelessWidget {
                     ? Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text('Espere...', style: TextStyle( color: Colors.white ),),
+                        FittedBox(child: Text('Espere...', style: TextStyle( color: Colors.white ),)),
                         SizedBox(width: MediaQuery.of(context).size.width * 0.006),
                         SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color:  Colors.orange[300]))
                       ],
                     )
-                    : Text('Guardar cambios', style: TextStyle( color: Colors.white ))
+                    : FittedBox(child: Text('Guardar cambios', style: TextStyle( color: Colors.white )))
                 ),
                 onPressed: updatePageController.isEnable.value 
                   ? () {
@@ -243,7 +244,7 @@ class UpdateProfilePage extends StatelessWidget {
                 splashColor: Colors.red,
                 child: Container(
                   padding: EdgeInsets.symmetric( horizontal: 20, vertical: 15 ),
-                  child: Text('Eliminar cuenta', style: TextStyle( color: Colors.white ))
+                  child: FittedBox(child: Text('Eliminar cuenta', style: TextStyle( color: Colors.white )))
                 ),
                 onPressed: updatePageController.isEnable2.value 
                   ? () {

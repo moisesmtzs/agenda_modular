@@ -12,9 +12,11 @@ class HomeController extends GetxController {
   }
 
   void goToUpdatePage() {
-
     Get.toNamed('/updateProfile');
+  }
 
+  void goToSearchPage() {
+    Get.toNamed('/search');
   }
 
   void logOut() {

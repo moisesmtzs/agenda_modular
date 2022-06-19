@@ -14,7 +14,7 @@ class UpdateProfileController extends GetxController {
 
   User userSession = User.fromJson(GetStorage().read('user') ?? {});
 
-  final UsersProvider _usersProvider = UsersProvider();
+  UsersProvider usersProvider = UsersProvider();
 
   var isEnable = true.obs;
   var isEnable2 = true.obs;
@@ -35,14 +35,16 @@ class UpdateProfileController extends GetxController {
   }
 
   void goToHomePage() {
-
     Get.offNamedUntil('/home', (route) => false);
+  }
 
+  void goToSearchPage() {
+    Get.offNamedUntil('/search', (route) => false);
   }
 
   void deleteAccount() async {
 
-    ResponseApi? responseApi = await _usersProvider.deleteUser(userSession.id);
+    ResponseApi? responseApi = await usersProvider.deleteUser(userSession.id);
     if ( responseApi?.success == true ) {
       Get.snackbar(responseApi?.message ?? '', '');
       GetStorage().remove('user');
@@ -78,30 +80,27 @@ class UpdateProfileController extends GetxController {
       );
 
       if ( imageFile == null ) {
-        ResponseApi? responseApi = await _usersProvider.update(user);
+        ResponseApi? responseApi = await usersProvider.update(user);
+        User? newUser = await usersProvider.getById(user.id);
+        newUser?.sessionToken = userSession.sessionToken;
         if ( responseApi?.success == true ) {
-          GetStorage().write('user', responseApi?.data);
+          GetStorage().write('user', newUser?.toJson());
           Get.snackbar(responseApi?.message ?? '', '');
           isEnable.value = true;
-          // await _usersProvider.findById(userSession.id);
         } else {
-          Get.snackbar(
-            'Datos no válidos',
-            responseApi?.message ?? '',
-            backgroundColor: Colors.red[200],
-            colorText: Colors.white
-          );
           isEnable.value = true;
         }
       } else {
 
-        Stream? stream = await _usersProvider.updateWithImage(user, imageFile!);
+        Stream? stream = await usersProvider.updateWithImage(user, imageFile!);
 
-        stream?.listen((res) {
+        stream?.listen((res) async {
           ResponseApi? responseApi = ResponseApi.fromJson(json.decode(res));
           
+          User? newUser = await usersProvider.getById(user.id);
+          newUser?.sessionToken = userSession.sessionToken;
           if (responseApi.success == true) {
-            GetStorage().write('user', responseApi.data);
+            GetStorage().write('user', newUser?.toJson());
             Get.snackbar( 'Actualización finalizada' ,responseApi.message ?? '');
             isEnable.value = true;
           } else {

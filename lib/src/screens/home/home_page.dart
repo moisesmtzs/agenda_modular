@@ -68,12 +68,13 @@ class HomePage extends StatelessWidget {
           },
           tabs: [
             const GButton(
-              // active: true,
+              active: true,
               // iconActiveColor: Colors.white,
               icon: Icons.home_outlined,
               text: 'Página Principal'
             ),
-            const GButton(
+            GButton(
+              onPressed: () => homeController.goToSearchPage(),
               icon: Icons.search_rounded,
               text: 'Buscar'
             ),
@@ -166,14 +167,6 @@ class HomePage extends StatelessWidget {
                             : const AssetImage('assets/img/user_profile_2.png') as ImageProvider,
                         )
                       )
-                      // child: FadeInImage(
-                      //   fit: BoxFit.cover,
-                      //   fadeInDuration: const Duration(milliseconds: 50),
-                      //   placeholder: const AssetImage('assets/img/no-image.png'),
-                      //   image: homeController.userSession.image != null
-                      //     ? NetworkImage(homeController.userSession.image!)
-                      //     : const AssetImage('assets/img/user_profile_2.png') as ImageProvider,
-                      // ),
                     ),
                   )
                   
@@ -183,7 +176,7 @@ class HomePage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      homeController.userSession.name ?? '', 
+                      homeController.userSession.name ?? 'Moises', 
                       style: const TextStyle(
                         fontSize: 24.0, 
                         color: Colors.white, 
@@ -194,7 +187,7 @@ class HomePage extends StatelessWidget {
                     ),
                     // const SizedBox(height: 5),
                     Text(
-                      homeController.userSession.email ?? '', 
+                      homeController.userSession.email ?? 'Correo', 
                       style: TextStyle(
                         fontSize: 14.0, 
                         color: Colors.grey[200], 
@@ -249,7 +242,7 @@ class HomePage extends StatelessWidget {
         children: [
           const CardContainer(
             child: Text(
-              'Habla aquíHabla aquí aquíHabla aquíHabla aquíHabla aquí aquíHabla aquíHabla aquíHabla aquí aquíHabla aquíHabla aquíHabla aquí aquíHabla aquí', 
+              'Habla aquí', 
               style: TextStyle( fontSize: 20 )
             ),
           ),

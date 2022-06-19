@@ -150,12 +150,12 @@ class LoginPage extends StatelessWidget {
             ? Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text('Espere...', style: TextStyle( color: Colors.white ),),
+                FittedBox(child: const Text('Espere...', style: TextStyle( color: Colors.white ),)),
                 SizedBox(width: MediaQuery.of(context).size.width * 0.006),
                 SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color:  Colors.orange[300]))
               ],
             )
-            : const Text('Ingresar', style: TextStyle( color: Colors.white ))
+            : FittedBox(child: const Text('Ingresar', style: TextStyle( color: Colors.white )))
         ),
         // }
       ),

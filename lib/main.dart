@@ -33,6 +33,7 @@ class _MyAppState extends State<MyApp> {
         GetPage( name: '/register', page: () => RegisterPage(), transition: Transition.rightToLeft ),
         GetPage( name: '/home', page: () => HomePage(), transition: Transition.noTransition ),
         GetPage( name: '/updateProfile', page: () => UpdateProfilePage(), transition: Transition.noTransition ),
+        GetPage( name: '/search', page: () => SearchPage(), transition: Transition.noTransition ),
       ],
       theme: ThemeData.light().copyWith(
         appBarTheme: AppBarTheme( color: Colors.grey[200] ),

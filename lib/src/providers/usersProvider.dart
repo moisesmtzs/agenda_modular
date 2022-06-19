@@ -12,7 +12,7 @@ import 'package:agenda_app/src/models/user.dart';
 
 class UsersProvider extends GetConnect {
 
-  String url = Environment.API_URL + "api/users";
+  String url = Environment.API_URL + "api/users"; 
 
   User userSession = User.fromJson(GetStorage().read('user') ?? {});
 
@@ -63,7 +63,8 @@ class UsersProvider extends GetConnect {
         'Authorization': userSession.sessionToken ?? ''
       }
     );
-    print({response.body});
+    // print("Datos del usuario JSON: ${user.toJson()}");
+    // print("Datos del usuario: ${response.body}");
 
     if ( response.body == null ) {
       Get.snackbar('Error', 'No se pudo actualizar la información');
@@ -108,6 +109,28 @@ class UsersProvider extends GetConnect {
     ResponseApi responseApi = ResponseApi.fromJson(response.body);
     return responseApi;
     
+  }
+
+  Future<User?> getById(String? id) async {
+
+    try {
+      Uri url = Uri.http(Environment.API_URL_OLD, '/api/users/findById/$id');
+
+      Map<String, String> headers = {
+        'Content-type': 'application/json',
+        'Authorization': userSession.sessionToken ?? ''
+      };
+      final res = await http.get(url, headers: headers);
+
+      final data = json.decode(res.body);
+      User user  = User.fromJson(data);
+      return user;
+
+    } catch (e) {
+      print('Error: $e');
+      return null;
+    }
+
   }
 
 }
