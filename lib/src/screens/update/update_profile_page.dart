@@ -128,9 +128,9 @@ class UpdateProfilePage extends StatelessWidget {
         children: [
           Positioned(child: _Bubble(), top: 90, left: 30),
           Positioned(child: _Bubble(), top: -40, left: -30),
-          Positioned(child: _Bubble(), top: -50, right: 10),
-          Positioned(child: _Bubble(), bottom: -50, left: 10),
-          Positioned(child: _Bubble(), bottom: 75, right: 20),
+          Positioned(child: _Bubble(), top: -50, right: 110),
+          Positioned(child: _Bubble(), bottom: -70, right: 70),
+          Positioned(child: _Bubble(), bottom: 55, right: -20),
           _headerIcon(context),
         ]
       ),

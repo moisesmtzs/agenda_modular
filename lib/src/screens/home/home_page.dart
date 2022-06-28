@@ -219,7 +219,7 @@ class HomePage extends StatelessWidget {
           ),
           SizedBox(height: MediaQuery.of(context).size.height * 0.008),
           ListTile(
-            onTap: () => homeController.logOut(),
+            onTap: () => homeController.confirmationDialog(context),
             title: const Text('Cerrar Sesión', style: TextStyle( color: Colors.white )),
             trailing: const Icon(Icons.logout_rounded, color: Colors.white)
           ),

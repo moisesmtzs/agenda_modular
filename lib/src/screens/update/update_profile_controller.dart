@@ -165,7 +165,7 @@ class UpdateProfileController extends GetxController {
 
     AlertDialog alertDialog = AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      title: const Text('¿Estás seguro que quieres eliminar la cuenta?'),
+      title: const Text('¿Estás seguro de que quieres eliminar la cuenta?'),
       actions: [
         cancelButton,
         confirmButton
