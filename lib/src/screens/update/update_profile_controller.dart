@@ -26,7 +26,6 @@ class UpdateProfileController extends GetxController {
   TextEditingController nameController = TextEditingController();
   TextEditingController lastNameController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
 
   UpdateProfileController() {
     nameController.text = userSession.name ?? '';
@@ -85,7 +84,7 @@ class UpdateProfileController extends GetxController {
         newUser?.sessionToken = userSession.sessionToken;
         if ( responseApi?.success == true ) {
           GetStorage().write('user', newUser?.toJson());
-          Get.snackbar(responseApi?.message ?? '', '');
+          Get.snackbar( 'Actualización finalizada' ,responseApi?.message ?? '');
           isEnable.value = true;
         } else {
           isEnable.value = true;
@@ -208,10 +207,10 @@ class UpdateProfileController extends GetxController {
     );
 
     showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return alertDialog;
-        }
+      context: context,
+      builder: (BuildContext context) {
+        return alertDialog;
+      }
     );
   }
 

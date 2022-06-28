@@ -1,5 +1,6 @@
 // ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors, avoid_unnecessary_containers, unused_local_variable, unnecessary_new, avoid_print, unused_import, non_constant_identifier_names
 import 'dart:convert';
+import 'package:agenda_app/src/widgets/custom_painters.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
@@ -21,20 +22,22 @@ class UpdateProfilePage extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: [
-          _purpleBox(context),
+          drawCircles(context),
           SingleChildScrollView(
             physics: BouncingScrollPhysics(),
             keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
               child: Column(
                 children: [
+                  // _purpleBox(context),
                   // SizedBox(height: MediaQuery.of(context).size.height * 0.006),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.23),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.09),
                   CardContainer(
                     child: Column(
                       children: [
-                        SizedBox( height: 10 ),
                         Text( 'Editar Perfil', style: Theme.of(context).textTheme.headline4 ),
-                        SizedBox( height: 30 ),
+                        // SizedBox( height: 10 ),
+                        _headerIcon(context),
+                        // SizedBox( height: 20 ),
                         _updateForm(context)
                       ],
                     )
@@ -44,7 +47,7 @@ class UpdateProfilePage extends StatelessWidget {
               )
             
           ),
-        ],
+        ]
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.only( left: 15, right: 15, bottom: 20, top: 10 ),
@@ -82,13 +85,57 @@ class UpdateProfilePage extends StatelessWidget {
     );
   }
 
+  Widget drawCircles(BuildContext context) {
+
+    var heightOfScreen = MediaQuery.of(context).size.height;
+    var widthOfScreen = MediaQuery.of(context).size.width;
+    return Column(
+      children: <Widget>[
+        CustomPaint(
+          painter: DrawCircle(
+            offset: Offset(widthOfScreen * 0.0005, heightOfScreen * 0.08),
+            radius: widthOfScreen * 0.16,
+            color: Colors.indigo.shade300,
+            hasShadow: true,
+            shadowColor: Colors.indigo[200],
+          ),
+        ),
+        CustomPaint(
+          painter: DrawCircle(
+            offset: Offset(widthOfScreen * 0.75, heightOfScreen * 0.05),
+            radius: widthOfScreen * 0.5,
+            color: Colors.indigo.shade300,
+            hasShadow: true,
+            shadowColor: Colors.indigo[200],
+          ),
+        ),
+        CustomPaint(
+          painter: DrawCircle(
+            offset: Offset(widthOfScreen * 0.1, heightOfScreen * 0.95),
+            radius: widthOfScreen * 0.175,
+            color: Colors.indigo.shade300,
+            hasShadow: true,
+            shadowColor: Colors.indigo[200],
+          ),
+        ),
+        CustomPaint(
+          painter: DrawCircle(
+            offset: Offset(widthOfScreen * 0.35, heightOfScreen * 0.85),
+            radius: widthOfScreen * 0.1,
+            color: Colors.indigo.shade300,
+            hasShadow: true,
+            shadowColor: Colors.indigo[200],
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _headerIcon(BuildContext context) {
   
     return SafeArea(
-      child: Container(
-        // width: double.infinity,
+      child: SizedBox(
         height: MediaQuery.of(context).size.height * 0.12,
-        margin: EdgeInsets.only(top: 50),
         child: GestureDetector(
           onTap: () => updatePageController.showAlertDialog(context),
           child: GetBuilder<UpdateProfileController> (
@@ -104,49 +151,6 @@ class UpdateProfilePage extends StatelessWidget {
           )
         ),
       ),
-    );
-    
-  }
-
-  Widget _purpleBox(BuildContext context) {
-      
-    final size = MediaQuery.of(context).size;
-    
-    return Container(
-      width: double.infinity,
-      height: size.height * 0.23,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: const [
-            Color.fromARGB(255, 40, 71, 221),
-            Color.fromARGB(255, 121, 102, 206),
-          ]
-        )
-      ),
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Positioned(child: _Bubble(), top: 90, left: 30),
-          Positioned(child: _Bubble(), top: -40, left: -30),
-          Positioned(child: _Bubble(), top: -50, right: 110),
-          Positioned(child: _Bubble(), bottom: -70, right: 70),
-          Positioned(child: _Bubble(), bottom: 55, right: -20),
-          _headerIcon(context),
-        ]
-      ),
-    );
-    
-  }
-
-  Widget _Bubble(){
-
-    return Container(
-      width: 100,
-      height: 100,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(100),
-        color: Color.fromRGBO(255, 255, 255, 0.05)
-      )    
     );
     
   }

@@ -67,8 +67,8 @@ class SearchPage extends StatelessWidget {
       children: <Widget>[
         CustomPaint(
           painter: DrawCircle(
-            offset: Offset(widthOfScreen * 0.04, heightOfScreen * 0.08),
-            radius: widthOfScreen * 0.2,
+            offset: Offset(widthOfScreen * 0.0005, heightOfScreen * 0.08),
+            radius: widthOfScreen * 0.16,
             color: Colors.indigo.shade300,
             hasShadow: true,
             shadowColor: Colors.indigo[200],

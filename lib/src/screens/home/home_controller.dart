@@ -21,10 +21,8 @@ class HomeController extends GetxController {
   }
 
   void logOut() {
-
     GetStorage().remove('user');
     Get.offNamedUntil('/', (route) => false);
-
   }
 
   void confirmationDialog( BuildContext context ) {
