@@ -1,5 +1,7 @@
 // ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors, avoid_unnecessary_containers, unused_local_variable, unnecessary_new, avoid_print, unused_import, non_constant_identifier_names
 import 'dart:convert';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
@@ -19,34 +21,43 @@ class UpdateProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: Colors.indigo[300],
-      body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
-        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-          child: Column(
-            children: [
-              SizedBox(height: MediaQuery.of(context).size.height * 0.09),
-              CardContainer(
-                child: Column(
-                  children: [
-                    Text( 'Editar Perfil', style: Theme.of(context).textTheme.headline4 ),
-                    _headerIcon(context),
-                    _updateForm(context)
-                  ],
-                )
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.03),
-            ],
-          )
-        
+      resizeToAvoidBottomInset: false,
+      extendBody: true,
+      body: Stack(
+        children: [
+          _fondoapp(),
+          SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+              child: Column(
+                children: [
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.09),
+                  Container(
+                    child: CardContainer(
+                      child: Column(
+                        children: [
+                          Text( 'Editar Perfil', style: Theme.of(context).textTheme.headline4 ),
+                          _headerIcon(context),
+                          _updateForm(context)
+                        ],
+                      )
+                    ),
+                  ),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+                ],
+              )
+            
+          ),
+        ]
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.only( left: 15, right: 15, bottom: 20, top: 10 ),
         child: GNav(
           selectedIndex: _selectedIndex,
+          backgroundColor: Colors.transparent,
           padding: const EdgeInsets.all(15),
           tabBorderRadius: 18,
-          color: Colors.black,
+          color: Colors.white,
           tabBackgroundColor: Colors.indigo.shade100,
           activeColor: Colors.indigo[300],
           gap: 8,
@@ -73,6 +84,53 @@ class UpdateProfilePage extends StatelessWidget {
           ]
         ),
       ),
+    );
+  }
+
+  Widget _fondoapp(){
+
+    final gradiente = Container(
+      width: double.infinity,
+      height: double.infinity,
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: FractionalOffset(0.0, 0.5),
+          end: FractionalOffset(0.0, 1.0),
+          colors: [
+            Color.fromRGBO(52, 54, 101, 1.0),
+            Color.fromRGBO(35, 37, 57, 1.0),
+          ]
+        ),
+      ),
+    );
+
+    final cajaRosa = Transform.rotate(
+      angle: -pi / 5.0, 
+      child: Container(
+        height: 280.0,
+        width: 280.0,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(72.0),
+          gradient: const LinearGradient(
+            colors: [
+              Color.fromRGBO(159, 168, 218, 1),
+              Color.fromRGBO(106, 119, 193, 1),
+            ]
+          )
+        ),
+      ),
+    );
+
+    return Stack(
+      children: <Widget>[
+        gradiente,
+        Positioned(
+          top: 400.0,
+          right: -50.0,
+          child: cajaRosa
+        )
+      ],
+
     );
   }
 

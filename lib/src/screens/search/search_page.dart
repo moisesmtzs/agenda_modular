@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
@@ -9,15 +11,20 @@ class SearchPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: Colors.indigo[300],
-      body: _search(context),
+      extendBody: true,
+      body: Stack(
+        children: [
+          _fondoapp(),
+          _search(context),
+        ],
+      ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.only( left: 15, right: 15, bottom: 20, top: 10 ),
         child: GNav(
           selectedIndex: _selectedIndex,
           padding: const EdgeInsets.all(15),
           tabBorderRadius: 18,
-          color: Colors.black,
+          color: Colors.white,
           tabBackgroundColor: Colors.indigo.shade100,
           activeColor: Colors.indigo[300],
           gap: 8,
@@ -50,7 +57,55 @@ class SearchPage extends StatelessWidget {
       ),
     );
 
+  }
 
+  Widget _fondoapp(){
+
+    final gradiente = Container(
+      width: double.infinity,
+      height: double.infinity,
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: FractionalOffset(0.0, 0.5),
+          end: FractionalOffset(0.0, 1.0),
+          colors: [
+            Color.fromRGBO(52, 54, 101, 1.0),
+            Color.fromRGBO(35, 37, 57, 1.0),
+            // Colors.purple[900],
+            // Colors.purple[800]
+          ]
+        ),
+      ),
+    );
+
+    final cajaRosa = Transform.rotate(
+      angle: -pi / 5.0, 
+      child: Container(
+        height: 280.0,
+        width: 280.0,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(72.0),
+          gradient: const LinearGradient(
+            colors: [
+              Color.fromRGBO(159, 168, 218, 1),
+              Color.fromRGBO(106, 119, 193, 1),
+            ]
+          )
+        ),
+      ),
+    );
+
+    return Stack(
+      children: <Widget>[
+        gradiente,
+        Positioned(
+          top: 400.0,
+          right: -50.0,
+          child: cajaRosa
+        )
+      ],
+
+    );
   }
 
   Widget _search(BuildContext context) {

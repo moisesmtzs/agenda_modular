@@ -1,4 +1,6 @@
 import 'dart:math';
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -7,10 +9,6 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 
 import 'package:agenda_app/src/screens/home/home_controller.dart';
 import 'package:agenda_app/src/widgets/card_container.dart';
-
-import 'dart:ui';
-
-
 
 class HomePage extends StatelessWidget {
 
@@ -24,9 +22,9 @@ class HomePage extends StatelessWidget {
     var scaffoldKey = GlobalKey<ScaffoldState>();
 
     return Scaffold(
-      // backgroundColor: Colors.indigo[300],
       key: scaffoldKey,
       extendBodyBehindAppBar: true,
+      extendBody: true,
       drawer: _drawer(context),
       appBar: AppBar(
         centerTitle: true,
@@ -55,20 +53,21 @@ class HomePage extends StatelessWidget {
         ),
       ),
       body: Stack(
-        // physics: const BouncingScrollPhysics(),
         children: [
           _fondoapp(),
-          _buttonAssistant(context),
+          SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: _buttonAssistant(context)
+          ),
         ]
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.only( left: 15, right: 15, bottom: 20, top: 10 ),
         child: GNav(
-          backgroundColor: Colors.transparent,
           selectedIndex: _selectedIndex,
           padding: const EdgeInsets.all(15),
           tabBorderRadius: 18,
-          color: Colors.black,
+          color: Colors.white,
           tabBackgroundColor: Colors.indigo.shade100,
           activeColor: Colors.indigo[300],
           gap: 8,
@@ -99,12 +98,12 @@ class HomePage extends StatelessWidget {
     );
   }
 
-    Widget _fondoapp(){
+  Widget _fondoapp(){
 
     final gradiente = Container(
       width: double.infinity,
       height: double.infinity,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         gradient: LinearGradient(
           begin: FractionalOffset(0.0, 0.5),
           end: FractionalOffset(0.0, 1.0),
@@ -125,7 +124,7 @@ class HomePage extends StatelessWidget {
         width: 280.0,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(72.0),
-          gradient: LinearGradient(
+          gradient: const LinearGradient(
             colors: [
               Color.fromRGBO(159, 168, 218, 1),
               Color.fromRGBO(106, 119, 193, 1),
@@ -254,19 +253,9 @@ class HomePage extends StatelessWidget {
         // vertical: MediaQuery.of(context).size.height * 0.0009, 
         horizontal: MediaQuery.of(context).size.width * 0.001
       ),
-      margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.15),
+      margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.13),
       child: Column(
         children: [
-          BackdropFilter(
-            filter: ImageFilter.blur( sigmaX: 8.0, sigmaY: 8.0 ),
-            child: const CardContainer(
-              child: Text(
-                'Habla aquí Habla aquí Habla aquí Habla aquí Habla aquí', 
-                style: TextStyle( fontSize: 20 )
-              ),
-            ),
-          ),
-          SizedBox(height: MediaQuery.of(context).size.height * 0.05,),
           Container(
             padding: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width * 0.36
@@ -286,6 +275,46 @@ class HomePage extends StatelessWidget {
               child: Icon(Icons.keyboard_voice_sharp, size: MediaQuery.of(context).size.height * 0.04,),
             ),
           ),
+          SizedBox(height: MediaQuery.of(context).size.height * 0.02,),
+          ClipRRect(
+            child: BackdropFilter(
+              filter: ImageFilter.blur( sigmaX: 8.0, sigmaY: 8.0 ),
+              child: Container(
+                margin: const EdgeInsets.symmetric(horizontal: 15),
+                decoration: BoxDecoration(
+                  color: const Color.fromRGBO(62, 66, 107, 0.8),
+                  borderRadius: BorderRadius.circular(16.0)
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric( horizontal: 10 ),
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadiusDirectional.circular(8),
+                    ),
+                    child: const Text(
+                      'Habla aqui',
+                      style: TextStyle(
+                        color: Colors.white, 
+                        fontSize: 20, 
+                        fontWeight: FontWeight.bold 
+                      ),
+                      textAlign: TextAlign.justify,
+                    ),
+                  ),
+                ),
+                // child: const CardContainer(
+                //   child: Text(
+                //     'Habla aquí Habla aquí Habla aquí Habla aquí Habla aquí', 
+                //     style: TextStyle( fontSize: 20 )
+                //   ),
+                // ),
+              ),
+            ),
+          ),
+          SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+          
         ],
       ),
     );
