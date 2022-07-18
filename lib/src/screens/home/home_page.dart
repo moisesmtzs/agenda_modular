@@ -6,7 +6,6 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 
 import 'package:agenda_app/src/screens/home/home_controller.dart';
 import 'package:agenda_app/src/widgets/card_container.dart';
-import 'package:agenda_app/src/widgets/custom_painters.dart';
 
 
 class HomePage extends StatelessWidget {
@@ -21,15 +20,24 @@ class HomePage extends StatelessWidget {
     var scaffoldKey = GlobalKey<ScaffoldState>();
 
     return Scaffold(
+      // backgroundColor: Colors.indigo[300],
       key: scaffoldKey,
       extendBodyBehindAppBar: true,
       drawer: _drawer(context),
       appBar: AppBar(
+        centerTitle: true,
+        backgroundColor: Colors.indigo[200],
+        toolbarHeight: 65,
+        shape: ShapeBorder.lerp(
+          RoundedRectangleBorder( borderRadius: BorderRadius.circular(30) ),
+          null,
+          0
+        ),
         leading: IconButton(
           onPressed: () => scaffoldKey.currentState?.openDrawer(), 
           icon: SvgPicture.asset("assets/icons/menu.svg")
         ),
-        backgroundColor: Colors.transparent,
+        // backgroundColor: Colors.transparent,
         automaticallyImplyLeading: true,
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.black, size: 30.0),
@@ -42,15 +50,9 @@ class HomePage extends StatelessWidget {
           ),
         ),
       ),
-      body: Stack(
-        children: <Widget> [
-          drawCircles(context),
-          // SizedBox( height: MediaQuery.of(context).size.height * 0.4 ),
-          SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: _buttonAssistant(context),
-          ),
-        ]
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: _buttonAssistant(context),
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.only( left: 15, right: 15, bottom: 20, top: 10 ),
@@ -75,12 +77,13 @@ class HomePage extends StatelessWidget {
             GButton(
               onPressed: () => homeController.goToSearchPage(),
               icon: Icons.search_rounded,
-              text: 'Buscar'
+              text: 'Buscar',
+              // iconColor: Colors.white
             ),
             GButton(
               onPressed: () => homeController.goToUpdatePage(),
               icon: Icons.person_outline_rounded,
-              text: 'Perfil'
+              text: 'Perfil',
             ),
           ]
         ),
@@ -88,56 +91,10 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget drawCircles(BuildContext context) {
-
-    var heightOfScreen = MediaQuery.of(context).size.height;
-    var widthOfScreen = MediaQuery.of(context).size.width;
-    return Column(
-      children: <Widget>[
-        CustomPaint(
-          painter: DrawCircle(
-            offset: Offset(widthOfScreen * 0.0005, heightOfScreen * 0.08),
-            radius: widthOfScreen * 0.16,
-            color: Colors.indigo.shade300,
-            hasShadow: true,
-            shadowColor: Colors.indigo[200],
-          ),
-        ),
-        CustomPaint(
-          painter: DrawCircle(
-            offset: Offset(widthOfScreen * 0.75, heightOfScreen * 0.05),
-            radius: widthOfScreen * 0.5,
-            color: Colors.indigo.shade300,
-            hasShadow: true,
-            shadowColor: Colors.indigo[200],
-          ),
-        ),
-        CustomPaint(
-          painter: DrawCircle(
-            offset: Offset(widthOfScreen * 0.1, heightOfScreen * 0.95),
-            radius: widthOfScreen * 0.175,
-            color: Colors.indigo.shade300,
-            hasShadow: true,
-            shadowColor: Colors.indigo[200],
-          ),
-        ),
-        CustomPaint(
-          painter: DrawCircle(
-            offset: Offset(widthOfScreen * 0.35, heightOfScreen * 0.85),
-            radius: widthOfScreen * 0.1,
-            color: Colors.indigo.shade300,
-            hasShadow: true,
-            shadowColor: Colors.indigo[200],
-          ),
-        ),
-      ],
-    );
-  }
-
   Widget _drawer(BuildContext context) {
 
     return Drawer(
-      backgroundColor: const Color(0xFF7986CB),
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       elevation: 25,
       child: ListView(
         physics: const BouncingScrollPhysics(),
@@ -176,9 +133,9 @@ class HomePage extends StatelessWidget {
                   children: [
                     Text(
                       homeController.userSession.name ?? 'Moises', 
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 24.0, 
-                        color: Colors.white, 
+                        color: Colors.indigo[300], 
                         fontWeight: FontWeight.bold 
                       ),
                       maxLines: 1,
@@ -189,7 +146,7 @@ class HomePage extends StatelessWidget {
                       homeController.userSession.email ?? 'Correo', 
                       style: TextStyle(
                         fontSize: 14.0, 
-                        color: Colors.grey[200], 
+                        color: Colors.indigo[200], 
                         fontWeight: FontWeight.bold 
                       ),
                       maxLines: 2, 
@@ -201,27 +158,31 @@ class HomePage extends StatelessWidget {
             )
           ),
           Divider( 
+            thickness: 1.4,
             indent: MediaQuery.of(context).size.width * 0.06,
             endIndent: MediaQuery.of(context).size.width * 0.06,
-            color: Colors.grey[200],
+            color: Colors.indigo[300],
           ),
-          // SizedBox(height: MediaQuery.of(context).size.height * 0.005),
+          const SizedBox(height:15),
           ListTile(
-            onTap: () {},
-            title: const Text('Mis Tareas', style: TextStyle( color: Colors.white )),
-            trailing: const Icon(Icons.task, color: Colors.white)
+            contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+            onTap: () => homeController.goToTaskPage(),
+            title: Text('Mis Tareas', style: TextStyle( color: Colors.indigo[300], fontSize: 20 )),
+            trailing: Icon(Icons.task, color: Colors.indigo[300], size: 27)
           ),
-          SizedBox(height: MediaQuery.of(context).size.height * 0.008),
+          const SizedBox(height: 8),
           ListTile(
-            onTap: () {},
-            title: const Text('Mi Horario', style: TextStyle( color: Colors.white )),
-            trailing: const Icon(Icons.schedule_rounded, color: Colors.white)
+            contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+            onTap: () => homeController.goToSchedulePage(),
+            title: Text('Mi Horario', style: TextStyle( color: Colors.indigo[300], fontSize: 20 )),
+            trailing: Icon(Icons.schedule_rounded, color: Colors.indigo[300], size: 27)
           ),
-          SizedBox(height: MediaQuery.of(context).size.height * 0.008),
+          const SizedBox(height: 8),
           ListTile(
+            contentPadding: const EdgeInsets.symmetric(horizontal: 20),
             onTap: () => homeController.confirmationDialog(context),
-            title: const Text('Cerrar Sesión', style: TextStyle( color: Colors.white )),
-            trailing: const Icon(Icons.logout_rounded, color: Colors.white)
+            title: Text('Cerrar Sesión', style: TextStyle( color: Colors.indigo[300], fontSize: 20 )),
+            trailing: Icon(Icons.logout_rounded, color: Colors.indigo[300], size: 27)
           ),
         ]
       ),
@@ -236,7 +197,7 @@ class HomePage extends StatelessWidget {
         // vertical: MediaQuery.of(context).size.height * 0.0009, 
         horizontal: MediaQuery.of(context).size.width * 0.001
       ),
-      margin: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.height * 0.11),
+      margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.15),
       child: Column(
         children: [
           const CardContainer(

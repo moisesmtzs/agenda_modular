@@ -34,14 +34,17 @@ class _MyAppState extends State<MyApp> {
         GetPage( name: '/home', page: () => HomePage(), transition: Transition.noTransition ),
         GetPage( name: '/updateProfile', page: () => UpdateProfilePage(), transition: Transition.noTransition ),
         GetPage( name: '/search', page: () => SearchPage(), transition: Transition.noTransition ),
+        GetPage( name: '/task', page: () => TaskPage(), ),
+        GetPage( name: '/schedule', page: () => SchedulePage(), ),
       ],
       theme: ThemeData.light().copyWith(
         appBarTheme: AppBarTheme( color: Colors.grey[200] ),
         scaffoldBackgroundColor: Colors.grey[200],
         textTheme: GoogleFonts.openSansTextTheme( Theme.of(context).textTheme ) ,
         primaryColor: Colors.indigo[300],
-        // dividerColor: Colors.grey[200],
-        splashColor: Colors.indigo,
+        splashColor: Colors.indigo[200],
+        dividerColor: Colors.white,
+        highlightColor: Colors.indigo.shade200.withOpacity(0.3),
         colorScheme: ColorScheme(
           // backgroundColor: Colors.orange[300], elevation: 0
           primary: Colors.indigo.shade300,

@@ -158,6 +158,7 @@ class UpdateProfileController extends GetxController {
       onPressed: () {
         isEnable2.value = false;
         deleteAccount();
+        Get.back();
       },
       child: const Text('Confirmar')
     );

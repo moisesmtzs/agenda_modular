@@ -147,14 +147,7 @@ class LoginPage extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric( horizontal: 80, vertical: 15 ),
           child: loginController.isLoading.value
-            ? Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                FittedBox(child: const Text('Espere...', style: TextStyle( color: Colors.white ),)),
-                SizedBox(width: MediaQuery.of(context).size.width * 0.006),
-                SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color:  Colors.orange[300]))
-              ],
-            )
+            ? FittedBox(child: const Text('Espere...', style: TextStyle( color: Colors.white ),))
             : FittedBox(child: const Text('Ingresar', style: TextStyle( color: Colors.white )))
         ),
         // }

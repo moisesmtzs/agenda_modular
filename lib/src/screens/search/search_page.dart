@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
-import 'package:agenda_app/src/widgets/custom_painters.dart';
-
 class SearchPage extends StatelessWidget {
 
   int _selectedIndex = 1;
@@ -11,12 +9,8 @@ class SearchPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: <Widget>[
-          drawCircles(context),
-          _search(context)
-        ],
-      ),
+      // backgroundColor: Colors.indigo[300],
+      body: _search(context),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.only( left: 15, right: 15, bottom: 20, top: 10 ),
         child: GNav(
@@ -59,52 +53,6 @@ class SearchPage extends StatelessWidget {
 
   }
 
-  Widget drawCircles(BuildContext context) {
-
-    var heightOfScreen = MediaQuery.of(context).size.height;
-    var widthOfScreen = MediaQuery.of(context).size.width;
-    return Column(
-      children: <Widget>[
-        CustomPaint(
-          painter: DrawCircle(
-            offset: Offset(widthOfScreen * 0.0005, heightOfScreen * 0.08),
-            radius: widthOfScreen * 0.16,
-            color: Colors.indigo.shade300,
-            hasShadow: true,
-            shadowColor: Colors.indigo[200],
-          ),
-        ),
-        CustomPaint(
-          painter: DrawCircle(
-            offset: Offset(widthOfScreen * 0.75, heightOfScreen * 0.05),
-            radius: widthOfScreen * 0.5,
-            color: Colors.indigo.shade300,
-            hasShadow: true,
-            shadowColor: Colors.indigo[200],
-          ),
-        ),
-        CustomPaint(
-          painter: DrawCircle(
-            offset: Offset(widthOfScreen * 0.1, heightOfScreen * 0.95),
-            radius: widthOfScreen * 0.175,
-            color: Colors.indigo.shade300,
-            hasShadow: true,
-            shadowColor: Colors.indigo[200],
-          ),
-        ),
-        CustomPaint(
-          painter: DrawCircle(
-            offset: Offset(widthOfScreen * 0.35, heightOfScreen * 0.85),
-            radius: widthOfScreen * 0.1,
-            color: Colors.indigo.shade300,
-            hasShadow: true,
-            shadowColor: Colors.indigo[200],
-          ),
-        ),
-      ],
-    );
-  }
-  
   Widget _search(BuildContext context) {
     return SafeArea(
       minimum: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.height * 0.09, horizontal: 20),

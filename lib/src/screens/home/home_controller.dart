@@ -20,6 +20,14 @@ class HomeController extends GetxController {
     Get.toNamed('/search');
   }
 
+  void goToTaskPage() {
+    Get.toNamed('/task');
+  }
+
+  void goToSchedulePage() {
+    Get.toNamed('/schedule');
+  }
+
   void logOut() {
     GetStorage().remove('user');
     Get.offNamedUntil('/', (route) => false);

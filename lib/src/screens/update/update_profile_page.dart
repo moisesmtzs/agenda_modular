@@ -1,6 +1,5 @@
 // ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors, avoid_unnecessary_containers, unused_local_variable, unnecessary_new, avoid_print, unused_import, non_constant_identifier_names
 import 'dart:convert';
-import 'package:agenda_app/src/widgets/custom_painters.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
@@ -20,34 +19,26 @@ class UpdateProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          drawCircles(context),
-          SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
-            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-              child: Column(
-                children: [
-                  // _purpleBox(context),
-                  // SizedBox(height: MediaQuery.of(context).size.height * 0.006),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.09),
-                  CardContainer(
-                    child: Column(
-                      children: [
-                        Text( 'Editar Perfil', style: Theme.of(context).textTheme.headline4 ),
-                        // SizedBox( height: 10 ),
-                        _headerIcon(context),
-                        // SizedBox( height: 20 ),
-                        _updateForm(context)
-                      ],
-                    )
-                  ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.03),
-                ],
-              )
-            
-          ),
-        ]
+      // backgroundColor: Colors.indigo[300],
+      body: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+          child: Column(
+            children: [
+              SizedBox(height: MediaQuery.of(context).size.height * 0.09),
+              CardContainer(
+                child: Column(
+                  children: [
+                    Text( 'Editar Perfil', style: Theme.of(context).textTheme.headline4 ),
+                    _headerIcon(context),
+                    _updateForm(context)
+                  ],
+                )
+              ),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+            ],
+          )
+        
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.only( left: 15, right: 15, bottom: 20, top: 10 ),
@@ -82,52 +73,6 @@ class UpdateProfilePage extends StatelessWidget {
           ]
         ),
       ),
-    );
-  }
-
-  Widget drawCircles(BuildContext context) {
-
-    var heightOfScreen = MediaQuery.of(context).size.height;
-    var widthOfScreen = MediaQuery.of(context).size.width;
-    return Column(
-      children: <Widget>[
-        CustomPaint(
-          painter: DrawCircle(
-            offset: Offset(widthOfScreen * 0.0005, heightOfScreen * 0.08),
-            radius: widthOfScreen * 0.16,
-            color: Colors.indigo.shade300,
-            hasShadow: true,
-            shadowColor: Colors.indigo[200],
-          ),
-        ),
-        CustomPaint(
-          painter: DrawCircle(
-            offset: Offset(widthOfScreen * 0.75, heightOfScreen * 0.05),
-            radius: widthOfScreen * 0.5,
-            color: Colors.indigo.shade300,
-            hasShadow: true,
-            shadowColor: Colors.indigo[200],
-          ),
-        ),
-        CustomPaint(
-          painter: DrawCircle(
-            offset: Offset(widthOfScreen * 0.1, heightOfScreen * 0.95),
-            radius: widthOfScreen * 0.175,
-            color: Colors.indigo.shade300,
-            hasShadow: true,
-            shadowColor: Colors.indigo[200],
-          ),
-        ),
-        CustomPaint(
-          painter: DrawCircle(
-            offset: Offset(widthOfScreen * 0.35, heightOfScreen * 0.85),
-            radius: widthOfScreen * 0.1,
-            color: Colors.indigo.shade300,
-            hasShadow: true,
-            shadowColor: Colors.indigo[200],
-          ),
-        ),
-      ],
     );
   }
 
@@ -224,14 +169,9 @@ class UpdateProfilePage extends StatelessWidget {
                 child: Container(
                   padding: EdgeInsets.symmetric( horizontal: 30, vertical: 15 ),
                   child: updatePageController.isLoading.value
-                    ? Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        FittedBox(child: Text('Espere...', style: TextStyle( color: Colors.white ),)),
-                        SizedBox(width: MediaQuery.of(context).size.width * 0.006),
-                        SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color:  Colors.orange[300]))
-                      ],
-                    )
+                    ? FittedBox(child: Text('Espere...', style: TextStyle( color: Colors.white )))
+                        // SizedBox(width: MediaQuery.of(context).size.width * 0.006),
+                        // SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color:  Colors.orange[300]))
                     : FittedBox(child: Text('Guardar cambios', style: TextStyle( color: Colors.white )))
                 ),
                 onPressed: updatePageController.isEnable.value 
