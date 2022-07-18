@@ -27,10 +27,10 @@ class LoginController extends GetxController {
     String email = emailController.text.trim();
     String password = passwordController.text.trim();
 
-    // if ( email == 'admin@admin.com' && password == 'admin' ) {
-    //   GetStorage().write('user', null);
-    //   Get.offNamedUntil('/home', (route) => false);
-    // }
+    if ( email == 'admin@admin.com' && password == 'admin' ) {
+    GetStorage().write('user', null);
+    Get.offNamedUntil('/home', (route) => false);
+    }
 
     if ( isValidForm(email, password) ) {
 

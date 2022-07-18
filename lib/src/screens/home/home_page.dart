@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -6,6 +7,9 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 
 import 'package:agenda_app/src/screens/home/home_controller.dart';
 import 'package:agenda_app/src/widgets/card_container.dart';
+
+import 'dart:ui';
+
 
 
 class HomePage extends StatelessWidget {
@@ -50,13 +54,17 @@ class HomePage extends StatelessWidget {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: _buttonAssistant(context),
+      body: Stack(
+        // physics: const BouncingScrollPhysics(),
+        children: [
+          _fondoapp(),
+          _buttonAssistant(context),
+        ]
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.only( left: 15, right: 15, bottom: 20, top: 10 ),
         child: GNav(
+          backgroundColor: Colors.transparent,
           selectedIndex: _selectedIndex,
           padding: const EdgeInsets.all(15),
           tabBorderRadius: 18,
@@ -88,6 +96,55 @@ class HomePage extends StatelessWidget {
           ]
         ),
       ),
+    );
+  }
+
+    Widget _fondoapp(){
+
+    final gradiente = Container(
+      width: double.infinity,
+      height: double.infinity,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: FractionalOffset(0.0, 0.5),
+          end: FractionalOffset(0.0, 1.0),
+          colors: [
+            Color.fromRGBO(52, 54, 101, 1.0),
+            Color.fromRGBO(35, 37, 57, 1.0),
+            // Colors.purple[900],
+            // Colors.purple[800]
+          ]
+        ),
+      ),
+    );
+
+    final cajaRosa = Transform.rotate(
+      angle: -pi / 5.0, 
+      child: Container(
+        height: 280.0,
+        width: 280.0,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(72.0),
+          gradient: LinearGradient(
+            colors: [
+              Color.fromRGBO(159, 168, 218, 1),
+              Color.fromRGBO(106, 119, 193, 1),
+            ]
+          )
+        ),
+      ),
+    );
+
+    return Stack(
+      children: <Widget>[
+        gradiente,
+        Positioned(
+          top: 400.0,
+          right: -50.0,
+          child: cajaRosa
+        )
+      ],
+
     );
   }
 
@@ -200,10 +257,13 @@ class HomePage extends StatelessWidget {
       margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.15),
       child: Column(
         children: [
-          const CardContainer(
-            child: Text(
-              'Habla aquí', 
-              style: TextStyle( fontSize: 20 )
+          BackdropFilter(
+            filter: ImageFilter.blur( sigmaX: 8.0, sigmaY: 8.0 ),
+            child: const CardContainer(
+              child: Text(
+                'Habla aquí Habla aquí Habla aquí Habla aquí Habla aquí', 
+                style: TextStyle( fontSize: 20 )
+              ),
             ),
           ),
           SizedBox(height: MediaQuery.of(context).size.height * 0.05,),
