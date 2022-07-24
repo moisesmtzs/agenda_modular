@@ -13,11 +13,11 @@ class HomeController extends GetxController {
   }
 
   void goToUpdatePage() {
-    Get.toNamed('/updateProfile');
+    Get.offNamedUntil('/updateProfile', (route) => false);
   }
 
   void goToSearchPage() {
-    Get.toNamed('/search');
+    Get.offNamedUntil('/search', (route) => false);
   }
 
   void goToTaskPage() {

@@ -61,38 +61,50 @@ class HomePage extends StatelessWidget {
           ),
         ]
       ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.only( left: 15, right: 15, bottom: 20, top: 10 ),
-        child: GNav(
-          selectedIndex: _selectedIndex,
-          padding: const EdgeInsets.all(15),
-          tabBorderRadius: 18,
-          color: Colors.white,
-          tabBackgroundColor: Colors.indigo.shade100,
-          activeColor: Colors.indigo[300],
-          gap: 8,
-          onTabChange: (index) {
-            _selectedIndex = index;
-          },
-          tabs: [
-            const GButton(
-              active: true,
-              // iconActiveColor: Colors.white,
-              icon: Icons.home_outlined,
-              text: 'Página Principal'
+      bottomNavigationBar: ClipRRect(
+        child: BackdropFilter(
+          filter: ImageFilter.blur( sigmaX: 6.0, sigmaY: 6.0 ),
+          child: Container(
+            margin: const EdgeInsets.only(left: 8, right: 8, bottom: 10),
+            decoration: BoxDecoration(
+              color: const Color.fromRGBO(62, 66, 107, 0.6),
+              borderRadius: BorderRadius.circular(16.0)
             ),
-            GButton(
-              onPressed: () => homeController.goToSearchPage(),
-              icon: Icons.search_rounded,
-              text: 'Buscar',
-              // iconColor: Colors.white
+            child: Padding(
+              padding: const EdgeInsets.symmetric( horizontal: 15, vertical: 10 ),
+              child: GNav(
+                selectedIndex: _selectedIndex,
+                padding: const EdgeInsets.all(15),
+                tabBorderRadius: 18,
+                color: Colors.white,
+                tabBackgroundColor: Colors.indigo.shade100,
+                activeColor: Colors.indigo[300],
+                gap: 8,
+                onTabChange: (index) {
+                  _selectedIndex = index;
+                },
+                tabs: [
+                  const GButton(
+                    // active: true,
+                    // iconActiveColor: Colors.white,
+                    icon: Icons.home_outlined,
+                    text: 'Página Principal'
+                  ),
+                  GButton(
+                    onPressed: () => homeController.goToSearchPage(),
+                    icon: Icons.search_rounded,
+                    text: 'Buscar',
+                    // iconColor: Colors.white
+                  ),
+                  GButton(
+                    onPressed: () => homeController.goToUpdatePage(),
+                    icon: Icons.person_outline_rounded,
+                    text: 'Perfil',
+                  ),
+                ]
+              ),
             ),
-            GButton(
-              onPressed: () => homeController.goToUpdatePage(),
-              icon: Icons.person_outline_rounded,
-              text: 'Perfil',
-            ),
-          ]
+          ),
         ),
       ),
     );
@@ -110,14 +122,12 @@ class HomePage extends StatelessWidget {
           colors: [
             Color.fromRGBO(52, 54, 101, 1.0),
             Color.fromRGBO(35, 37, 57, 1.0),
-            // Colors.purple[900],
-            // Colors.purple[800]
           ]
         ),
       ),
     );
 
-    final cajaRosa = Transform.rotate(
+    final purpleSquare = Transform.rotate(
       angle: -pi / 5.0, 
       child: Container(
         height: 280.0,
@@ -140,7 +150,7 @@ class HomePage extends StatelessWidget {
         Positioned(
           top: 400.0,
           right: -50.0,
-          child: cajaRosa
+          child: purpleSquare
         )
       ],
 

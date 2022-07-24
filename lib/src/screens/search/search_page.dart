@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -18,41 +19,53 @@ class SearchPage extends StatelessWidget {
           _search(context),
         ],
       ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.only( left: 15, right: 15, bottom: 20, top: 10 ),
-        child: GNav(
-          selectedIndex: _selectedIndex,
-          padding: const EdgeInsets.all(15),
-          tabBorderRadius: 18,
-          color: Colors.white,
-          tabBackgroundColor: Colors.indigo.shade100,
-          activeColor: Colors.indigo[300],
-          gap: 8,
-          onTabChange: (index) {
-            _selectedIndex = index;
-          },
-          tabs: [
-            GButton(
-              onPressed: () {
-                Get.offNamedUntil('/home', (route) => false);
-              },
-              // iconActiveColor: Colors.white,
-              icon: Icons.home_outlined,
-              text: 'Página Principal'
+      bottomNavigationBar: ClipRRect(
+        child: BackdropFilter(
+          filter: ImageFilter.blur( sigmaX: 8.0, sigmaY: 8.0 ),
+          child: Container(
+            margin: const EdgeInsets.only(left: 8, right: 8, bottom: 10),
+            decoration: BoxDecoration(
+              color: const Color.fromRGBO(62, 66, 107, 0.6),
+              borderRadius: BorderRadius.circular(16.0)
             ),
-            const GButton(
-              icon: Icons.search_rounded,
-              text: 'Buscar'
+            child: Padding(
+              padding: const EdgeInsets.symmetric( horizontal: 15, vertical: 10 ),
+              child: GNav(
+                selectedIndex: _selectedIndex,
+                padding: const EdgeInsets.all(15),
+                tabBorderRadius: 18,
+                color: Colors.white,
+                tabBackgroundColor: Colors.indigo.shade100,
+                activeColor: Colors.indigo[300],
+                gap: 8,
+                onTabChange: (index) {
+                  _selectedIndex = index;
+                },
+                tabs: [
+                  GButton(
+                    onPressed: () {
+                      Get.offNamedUntil('/home', (route) => false);
+                    },
+                    // iconActiveColor: Colors.white,
+                    icon: Icons.home_outlined,
+                    text: 'Página Principal'
+                  ),
+                  const GButton(
+                    icon: Icons.search_rounded,
+                    text: 'Buscar'
+                  ),
+                  GButton(
+                    // active: true,
+                    onPressed: () {
+                      Get.offNamedUntil('/updateProfile', (route) => false);
+                    },
+                    icon: Icons.person_outline_rounded,
+                    text: 'Perfil'
+                  ),
+                ]
+              ),
             ),
-            GButton(
-              // active: true,
-              onPressed: () {
-                Get.offNamedUntil('/updateProfile', (route) => false);
-              },
-              icon: Icons.person_outline_rounded,
-              text: 'Perfil'
-            ),
-          ]
+          ),
         ),
       ),
     );

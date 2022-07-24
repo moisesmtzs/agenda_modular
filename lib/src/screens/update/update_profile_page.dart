@@ -1,6 +1,7 @@
 // ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors, avoid_unnecessary_containers, unused_local_variable, unnecessary_new, avoid_print, unused_import, non_constant_identifier_names
 import 'dart:convert';
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -50,38 +51,50 @@ class UpdateProfilePage extends StatelessWidget {
           ),
         ]
       ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.only( left: 15, right: 15, bottom: 20, top: 10 ),
-        child: GNav(
-          selectedIndex: _selectedIndex,
-          backgroundColor: Colors.transparent,
-          padding: const EdgeInsets.all(15),
-          tabBorderRadius: 18,
-          color: Colors.white,
-          tabBackgroundColor: Colors.indigo.shade100,
-          activeColor: Colors.indigo[300],
-          gap: 8,
-          onTabChange: (index) {
-            _selectedIndex = index;
-          },
-          tabs: [
-            GButton(
-              onPressed: () => updatePageController.goToHomePage(),
-              // iconActiveColor: Colors.white,
-              icon: Icons.home_outlined,
-              text: 'Página Principal'
+      bottomNavigationBar: ClipRRect(
+        child: BackdropFilter(
+          filter: ImageFilter.blur( sigmaX: 6.0, sigmaY: 6.0 ),
+          child: Container(
+            margin: const EdgeInsets.only(left: 8, right: 8, bottom: 10),
+            decoration: BoxDecoration(
+              color: const Color.fromRGBO(62, 66, 107, 0.6),
+              borderRadius: BorderRadius.circular(16.0)
             ),
-            GButton(
-              icon: Icons.search_rounded,
-              text: 'Buscar',
-              onPressed: () => updatePageController.goToSearchPage(),
+            child: Padding(
+              padding: const EdgeInsets.symmetric( horizontal: 15, vertical: 10 ),
+              child: GNav(
+                selectedIndex: _selectedIndex,
+                backgroundColor: Colors.transparent,
+                padding: const EdgeInsets.all(15),
+                tabBorderRadius: 18,
+                color: Colors.white,
+                tabBackgroundColor: Colors.indigo.shade100,
+                activeColor: Colors.indigo[300],
+                gap: 8,
+                onTabChange: (index) {
+                  _selectedIndex = index;
+                },
+                tabs: [
+                  GButton(
+                    onPressed: () => updatePageController.goToHomePage(),
+                    // iconActiveColor: Colors.white,
+                    icon: Icons.home_outlined,
+                    text: 'Página Principal'
+                  ),
+                  GButton(
+                    icon: Icons.search_rounded,
+                    text: 'Buscar',
+                    onPressed: () => updatePageController.goToSearchPage(),
+                  ),
+                  GButton(
+                    // active: true,
+                    icon: Icons.person_outline_rounded,
+                    text: 'Perfil'
+                  ),
+                ]
+              ),
             ),
-            GButton(
-              // active: true,
-              icon: Icons.person_outline_rounded,
-              text: 'Perfil'
-            ),
-          ]
+          ),
         ),
       ),
     );
