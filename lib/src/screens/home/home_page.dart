@@ -10,8 +10,13 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:agenda_app/src/screens/home/home_controller.dart';
 import 'package:agenda_app/src/widgets/card_container.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   HomeController homeController = Get.put(HomeController());
 
   int _selectedIndex = 0;
@@ -330,5 +335,4 @@ class HomePage extends StatelessWidget {
     );
 
   }
-
 }
