@@ -109,7 +109,7 @@ class LoginPage extends StatelessWidget {
           hintText: "**********",
           hintStyle: TextStyle(color: Colors.grey[400]),
           labelText: "Contraseña",
-          labelStyle: TextStyle(color: Colors.blueGrey),
+          labelStyle: TextStyle(color: Colors.indigo[300]),
           prefixIcon: Icon(Icons.lock_rounded, color: Colors.indigo.shade300),
           suffixIcon: IconButton(
             icon: Icon(

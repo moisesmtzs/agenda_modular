@@ -18,6 +18,8 @@ class TaskController extends GetxController {
   void openBottomSheet(BuildContext context) async {
 
     isUpdated = await showMaterialModalBottomSheet(
+      enableDrag: false,
+      backgroundColor: Colors.indigo.shade200,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.only(topLeft: Radius.circular(10.0), topRight: Radius.circular(10.0)),
       ),
@@ -25,5 +27,9 @@ class TaskController extends GetxController {
       builder: (context) => TaskDetailPage()
     ); 
 
+  }
+
+  void goToAddTaskPage() {
+    Get.toNamed('/addTask');
   }
 }

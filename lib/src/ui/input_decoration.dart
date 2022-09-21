@@ -26,7 +26,7 @@ class InputDecorations {
       hintText: hintText,
       hintStyle: TextStyle( color: Colors.grey[400] ),
       labelText: labelText,
-      labelStyle: TextStyle( color: Colors.blueGrey ),
+      labelStyle: TextStyle( color: Colors.indigo[300] ),
       prefixIcon: prefixIcon != null
         ? Icon( prefixIcon, color: Colors.indigo.shade300, )
         : null,

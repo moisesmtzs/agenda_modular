@@ -176,7 +176,7 @@ class RegisterPage extends StatelessWidget {
           hintText: "**********",
           hintStyle: TextStyle(color: Colors.grey[400]),
           labelText: "Contraseña",
-          labelStyle: const TextStyle(color: Colors.blueGrey),
+          labelStyle: TextStyle(color: Colors.indigo[300]),
           prefixIcon: Icon(Icons.lock_rounded, color: Colors.indigo.shade300),
           suffixIcon: IconButton(
             icon: Icon(
@@ -219,7 +219,7 @@ class RegisterPage extends StatelessWidget {
           hintText: "**********",
           hintStyle: TextStyle( color: Colors.grey[400] ),
           labelText: "Confirmar contraseña",
-          labelStyle: const TextStyle( color: Colors.blueGrey ),
+          labelStyle: TextStyle( color: Colors.indigo[300] ),
           prefixIcon: Icon(Icons.lock_outline_rounded, color: Colors.indigo[300]),
           suffixIcon: IconButton(
             icon: Icon(

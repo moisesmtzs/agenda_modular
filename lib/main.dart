@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -28,30 +29,48 @@ class _MyAppState extends State<MyApp> {
         initialRoute: userSession.id != null ? '/home' : '/',
         navigatorKey: Get.key,
         defaultTransition: Transition.rightToLeft,
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        supportedLocales: const [
+          Locale('en'),
+          Locale('es'),
+        ],
         getPages: [
           GetPage(
-              name: '/',
-              page: () => LoginPage(),
-              transition: Transition.leftToRight),
+            name: '/',
+            page: () => LoginPage(),
+            transition: Transition.leftToRight
+          ),
           GetPage(
-              name: '/register',
-              page: () => RegisterPage(),
-              transition: Transition.rightToLeft),
+            name: '/register',
+            page: () => RegisterPage(),
+            transition: Transition.rightToLeft
+          ),
           GetPage(
-              name: '/home',
-              page: () => HomePage(),
-              transition: Transition.noTransition),
+            name: '/home',
+            page: () => HomePage(),
+            transition: Transition.noTransition
+          ),
           GetPage(
-              name: '/updateProfile',
-              page: () => UpdateProfilePage(),
-              transition: Transition.noTransition),
+            name: '/updateProfile',
+            page: () => UpdateProfilePage(),
+            transition: Transition.noTransition
+          ),
           GetPage(
-              name: '/search',
-              page: () => SearchPage(),
-              transition: Transition.noTransition),
+            name: '/search',
+            page: () => SearchPage(),
+            transition: Transition.noTransition
+          ),
           GetPage(
             name: '/task',
             page: () => TaskPage(),
+          ),
+          GetPage(
+            name: '/addTask',
+            page: () => AddTaskPage(),
+            transition: Transition.noTransition
           ),
           GetPage(
             name: '/schedule',

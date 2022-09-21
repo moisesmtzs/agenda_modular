@@ -14,15 +14,24 @@ class TaskPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.indigo[300],
         title: const Text('Mis Tareas'),
+        shape: ShapeBorder.lerp(
+          RoundedRectangleBorder( borderRadius: BorderRadius.circular(30) ),
+          null,
+          0
+        ),
       ),
       // body: NoTaskWidget( text: 'No hay tareas pendientes' ),
       body: _taskCard(context),
       floatingActionButton: FloatingActionButton.extended(
+        heroTag: 'openAddTaskPage',
         backgroundColor: Colors.indigo[300],
+        elevation: 15,
         shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(16.0))),
         icon: const Icon(Icons.add),
         label: const Text('Agregar tarea'),
-        onPressed: () {},
+        onPressed: () {
+          _taskController.goToAddTaskPage();
+        },
       ),
 
     );

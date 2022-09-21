@@ -5,5 +5,6 @@ export 'package:agenda_app/src/screens/update/update_profile_page.dart';
 export 'package:agenda_app/src/screens/search/search_page.dart';
 export 'package:agenda_app/src/screens/tasks/task_page.dart';
 export 'package:agenda_app/src/screens/tasks/detail/tasks_detail_screen.dart';
+export 'package:agenda_app/src/screens/tasks/add_task/add_task_page.dart';
 export 'package:agenda_app/src/screens/schedule/schedule_page.dart';
 export 'package:agenda_app/src/screens/registersubject/registersubject_page.dart';//FARFAN
