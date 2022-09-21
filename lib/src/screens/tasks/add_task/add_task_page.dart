@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:agenda_app/src/screens/tasks/add_task/add_task_controller.dart';
 import 'package:agenda_app/src/ui/input_decoration.dart';
 
-class _AddTaskPageState extends StatelessWidget{
+class AddTaskPage extends StatelessWidget{
   
   final AddTaskController _controller = Get.put(AddTaskController());
 
