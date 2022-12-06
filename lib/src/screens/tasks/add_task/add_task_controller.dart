@@ -1,5 +1,7 @@
+import 'package:agenda_app/src/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 
 import 'package:agenda_app/src/models/response_api.dart';
@@ -7,6 +9,8 @@ import 'package:agenda_app/src/models/task.dart';
 import 'package:agenda_app/src/providers/tasksProvider.dart';
 
 class AddTaskController extends GetxController {
+
+  User userSession = User.fromJson(GetStorage().read('user') ?? {});
 
   TasksProvider tasksProvider = TasksProvider();
 
@@ -31,6 +35,7 @@ class AddTaskController extends GetxController {
       // isEnable.value = false;
 
       Task task = Task(
+        idUser: userSession.id,
         name: name,
         description: description,
         deliveryDate: date,
@@ -43,7 +48,7 @@ class AddTaskController extends GetxController {
       if (responseApi?.success == true) {
         Get.snackbar(responseApi?.message ?? '', 'La tarea ha sido creada satisfactoriamente');
         Future.delayed(const Duration(milliseconds: 1000), () {
-          Get.off('/task');
+          Get.offAllNamed('/menu');
         });
       } else {
         Get.snackbar(
@@ -62,7 +67,7 @@ class AddTaskController extends GetxController {
   bool isValidForm( String name, String description, String date, String subject, String type ) {
 
     if ( name.isEmpty ) {
-      Get.snackbar("Datos no válidos", "Debes ingresar un nombre a la materia");
+      Get.snackbar("Datos no válidos", "Debes ingresar un nombre a la tarea");
       return false;
     }
     if ( description.isEmpty ) {
@@ -134,7 +139,7 @@ class AddTaskController extends GetxController {
       },
     );
     if(picked != null && picked != _selectedDate) {
-      value = picked.toString() as RxString;
+      value.value = picked.toString();
       _selectedDate = picked;
     } 
   }

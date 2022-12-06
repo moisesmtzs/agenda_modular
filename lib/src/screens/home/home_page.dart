@@ -1,23 +1,25 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:agenda_app/src/screens/screens.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_zoom_drawer/config.dart';
+import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:get/get.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
 import 'package:agenda_app/src/screens/home/home_controller.dart';
-import 'package:agenda_app/src/widgets/card_container.dart';
+// import 'package:agenda_app/src/widgets/card_container.dart';
 
-class HomePage extends StatefulWidget {
+class MyHomePage extends StatefulWidget {
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
-  HomeController homeController = Get.put(HomeController());
+class _MyHomePageState extends State<MyHomePage> {
 
   int _selectedIndex = 0;
 
@@ -26,11 +28,11 @@ class _HomePageState extends State<HomePage> {
     
     var scaffoldKey = GlobalKey<ScaffoldState>();
 
+    MyDrawerController _zoomController = MyDrawerController();
+
     return Scaffold(
-      key: scaffoldKey,
       extendBodyBehindAppBar: true,
       extendBody: true,
-      drawer: _drawer(context),
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: Colors.indigo[200],
@@ -41,11 +43,10 @@ class _HomePageState extends State<HomePage> {
           0
         ),
         leading: IconButton(
-          onPressed: () => scaffoldKey.currentState?.openDrawer(), 
+          onPressed: () => ZoomDrawer.of(context)!.toggle(),
           icon: SvgPicture.asset("assets/icons/menu.svg")
         ),
-        // backgroundColor: Colors.transparent,
-        automaticallyImplyLeading: true,
+        // automaticallyImplyLeading: true,
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.black, size: 30.0),
         title: const Text(
@@ -96,13 +97,13 @@ class _HomePageState extends State<HomePage> {
                     text: 'Página Principal'
                   ),
                   GButton(
-                    onPressed: () => homeController.goToSearchPage(),
+                    onPressed: () => Get.offNamedUntil('/search', (route) => false),
                     icon: Icons.search_rounded,
                     text: 'Buscar',
                     // iconColor: Colors.white
                   ),
                   GButton(
-                    onPressed: () => homeController.goToUpdatePage(),
+                    onPressed: () => Get.offNamedUntil('/updateProfile', (route) => false),
                     icon: Icons.person_outline_rounded,
                     text: 'Perfil',
                   ),
@@ -160,105 +161,6 @@ class _HomePageState extends State<HomePage> {
       ],
 
     );
-  }
-
-  Widget _drawer(BuildContext context) {
-
-    return Drawer(
-      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-      elevation: 25,
-      child: ListView(
-        physics: const BouncingScrollPhysics(),
-        padding: EdgeInsets.zero,
-        children: [
-          DrawerHeader(
-            padding: const EdgeInsets.fromLTRB(15, 15, 0, 0),
-            child: ListView(
-              // mainAxisSize: MainAxisSize.max,
-              physics: const BouncingScrollPhysics(),
-              children: [
-                Container(
-                  alignment: Alignment.topLeft,
-                  height: 60,
-                  margin: const EdgeInsets.only(top: 10),
-                  child: AspectRatio(
-                    aspectRatio: 1/1,
-                    child: ClipOval(
-                      child: GetBuilder<HomeController>(
-                        builder: (value) => FadeInImage(
-                          fit: BoxFit.cover,
-                          fadeInDuration: const Duration(milliseconds: 50),
-                          placeholder: const AssetImage('assets/img/no-image.png'),
-                          image: homeController.userSession.image != null
-                            ? NetworkImage(homeController.userSession.image!)
-                            : const AssetImage('assets/img/user_profile_2.png') as ImageProvider,
-                        )
-                      )
-                    ),
-                  )
-                  
-                ),
-                const SizedBox(width: 25),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      homeController.userSession.name ?? 'Moises', 
-                      style: TextStyle(
-                        fontSize: 24.0, 
-                        color: Colors.indigo[300], 
-                        fontWeight: FontWeight.bold 
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis, 
-                    ),
-                    // const SizedBox(height: 5),
-                    Text(
-                      homeController.userSession.email ?? 'Correo', 
-                      style: TextStyle(
-                        fontSize: 14.0, 
-                        color: Colors.indigo[200], 
-                        fontWeight: FontWeight.bold 
-                      ),
-                      maxLines: 2, 
-                      overflow: TextOverflow.ellipsis, 
-                    ),
-                  ],
-                ),
-              ],
-            )
-          ),
-          Divider( 
-            thickness: 1.4,
-            indent: MediaQuery.of(context).size.width * 0.06,
-            endIndent: MediaQuery.of(context).size.width * 0.06,
-            color: Colors.indigo[300],
-          ),
-          const SizedBox(height:15),
-          ListTile(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 20),
-            onTap: () => homeController.goToTaskPage(),
-            title: Text('Mis Tareas', style: TextStyle( color: Colors.indigo[300], fontSize: 20 )),
-            trailing: Icon(Icons.task, color: Colors.indigo[300], size: 27)
-          ),
-          const SizedBox(height: 8),
-          ListTile(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 20),
-            onTap: () => homeController.goToSchedulePage(),
-            title: Text('Mi Horario', style: TextStyle( color: Colors.indigo[300], fontSize: 20 )),
-            trailing: Icon(Icons.schedule_rounded, color: Colors.indigo[300], size: 27)
-          ),
-          const SizedBox(height: 8),
-          ListTile(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 20),
-            onTap: () => homeController.confirmationDialog(context),
-            title: Text('Cerrar Sesión', style: TextStyle( color: Colors.indigo[300], fontSize: 20 )),
-            trailing: Icon(Icons.logout_rounded, color: Colors.indigo[300], size: 27)
-          ),
-        ]
-      ),
-    );
-
   }
 
   Widget _buttonAssistant(BuildContext context) {
@@ -334,5 +236,138 @@ class _HomePageState extends State<HomePage> {
       ),
     );
 
+  }
+}
+
+class HomePage extends GetView<MyDrawerController> {
+  @override
+  Widget build(BuildContext context) {
+    return GetBuilder<MyDrawerController>(
+      builder: (_) => ZoomDrawer(
+        controller: _.zoomDrawerController,
+        style: DrawerStyle.defaultStyle,
+        menuScreen: MenuPage(), 
+        mainScreen: MyHomePage(),
+        borderRadius: 30.0,
+        showShadow: true,
+        angle: 0.0,
+        menuBackgroundColor: const Color.fromARGB(255, 255, 255, 255),
+        drawerShadowsBackgroundColor: Colors.grey,
+        slideWidth: MediaQuery.of(context).size.width * 0.65,
+      ),
+    );
+  }
+}
+
+class MenuPage extends GetView<MyDrawerController> {
+
+  HomeController homeController = Get.put(HomeController());
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: const Color.fromARGB(255, 255, 255, 255),
+      child: ListView(
+        physics: const BouncingScrollPhysics(),
+        padding: EdgeInsets.zero,
+        children: [
+          DrawerHeader(
+            padding: const EdgeInsets.fromLTRB(15, 15, 0, 0),
+            child: ListView(
+              // mainAxisSize: MainAxisSize.max,
+              physics: const BouncingScrollPhysics(),
+              children: [
+                Container(
+                  alignment: Alignment.topLeft,
+                  height: 60,
+                  margin: const EdgeInsets.only(top: 10),
+                  child: AspectRatio(
+                    aspectRatio: 1/1,
+                    child: ClipOval(
+                      child: GetBuilder<HomeController>(
+                        builder: (value) => FadeInImage(
+                          fit: BoxFit.cover,
+                          fadeInDuration: const Duration(milliseconds: 50),
+                          placeholder: const AssetImage('assets/img/no-image.png'),
+                          image: homeController.userSession.image != null
+                            ? NetworkImage(homeController.userSession.image!)
+                            : const AssetImage('assets/img/user_profile_2.png') as ImageProvider,
+                        )
+                      )
+                    ),
+                  )
+                  
+                ),
+                const SizedBox(height: 15),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      homeController.userSession.name ?? 'Moises', 
+                      style: TextStyle(
+                        fontSize: 24.0, 
+                        color: Colors.indigo[300], 
+                        fontWeight: FontWeight.bold 
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis, 
+                    ),
+                    // const SizedBox(height: 5),
+                    Text(
+                      homeController.userSession.email ?? 'Correo', 
+                      style: TextStyle(
+                        fontSize: 14.0, 
+                        color: Colors.indigo[200], 
+                        fontWeight: FontWeight.bold 
+                      ),
+                      maxLines: 2, 
+                      overflow: TextOverflow.ellipsis, 
+                    ),
+                  ],
+                ),
+              ],
+            )
+          ),
+          Divider( 
+            thickness: 1.4,
+            indent: MediaQuery.of(context).size.width * 0.06,
+            endIndent: MediaQuery.of(context).size.width * 0.06,
+            color: Colors.indigo[300],
+          ),
+          const SizedBox(height:25),
+          ListTile(
+            contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+            onTap: () => homeController.goToTaskPage(),
+            title: Text('Mis Tareas', style: TextStyle( color: Colors.indigo[300], fontSize: 16 )),
+            trailing: Icon(Icons.task, color: Colors.indigo[300], size: 27)
+          ),
+          const SizedBox(height: 15),
+          ListTile(
+            contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+            onTap: () => homeController.goToSchedulePage(),
+            title: Text('Mi Horario', style: TextStyle( color: Colors.indigo[300], fontSize: 16 )),
+            trailing: Icon(Icons.schedule_rounded, color: Colors.indigo[300], size: 27)
+          ),
+          const SizedBox(height: 15),
+          ListTile(
+            contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+            onTap: () => homeController.confirmationDialog(context),
+            title: Text('Cerrar Sesión', style: TextStyle( color: Colors.indigo[300], fontSize: 16 )),
+            trailing: Icon(Icons.logout_rounded, color: Colors.indigo[300], size: 27)
+          ),
+        ]
+      ),
+    );
+  }
+
+}
+
+class MyDrawerController extends GetxController {
+  final zoomDrawerController = ZoomDrawerController();
+
+  void toggleDrawer() {
+    print("Toggle drawer");
+    zoomDrawerController.toggle?.call();
+    update();
   }
 }

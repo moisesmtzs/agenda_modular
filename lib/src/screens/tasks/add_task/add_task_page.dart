@@ -58,7 +58,7 @@ class AddTaskPage extends StatelessWidget{
         child: Column(
           children: [
             TextFormField(
-              // controller: _con.nameController,
+              controller: _controller.nameController,
               cursorRadius: const Radius.circular(8.0),
               maxLength: 180,
               decoration: InputDecorations.authInputDecoration(
@@ -94,7 +94,7 @@ class AddTaskPage extends StatelessWidget{
         child: Column(
           children: [
             TextFormField(
-              // controller: _con.descController,
+              controller: _controller.descriptionController,
               maxLines: 3,
               maxLength: 255,
               textAlign: TextAlign.justify,
@@ -153,15 +153,15 @@ class AddTaskPage extends StatelessWidget{
         child: Column(
           children: [
             TextFormField(
-              // controller: _con.descController,
-              maxLines: 3,
-              maxLength: 255,
+              controller: _controller.subjectController,
+              maxLines: 2,
+              maxLength: 120,
               textAlign: TextAlign.justify,
               cursorRadius: const Radius.circular(8.0),
               decoration: InputDecorations.authInputDecoration(
                 hintText: "Introducción a la computación",
                 labelText: "Materia",
-                suffixIcon: Icons.description_outlined
+                suffixIcon: Icons.class_outlined
               ),
               validator: ( value ){
                 String pattern = r"\b([a-zA-ZÀ-ÿ][-,a-z. ']+[ ]*)+";
@@ -191,15 +191,13 @@ class AddTaskPage extends StatelessWidget{
         child: Column(
           children: [
             TextFormField(
-              // controller: _con.descController,
-              maxLines: 3,
-              maxLength: 255,
+              controller: _controller.typeController,
               textAlign: TextAlign.justify,
               cursorRadius: const Radius.circular(8.0),
               decoration: InputDecorations.authInputDecoration(
                 hintText: "Examen",
                 labelText: "Tipo",
-                suffixIcon: Icons.description_outlined
+                suffixIcon: Icons.assignment_late_outlined
               ),
               validator: ( value ){
                 String pattern = r"\b([a-zA-ZÀ-ÿ][-,a-z. ']+[ ]*)+";
@@ -237,8 +235,5 @@ class AddTaskPage extends StatelessWidget{
     );
 
   }
-
-
-
 
 }
