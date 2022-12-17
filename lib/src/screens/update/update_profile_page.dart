@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:agenda_app/src/ui/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
@@ -28,7 +29,7 @@ class UpdateProfilePage extends StatelessWidget {
         children: [
           _fondoapp(),
           SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
+            physics: ClampingScrollPhysics(),
             keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
               child: Column(
                 children: [
@@ -185,10 +186,10 @@ class UpdateProfilePage extends StatelessWidget {
                 cursorRadius: Radius.circular(8.0),
                 autocorrect: false,
                 keyboardType: TextInputType.name,
-                decoration: InputDecorations.authInputDecoration(
+                decoration: const InputDecoration(
                   hintText: "Will",
                   labelText: "Nombre",
-                  prefixIcon: Icons.perm_identity_sharp
+                  prefixIcon: Icon(Icons.perm_identity_sharp)
                 ),
                 validator: ( value ){
                   String pattern = r"\b([a-zA-ZÀ-ÿ][-,a-z. ']+[ ]*)+";
@@ -203,10 +204,10 @@ class UpdateProfilePage extends StatelessWidget {
                 cursorRadius: const Radius.circular(8.0),
                 autocorrect: false,
                 keyboardType: TextInputType.name,
-                decoration: InputDecorations.authInputDecoration(
+                decoration: const InputDecoration(
                   hintText: "Smith",
                   labelText: "Apellido",
-                  prefixIcon: Icons.co_present_outlined
+                  prefixIcon: Icon(Icons.co_present_outlined)
                 ),
                 validator: ( value ){
                   String pattern = r"\b([a-zA-ZÀ-ÿ][-,a-z. ']+[ ]*)+";
@@ -221,10 +222,10 @@ class UpdateProfilePage extends StatelessWidget {
                 cursorRadius: Radius.circular(8.0),
                 autocorrect: false,
                 keyboardType: TextInputType.phone,
-                decoration: InputDecorations.authInputDecoration(
+                decoration: const InputDecoration(
                   hintText: "5555555555",
                   labelText: "Número de teléfono",
-                  prefixIcon: Icons.call
+                  prefixIcon: Icon(Icons.call)
                 ),
                 validator: ( value ){
                   return ( value != null && value.length == 10 ) 
@@ -236,7 +237,7 @@ class UpdateProfilePage extends StatelessWidget {
               MaterialButton(
                 shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(10) ),
                 disabledColor: Colors.grey,
-                color: Colors.indigo[300],
+                color: AppColors.colors.primary,
                 child: Container(
                   padding: EdgeInsets.symmetric( horizontal: 30, vertical: 15 ),
                   child: updatePageController.isLoading.value
@@ -259,7 +260,7 @@ class UpdateProfilePage extends StatelessWidget {
               MaterialButton(
                 shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(10) ),
                 disabledColor: Colors.grey,
-                color: Colors.red[300],
+                color: AppColors.colors.tertiary,
                 splashColor: Colors.red,
                 child: Container(
                   padding: EdgeInsets.symmetric( horizontal: 20, vertical: 15 ),

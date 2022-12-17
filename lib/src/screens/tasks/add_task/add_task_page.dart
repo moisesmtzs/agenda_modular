@@ -1,3 +1,4 @@
+import 'package:agenda_app/src/ui/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -13,10 +14,8 @@ class AddTaskPage extends StatelessWidget{
     return Hero(
       tag: 'openAddTaskPage',
       child: Scaffold(
-        // backgroundColor: Colors.indigo.shade300,
         appBar: AppBar(
-          title: const Text('Agregar tarea'),
-          backgroundColor: Colors.indigo.shade300,
+          title: const Text('Agregar tarea', style: TextStyle(fontSize: 24)),
           shape: ShapeBorder.lerp(
             RoundedRectangleBorder( borderRadius: BorderRadius.circular(30) ),
             null,
@@ -24,7 +23,7 @@ class AddTaskPage extends StatelessWidget{
           ),
         ),
         body: ListView(
-          physics: const BouncingScrollPhysics(),
+          physics: const ClampingScrollPhysics(),
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           children: [
             const SizedBox(height: 20),
@@ -50,7 +49,7 @@ class AddTaskPage extends StatelessWidget{
       margin: const EdgeInsets.symmetric(horizontal: 25),
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.colors.primaryContainer,
         borderRadius: BorderRadius.circular(15)
       ),
       child: Form(
@@ -61,10 +60,10 @@ class AddTaskPage extends StatelessWidget{
               controller: _controller.nameController,
               cursorRadius: const Radius.circular(8.0),
               maxLength: 180,
-              decoration: InputDecorations.authInputDecoration(
+              decoration: const InputDecoration(
                 hintText: "Hacer maqueta",
                 labelText: "Nombre de la tarea",
-                suffixIcon: Icons.task_outlined
+                suffixIcon: Icon(Icons.task_outlined)
               ),
               validator: ( value ){
                 String pattern = r"\b([a-zA-ZÀ-ÿ][-,a-z. ']+[ ]*)+";
@@ -86,7 +85,7 @@ class AddTaskPage extends StatelessWidget{
       margin: const EdgeInsets.symmetric(horizontal: 25),
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.colors.primaryContainer,
         borderRadius: BorderRadius.circular(15)
       ),
       child: Form(
@@ -99,10 +98,10 @@ class AddTaskPage extends StatelessWidget{
               maxLength: 255,
               textAlign: TextAlign.justify,
               cursorRadius: const Radius.circular(8.0),
-              decoration: InputDecorations.authInputDecoration(
+              decoration: const InputDecoration(
                 hintText: "Maqueta de 25x25",
                 labelText: "Descripción de la tarea",
-                suffixIcon: Icons.description_outlined
+                suffixIcon: Icon(Icons.description_outlined)
               ),
               validator: ( value ){
                 String pattern = r"\b([a-zA-ZÀ-ÿ][-,a-z. ']+[ ]*)+";
@@ -124,14 +123,14 @@ class AddTaskPage extends StatelessWidget{
       margin: const EdgeInsets.symmetric(horizontal: 20),
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.colors.primaryContainer,
         borderRadius: BorderRadius.circular(15) 
       ),
       child: Obx( () =>
         ListTile(
-          title: Text('Fecha de entrega', style: TextStyle( color: Colors.indigo[300], fontSize: 18 ),),
-          subtitle: Text(_controller.convertDateTimeDisplay(_controller.value.value), style: TextStyle( color: Colors.indigo[300] ),),
-          trailing: Icon( Icons.date_range_outlined, color: Colors.indigo.shade300 ),
+          title: const Text('Fecha de entrega', style: TextStyle(  fontSize: 18 ),),
+          subtitle: Text(_controller.convertDateTimeDisplay(_controller.value.value),),
+          trailing: const Icon( Icons.date_range_outlined ),
           onTap: () {
             _controller.showDatePick(context);
           },
@@ -145,7 +144,7 @@ class AddTaskPage extends StatelessWidget{
       margin: const EdgeInsets.symmetric(horizontal: 25),
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.colors.primaryContainer,
         borderRadius: BorderRadius.circular(15)
       ),
       child: Form(
@@ -158,10 +157,10 @@ class AddTaskPage extends StatelessWidget{
               maxLength: 120,
               textAlign: TextAlign.justify,
               cursorRadius: const Radius.circular(8.0),
-              decoration: InputDecorations.authInputDecoration(
+              decoration: const InputDecoration(
                 hintText: "Introducción a la computación",
                 labelText: "Materia",
-                suffixIcon: Icons.class_outlined
+                suffixIcon: Icon(Icons.class_outlined)
               ),
               validator: ( value ){
                 String pattern = r"\b([a-zA-ZÀ-ÿ][-,a-z. ']+[ ]*)+";
@@ -183,7 +182,7 @@ class AddTaskPage extends StatelessWidget{
       margin: const EdgeInsets.symmetric(horizontal: 25),
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.colors.primaryContainer,
         borderRadius: BorderRadius.circular(15)
       ),
       child: Form(
@@ -194,10 +193,10 @@ class AddTaskPage extends StatelessWidget{
               controller: _controller.typeController,
               textAlign: TextAlign.justify,
               cursorRadius: const Radius.circular(8.0),
-              decoration: InputDecorations.authInputDecoration(
+              decoration: const InputDecoration(
                 hintText: "Examen",
                 labelText: "Tipo",
-                suffixIcon: Icons.assignment_late_outlined
+                suffixIcon: Icon(Icons.assignment_late_outlined)
               ),
               validator: ( value ){
                 String pattern = r"\b([a-zA-ZÀ-ÿ][-,a-z. ']+[ ]*)+";
@@ -222,10 +221,10 @@ class AddTaskPage extends StatelessWidget{
       child: MaterialButton(
         shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(15) ),
         disabledColor: Colors.grey,
-        color: Colors.indigo[300],
+        color: AppColors.colors.secondaryContainer,
         child: Container(
           padding: const EdgeInsets.symmetric( horizontal: 30, vertical: 15 ),
-          child: const Text( 'Crear tarea', style: TextStyle( color: Colors.white ) )
+          child: const Text('Crear tarea')
         ),
         onPressed: () {
           _controller.register(context);

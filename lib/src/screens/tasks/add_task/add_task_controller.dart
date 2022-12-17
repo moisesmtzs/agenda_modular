@@ -98,45 +98,45 @@ class AddTaskController extends GetxController {
       initialDate: _selectedDate,
       firstDate: DateTime(2022), 
       lastDate: DateTime(2023),
-      builder: (context, child) {
-        return Theme(
-          data: ThemeData.dark().copyWith(
-            colorScheme: ColorScheme.dark(
-              primary: Colors.indigo.shade200,
-              onPrimary: Colors.white,
-              surface: Colors.indigo.shade300,
-              onSurface: Colors.orange.shade200,
-            ),
-            dialogTheme: const DialogTheme(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(16))
-              )
-            ),
-            dialogBackgroundColor:Colors.indigo.shade300,
-            textButtonTheme: TextButtonThemeData(
-              style: TextButton.styleFrom(
-                primary: Colors.orange.shade200, 
-                backgroundColor: Colors.black12, 
-                textStyle: TextStyle(
-                  color: Colors.orange.shade200,
-                  fontWeight: FontWeight.normal,
-                  fontSize: 12,
-                  fontFamily: 'Quicksand'
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                  side: const BorderSide(
-                    color: Colors.transparent,
-                    width: 1,
-                    style: BorderStyle.solid
-                  ),
-                )
-              ), 
-            )
-          ),
-          child: child!,
-        );
-      },
+      // builder: (context, child) {
+      //   return Theme(
+      //     data: ThemeData.dark().copyWith(
+      //       colorScheme: ColorScheme.dark(
+      //         primary: Colors.indigo.shade200,
+      //         onPrimary: Colors.white,
+      //         surface: Colors.indigo.shade300,
+      //         onSurface: Colors.orange.shade200,
+      //       ),
+      //       dialogTheme: const DialogTheme(
+      //         shape: RoundedRectangleBorder(
+      //           borderRadius: BorderRadius.all(Radius.circular(16))
+      //         )
+      //       ),
+      //       dialogBackgroundColor:Colors.indigo.shade300,
+      //       textButtonTheme: TextButtonThemeData(
+      //         style: TextButton.styleFrom(
+      //           primary: Colors.orange.shade200, 
+      //           backgroundColor: Colors.black12, 
+      //           textStyle: TextStyle(
+      //             color: Colors.orange.shade200,
+      //             fontWeight: FontWeight.normal,
+      //             fontSize: 12,
+      //             fontFamily: 'Quicksand'
+      //           ),
+      //           shape: RoundedRectangleBorder(
+      //             borderRadius: BorderRadius.circular(16),
+      //             side: const BorderSide(
+      //               color: Colors.transparent,
+      //               width: 1,
+      //               style: BorderStyle.solid
+      //             ),
+      //           )
+      //         ), 
+      //       )
+      //     ),
+      //     child: child!,
+      //   );
+      // },
     );
     if(picked != null && picked != _selectedDate) {
       value.value = picked.toString();

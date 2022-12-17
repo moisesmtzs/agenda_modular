@@ -1,4 +1,3 @@
-import 'package:agenda_app/src/screens/screens.dart';
 import 'package:flutter/material.dart';
 import "dart:io";
 
@@ -8,6 +7,8 @@ import 'package:agenda_app/src/widgets/auth_background.dart';
 import 'package:agenda_app/src/widgets/card_container.dart';
 import 'package:agenda_app/src/ui/input_decoration.dart';
 import 'package:agenda_app/src/screens/registersubject/registersubject_controller.dart';
+import 'package:agenda_app/src/screens/screens.dart';
+import 'package:agenda_app/src/ui/app_colors.dart';
 
 class RegisterSubjectPage extends StatefulWidget {
   @override
@@ -41,39 +42,13 @@ class _RegisterSubjectPageState extends State<RegisterSubjectPage> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-        floatingActionButton: FloatingActionButton(
-            elevation: 0,
-            backgroundColor: const Color.fromARGB(0, 254, 254, 254),
-            child: const Icon(Icons.arrow_back_ios_new_rounded),
-            onPressed: () => Get.back()),
-        floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
-        body: AuthBackground(
-            child: SingleChildScrollView(
-                keyboardDismissBehavior:
-                    ScrollViewKeyboardDismissBehavior.onDrag,
-                physics: const BouncingScrollPhysics(),
-                child: Column(
-                  children: [
-                    SizedBox(height: MediaQuery.of(context).size.height * 0.25),
-                    CardContainer(
-                        child: Column(
-                      children: [
-                        const SizedBox(height: 10),
-                        Text('Crear materia',
-                            style: Theme.of(context).textTheme.headline4),
-                        const SizedBox(height: 30),
-                        _registerForm(context)
-                      ],
-                    )),
-                    SizedBox(height: MediaQuery.of(context).size.height * 0.03),
-                  ],
-                ))));
-  }
-
-  Widget _registerForm(BuildContext context) {
-    return Form(
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        child: Column(children: [
+      appBar: AppBar(
+        title: const Text('Crear materia', style: TextStyle(fontSize: 24),),
+      ),
+      body: ListView(
+        physics: const ClampingScrollPhysics(),
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+        children: [
           _textName(),
           _textCodeSubject(),
           _textProfesorsName(),
@@ -82,180 +57,275 @@ class _RegisterSubjectPageState extends State<RegisterSubjectPage> {
           _days(),
           _clasroom(),
           _building(),
-          const SizedBox(
-            height: 25,
-          ),
-          _registerButton(),
-        ]));
+        ],
+      ),
+      bottomNavigationBar: _registerButton(),
+    );
   }
-
   //------------------CLASS---------------------------------------------
   Widget _textName() {
-    return TextFormField(
-        controller: classController.nameClassController, ////<----
-        cursorRadius: const Radius.circular(8.0),
-        autocorrect: false,
-        keyboardType: TextInputType.name,
-        decoration: InputDecorations.authInputDecoration(
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: AppColors.colors.primaryContainer,
+        borderRadius: BorderRadius.circular(15)
+      ),
+      child: Form(
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        child: TextFormField(
+          controller: classController.nameClassController, ////<----
+          cursorRadius: const Radius.circular(8.0),
+          autocorrect: false,
+          keyboardType: TextInputType.name,
+          decoration: const InputDecoration(
             hintText: "Matematicas",
             labelText: "Nombre Materia",
-            prefixIcon: Icons.perm_identity_sharp),
-        validator: (value) {
-          String pattern = r"\b([a-zA-ZÀ-ÿ][-,a-z. ']+[ ]*)+";
-          RegExp nameregExp = RegExp(pattern);
-          return nameregExp.hasMatch(value ?? '') ? null : 'Nombre no válido';
-        });
+            prefixIcon: Icon(Icons.perm_identity_sharp)
+          ),
+          validator: (value) {
+            String pattern = r"\b([a-zA-ZÀ-ÿ][-,a-z. ']+[ ]*)+";
+            RegExp nameregExp = RegExp(pattern);
+            return nameregExp.hasMatch(value ?? '') ? null : 'Nombre no válido';
+          }
+        ),
+      ),
+    );
   }
 
   Widget _textCodeSubject() {
-    return TextFormField(
-        controller: classController.codeClassController,
-        cursorRadius: const Radius.circular(8.0),
-        autocorrect: false,
-        keyboardType: TextInputType.number,
-        decoration: InputDecorations.authInputDecoration(
-            hintText: "5909",
-            labelText: "Codigo Materia",
-            prefixIcon: Icons.numbers),
-        validator: (value) {
-          String pattern = r"\b[0-9]";
-          RegExp nameregExp = RegExp(pattern);
-          return nameregExp.hasMatch(value ?? '') ? null : 'Codigo no válido';
-        });
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: AppColors.colors.primaryContainer,
+        borderRadius: BorderRadius.circular(15)
+      ),
+      child: Form(
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        child: TextFormField(
+          controller: classController.codeClassController,
+          cursorRadius: const Radius.circular(8.0),
+          autocorrect: false,
+          keyboardType: TextInputType.number,
+          decoration: const InputDecoration(
+              hintText: "5909",
+              labelText: "Codigo Materia",
+              prefixIcon: Icon(Icons.numbers)
+            ),
+          validator: (value) {
+            String pattern = r"\b[0-9]";
+            RegExp nameregExp = RegExp(pattern);
+            return nameregExp.hasMatch(value ?? '') ? null : 'Codigo no válido';
+          }
+        ),
+      ),
+    );
   }
 
   Widget _textProfesorsName() {
-    return TextFormField(
-        controller: classController.profesorClassController,
-        cursorRadius: const Radius.circular(8.0),
-        autocorrect: false,
-        keyboardType: TextInputType.name,
-        decoration: InputDecorations.authInputDecoration(
-            hintText: "Marcos",
-            labelText: "Nombre Profesor",
-            prefixIcon: Icons.perm_identity_sharp),
-        validator: (value) {
-          String pattern = r"\b([a-zA-ZÀ-ÿ][-,a-z. ']+[ ]*)+";
-          RegExp nameregExp = RegExp(pattern);
-          return nameregExp.hasMatch(value ?? '') ? null : 'Nombre no válido';
-        });
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: AppColors.colors.primaryContainer,
+        borderRadius: BorderRadius.circular(15)
+      ),
+      child: Form(
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        child: TextFormField(
+          controller: classController.profesorClassController,
+          cursorRadius: const Radius.circular(8.0),
+          autocorrect: false,
+          keyboardType: TextInputType.name,
+          decoration: const InputDecoration(
+              hintText: "Marcos",
+              labelText: "Nombre Profesor",
+              prefixIcon: Icon(Icons.perm_identity_sharp)
+            ),
+          validator: (value) {
+            String pattern = r"\b([a-zA-ZÀ-ÿ][-,a-z. ']+[ ]*)+";
+            RegExp nameregExp = RegExp(pattern);
+            return nameregExp.hasMatch(value ?? '') ? null : 'Nombre no válido';
+          }
+        ),
+      ),
+    );
   }
 
   //------------------------SCHEDULE-----------------------------------
   Widget _begin() {
-    return DropdownButton(
-      hint: Text("Hora de Inicio"),
-      alignment: Alignment.topLeft,
-      style: const TextStyle(color: Colors.indigo),
-      value: scheduleController.begineController,
-      icon: const Icon(
-        Icons.keyboard_arrow_down,
-        color: Colors.indigo,
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 45, vertical: 15),
+      padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 10),
+      decoration: BoxDecoration(
+        color: AppColors.colors.primaryContainer,
+        borderRadius: BorderRadius.circular(15)
       ),
-      items: items
-          .map((String hora) => DropdownMenuItem<String>(
-                value: hora,
-                child: Text(hora),
-              ))
-          .toList(),
-      onChanged: (option) {
-        setState(() {
-          scheduleController.begineController = option.toString();
-        });
-      },
+      child: DropdownButton(
+        dropdownColor: AppColors.colors.onSecondary,
+        borderRadius: BorderRadius.circular(16),
+        alignment: Alignment.center,
+        menuMaxHeight: 400,
+        icon: const Icon(Icons.keyboard_arrow_down),
+        iconSize: 30,
+        hint: const Text("Hora de Inicio"),
+        value: scheduleController.begineController,
+        items: items
+            .map((String hora) => DropdownMenuItem<String>(
+                  value: hora,
+                  child: Text(hora),
+                ))
+            .toList(),
+        onChanged: (option) {
+          setState(() {
+            scheduleController.begineController = option.toString();
+          });
+        },
+      ),
     );
   }
 
   Widget _end() {
-    return DropdownButton(
-      hint: Text("Hora de Fin"),
-      alignment: Alignment.topLeft,
-      style: const TextStyle(color: Colors.indigo),
-      value: scheduleController.endController,
-      icon: const Icon(
-        Icons.keyboard_arrow_down,
-        color: Colors.indigo,
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 45, vertical: 15),
+      padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 10),
+      decoration: BoxDecoration(
+        color: AppColors.colors.primaryContainer,
+        borderRadius: BorderRadius.circular(15)
       ),
-      items: items
-          .map((String hora) => DropdownMenuItem<String>(
-                value: hora,
-                child: Text(hora),
-              ))
-          .toList(),
-      onChanged: (option) {
-        setState(() {
-          scheduleController.endController = option.toString();
-        });
-      },
+      child: DropdownButton(
+        dropdownColor: AppColors.colors.onSecondary,
+        borderRadius: BorderRadius.circular(16),
+        alignment: Alignment.center,
+        menuMaxHeight: 400,
+        icon: const Icon(Icons.keyboard_arrow_down),
+        iconSize: 30,
+        hint: const Text("Hora de Fin"),
+        value: scheduleController.endController,
+        items: items
+            .map((String hora) => DropdownMenuItem<String>(
+                  value: hora,
+                  child: Text(hora),
+                ))
+            .toList(),
+        onChanged: (option) {
+          setState(() {
+            scheduleController.endController = option.toString();
+          });
+        },
+      ),
     );
   }
 
   Widget _days() {
     //  l  m i j v s
     //MODIFICAR------------------
-    return TextFormField(
-        controller: scheduleController.daysController,
-        cursorRadius: const Radius.circular(8.0),
-        autocorrect: false,
-        keyboardType: TextInputType.text,
-        decoration: InputDecorations.authInputDecoration(
-            hintText: "l m i j v s",
-            labelText: "Dias",
-            prefixIcon: Icons.calendar_month),
-        validator: (value) {
-          String pattern =
-              r"^\s*([A-Za-z]{1,}([\.,] |[-']| ))+[A-Za-z]+\.?\s*$";
-          RegExp nameregExp = RegExp(pattern);
-          return nameregExp.hasMatch(value ?? '') ? null : 'Hora no válido';
-        });
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: AppColors.colors.primaryContainer,
+        borderRadius: BorderRadius.circular(15)
+      ),
+      child: Form(
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        child: TextFormField(
+          controller: scheduleController.daysController,
+          cursorRadius: const Radius.circular(8.0),
+          autocorrect: false,
+          keyboardType: TextInputType.text,
+          decoration: const InputDecoration(
+              hintText: "l m i j v s",
+              labelText: "Dias",
+              prefixIcon: Icon(Icons.calendar_month)
+            ),
+          validator: (value) {
+            String pattern =
+                r"^\s*([A-Za-z]{1,}([\.,] |[-']| ))+[A-Za-z]+\.?\s*$";
+            RegExp nameregExp = RegExp(pattern);
+            return nameregExp.hasMatch(value ?? '') ? null : 'Hora no válido';
+          }
+        ),
+      ),
+    );
   }
 
   Widget _clasroom() {
-    return TextFormField(
-        controller: scheduleController.clasroomController,
-        cursorRadius: const Radius.circular(8.0),
-        autocorrect: false,
-        keyboardType: TextInputType.number,
-        decoration: InputDecorations.authInputDecoration(
-            hintText: "8",
-            labelText: "Numero de Salon",
-            prefixIcon: Icons.numbers),
-        validator: (value) {
-          String pattern = r"\b[0-9]";
-          RegExp nameregExp = RegExp(pattern);
-          return nameregExp.hasMatch(value ?? '') ? null : 'Nombre no válido';
-        });
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: AppColors.colors.primaryContainer,
+        borderRadius: BorderRadius.circular(15)
+      ),
+      child: Form(
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        child: TextFormField(
+          controller: scheduleController.clasroomController,
+          cursorRadius: const Radius.circular(8.0),
+          autocorrect: false,
+          keyboardType: TextInputType.number,
+          decoration: const InputDecoration(
+              hintText: "8",
+              labelText: "Numero de Salon",
+              prefixIcon: Icon(Icons.numbers)
+            ),
+          validator: (value) {
+            String pattern = r"\b[0-9]";
+            RegExp nameregExp = RegExp(pattern);
+            return nameregExp.hasMatch(value ?? '') ? null : 'Nombre no válido';
+          }
+        ),
+      ),
+    );
   }
 
   Widget _building() {
-    return TextFormField(
-        controller: scheduleController.buildingController,
-        cursorRadius: const Radius.circular(8.0),
-        autocorrect: false,
-        keyboardType: TextInputType.text,
-        decoration: InputDecorations.authInputDecoration(
-            hintText: "A", labelText: "Edificio", prefixIcon: Icons.abc),
-        validator: (value) {
-          String pattern = r"\b[a-zA-Z]";
-          RegExp nameregExp = RegExp(pattern);
-          return nameregExp.hasMatch(value ?? '') ? null : 'Nombre no válido';
-        });
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: AppColors.colors.primaryContainer,
+        borderRadius: BorderRadius.circular(15)
+      ),
+      child: Form(
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        child: TextFormField(
+          controller: scheduleController.buildingController,
+          cursorRadius: const Radius.circular(8.0),
+          autocorrect: false,
+          keyboardType: TextInputType.text,
+          decoration: const InputDecoration(
+              hintText: "A", labelText: "Edificio", prefixIcon: Icon(Icons.abc)
+          ),
+          validator: (value) {
+            String pattern = r"\b[a-zA-Z]";
+            RegExp nameregExp = RegExp(pattern);
+            return nameregExp.hasMatch(value ?? '') ? null : 'Nombre no válido';
+          }
+        ),
+      ),
+    );
   }
 
   //-------------------------------------------------------------------------------
   Widget _registerButton() {
     return Container(
       width: double.infinity,
-      margin: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-      child: ElevatedButton(
+      height: 50,
+      margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+      child: MaterialButton(
+        shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(15) ),
+        color: AppColors.colors.secondaryContainer,
         //onPressed: () => scheduleController.voidschedule(),
         onPressed: () {
           classController.voidClass();
           scheduleController.voidschedule();
         },
-        child: Text(
+        child: const Text(
           'Registrar Materia',
-          style: TextStyle(color: Colors.indigo),
+          // style: TextStyle(color: Colors.indigo),
         ),
       ),
     );

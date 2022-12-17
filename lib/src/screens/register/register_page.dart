@@ -18,14 +18,14 @@ class RegisterPage extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         elevation: 0,
         backgroundColor: const Color.fromARGB(0, 254, 254, 254),
-        child: const Icon(Icons.arrow_back_ios_new_rounded),
+        child: const Icon(Icons.arrow_back_ios_new_rounded, color: Color(0xFFFFFFFF),),
         onPressed: () => Get.back()
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
       body: AuthBackground(
         child: SingleChildScrollView(
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-          physics: const BouncingScrollPhysics(),
+          physics: const ClampingScrollPhysics(),
           child: Column(
             children: [
               SizedBox(height: MediaQuery.of(context).size.height * 0.25),

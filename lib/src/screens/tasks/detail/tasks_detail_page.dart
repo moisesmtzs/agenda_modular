@@ -15,14 +15,14 @@ class TaskDetailPage extends StatelessWidget {
       height: MediaQuery.of(context).size.height * 0.4,
       margin: const EdgeInsets.only(top: 20, bottom: 40, left: 30, right: 30),
       child: ListView(
-        physics: const BouncingScrollPhysics(),
+        physics: const ClampingScrollPhysics(),
         children: [
           Text(
             task.name ?? '', 
-            style: const TextStyle( fontSize: 20, fontWeight: FontWeight.bold ),
+            style: const TextStyle( fontSize: 30, fontWeight: FontWeight.bold ),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 30),
+          const SizedBox(height: 40),
           Text(
             task.description ?? '',
             style: const TextStyle( fontSize: 16 ),

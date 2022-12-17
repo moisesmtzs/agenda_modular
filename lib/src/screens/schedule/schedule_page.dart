@@ -9,13 +9,12 @@ class SchedulePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.indigo[300],
-        title: const Text('Mi Horario'),
+        title: const Text('Mi Horario', style: TextStyle(fontSize: 24),),
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
+        label: const Text('Agregar horario'),
         onPressed: () => registerSubjectController.goToRegisterSubject(),
-        backgroundColor: Colors.indigo[300],
-        child: const Icon(Icons.add_circle),
+        icon: const Icon(Icons.add_circle),
       ),
     );
   }

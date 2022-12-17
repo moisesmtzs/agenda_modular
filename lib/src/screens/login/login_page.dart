@@ -17,7 +17,7 @@ class LoginPage extends StatelessWidget {
       body: AuthBackground(
         child: SingleChildScrollView(
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-          physics: BouncingScrollPhysics(),
+          physics: ClampingScrollPhysics(),
           child: Column(
             children: [
               SizedBox(height: MediaQuery.of(context).size.height * 0.3),

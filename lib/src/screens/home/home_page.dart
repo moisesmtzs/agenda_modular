@@ -62,7 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
         children: [
           _fondoapp(),
           SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
+            physics: const ClampingScrollPhysics(),
             child: _buttonAssistant(context)
           ),
         ]
@@ -268,14 +268,14 @@ class MenuPage extends GetView<MyDrawerController> {
     return Container(
       color: const Color.fromARGB(255, 255, 255, 255),
       child: ListView(
-        physics: const BouncingScrollPhysics(),
+        physics: const ClampingScrollPhysics(),
         padding: EdgeInsets.zero,
         children: [
           DrawerHeader(
             padding: const EdgeInsets.fromLTRB(15, 15, 0, 0),
             child: ListView(
               // mainAxisSize: MainAxisSize.max,
-              physics: const BouncingScrollPhysics(),
+              physics: const ClampingScrollPhysics(),
               children: [
                 Container(
                   alignment: Alignment.topLeft,

@@ -1,10 +1,11 @@
-import 'package:agenda_app/src/models/task.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import 'package:agenda_app/src/screens/tasks/task_controller.dart';
-import 'package:agenda_app/src/widgets/no_task_widget.dart';
 import 'package:intl/intl.dart';
+
+import 'package:agenda_app/src/models/task.dart';
+import 'package:agenda_app/src/screens/tasks/task_controller.dart';
+import 'package:agenda_app/src/ui/app_colors.dart';
+import 'package:agenda_app/src/widgets/no_task_widget.dart';
 
 class TaskPage extends StatelessWidget {
 
@@ -19,17 +20,16 @@ class TaskPage extends StatelessWidget {
             preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * 0.15),
             child: AppBar(
               toolbarHeight: 120,
-              backgroundColor: Colors.indigo[300],
-              title: const Text('Mis Tareas'),
+              title: const Text('Mis Tareas', style: TextStyle(fontSize: 24)),
               shape: ShapeBorder.lerp(
                 RoundedRectangleBorder( borderRadius: BorderRadius.circular(30) ),
                 null,
                 0
               ),
               bottom: TabBar(
-                indicatorColor: const Color.fromARGB(255, 159, 169, 230),
-                labelColor: const Color.fromARGB(255, 159, 169, 230),
-                unselectedLabelColor: Colors.grey[200],
+                indicatorColor: AppColors.colors.inversePrimary,
+                labelColor: AppColors.colors.inversePrimary,
+                unselectedLabelColor: AppColors.colors.onSecondaryContainer,
                 isScrollable: true,
                 tabs: List<Widget>.generate(_taskController.status.length, (index){
                   return Tab(
@@ -40,7 +40,7 @@ class TaskPage extends StatelessWidget {
             ),
           ),
           body: TabBarView(
-            physics: const BouncingScrollPhysics(),
+            physics: const ClampingScrollPhysics(),
             children: _taskController.status.map((String status) {
               return FutureBuilder(
                 future: _taskController.getTasks(status),
@@ -49,7 +49,7 @@ class TaskPage extends StatelessWidget {
                     if ( snapshot.data!.isNotEmpty ) {
                       return ListView.builder(
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                        physics: const BouncingScrollPhysics(),
+                        physics: const ClampingScrollPhysics(),
                         itemCount: snapshot.data?.length ?? 0,
                         itemBuilder: (_, index) {
                           return _taskCard(snapshot.data![index], context);
@@ -67,7 +67,6 @@ class TaskPage extends StatelessWidget {
           ),
           floatingActionButton: FloatingActionButton.extended(
             heroTag: 'openAddTaskPage',
-            backgroundColor: Colors.indigo[300],
             elevation: 15,
             shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(16.0))),
             icon: const Icon(Icons.add),
@@ -126,7 +125,7 @@ class TaskPage extends StatelessWidget {
   }
 
   BoxDecoration _cardBorders() => BoxDecoration(
-    color: Colors.white,
+    color: AppColors.colors.surface,
     borderRadius: BorderRadius.circular(25),
     boxShadow: const [
       BoxShadow(
@@ -156,21 +155,24 @@ class TaskPage extends StatelessWidget {
   Widget _taskChecked(String status) {
 
     return Obx( () =>
-      Checkbox(
-        overlayColor: MaterialStateProperty.all(Colors.indigo),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(5)
+      Transform.scale(
+        scale: 1.2,
+        child: Checkbox(
+          overlayColor: MaterialStateProperty.all(AppColors.colors.tertiaryContainer),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5)
+          ),
+          side: MaterialStateBorderSide.resolveWith(
+            (states) => BorderSide(width: 1.5, color: AppColors.colors.onTertiaryContainer),
+          ),
+          activeColor: AppColors.colors.onTertiaryContainer,
+          checkColor: AppColors.colors.tertiaryContainer,
+          value: _taskController.isSelected.value,
+          onChanged: (value) {
+            _taskController.isSelected.value = !_taskController.isSelected.value;
+          }
+          
         ),
-        side: MaterialStateBorderSide.resolveWith(
-          (states) => BorderSide(width: 2.0, color: Colors.orange.shade300),
-        ),
-        activeColor: Colors.orange[300],
-        checkColor: Colors.indigo[700],
-        value: _taskController.isSelected.value,
-        onChanged: (value) {
-          _taskController.isSelected.value = !_taskController.isSelected.value;
-        }
-        
       ),
     );
 
@@ -193,7 +195,7 @@ class TaskPage extends StatelessWidget {
       height: 30,
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        color: Colors.indigo[600],
+        color: AppColors.colors.inversePrimary,
         borderRadius: const BorderRadius.only( topRight: Radius.circular(25), bottomLeft: Radius.circular(25))
       )
     );

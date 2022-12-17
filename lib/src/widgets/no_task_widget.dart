@@ -16,7 +16,7 @@ class NoTaskWidget extends StatelessWidget {
         children: [
           Image.asset('assets/img/no_tasks.png', height: 100),
           const SizedBox(height: 10),
-          Text(text ?? '', style: TextStyle( fontSize: 18, fontWeight: FontWeight.w600, color: Colors.indigo[300] ))
+          Text(text ?? '', style: const TextStyle( fontSize: 18, fontWeight: FontWeight.w600 ))
         ],
       ),
 
