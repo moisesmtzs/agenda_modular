@@ -35,14 +35,14 @@ class HomeController extends GetxController {
 
   void confirmationDialog( BuildContext context ) {
 
-    Widget cancelButton = ElevatedButton(
+    Widget cancelButton = TextButton(
       onPressed: () {
         Get.back();
       },
       child: const Text('Cancelar')
     );
 
-    Widget confirmButton = ElevatedButton(
+    Widget confirmButton = TextButton(
       onPressed: () {
         logOut();
       },
@@ -51,7 +51,8 @@ class HomeController extends GetxController {
 
     AlertDialog alertDialog = AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      title: const Text('¿Estás seguro de que quieres cerrar sesión?'),
+      title: const Text('Cerrar sesión'),
+      content: const Text('¿Estás seguro de que quieres cerrar sesión?'),
       actions: [
         cancelButton,
         confirmButton

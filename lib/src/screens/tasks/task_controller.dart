@@ -6,7 +6,7 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:agenda_app/src/models/task.dart';
 import 'package:agenda_app/src/models/user.dart';
 import 'package:agenda_app/src/providers/tasksProvider.dart';
-import 'package:agenda_app/src/screens/tasks/detail/tasks_detail_page.dart';
+import 'package:agenda_app/src/screens/tasks/detail/task_detail_page.dart';
 import 'package:agenda_app/src/ui/app_colors.dart';
 
 class TaskController extends GetxController {

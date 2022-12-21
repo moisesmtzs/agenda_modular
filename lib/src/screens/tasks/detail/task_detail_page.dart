@@ -1,8 +1,14 @@
-import 'package:agenda_app/src/models/task.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
+import 'package:agenda_app/src/models/task.dart';
+import 'package:agenda_app/src/screens/tasks/detail/task_detail_controller.dart';
+import 'package:agenda_app/src/ui/app_colors.dart';
+
 class TaskDetailPage extends StatelessWidget {
+
+  TaskDetailController taskDetailController = Get.put(TaskDetailController());
 
   late Task task;
   late var datetime = DateFormat("yyyy-MM-dd").format(DateTime.parse(task.deliveryDate ?? '') );
@@ -17,6 +23,25 @@ class TaskDetailPage extends StatelessWidget {
       child: ListView(
         physics: const ClampingScrollPhysics(),
         children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.edit_outlined, size: 30),
+                color: AppColors.colors.primary,
+                onPressed: () {},
+              ),
+              IconButton(
+                icon: const Icon(Icons.delete_outline_rounded, size: 30),
+                color: AppColors.colors.primary,
+                onPressed: () {
+                  taskDetailController.confirmationDialog(context, task.id ?? '0');
+                },
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
           Text(
             task.name ?? '', 
             style: const TextStyle( fontSize: 30, fontWeight: FontWeight.bold ),

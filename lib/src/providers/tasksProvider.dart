@@ -51,4 +51,18 @@ class TasksProvider extends GetConnect {
 
   }
 
+  Future<ResponseApi?> deleteTask( String? id ) async {
+
+    Response response = await delete(
+      '$url/delete/$id',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': userSession.sessionToken ?? ''
+      }
+    );
+    ResponseApi responseApi = ResponseApi.fromJson(response.body);
+    return responseApi;
+    
+  }
+
 }

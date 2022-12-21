@@ -1,4 +1,3 @@
-import 'package:agenda_app/src/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -6,7 +5,9 @@ import 'package:intl/intl.dart';
 
 import 'package:agenda_app/src/models/response_api.dart';
 import 'package:agenda_app/src/models/task.dart';
+import 'package:agenda_app/src/models/user.dart';
 import 'package:agenda_app/src/providers/tasksProvider.dart';
+import 'package:agenda_app/src/ui/app_colors.dart';
 
 class AddTaskController extends GetxController {
 
@@ -54,8 +55,8 @@ class AddTaskController extends GetxController {
         Get.snackbar(
           'Datos no válidos',
           responseApi?.message ?? '',
-          backgroundColor: Colors.red[200],
-          colorText: Colors.white
+          backgroundColor: AppColors.colors.errorContainer,
+        colorText: AppColors.colors.onErrorContainer
         );
         // isEnable.value = true;
       }

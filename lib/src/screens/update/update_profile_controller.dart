@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:agenda_app/src/ui/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -52,8 +53,8 @@ class UpdateProfileController extends GetxController {
       Get.snackbar(
         'No se eliminó la cuenta',
         responseApi?.message ?? '',
-        backgroundColor: Colors.red[200],
-        colorText: Colors.white
+        backgroundColor: AppColors.colors.errorContainer,
+        colorText: AppColors.colors.onErrorContainer
       );
       isEnable2.value = true;
     }
@@ -147,14 +148,14 @@ class UpdateProfileController extends GetxController {
 
   void confirmationDialog( BuildContext context ) {
 
-    Widget cancelButton = ElevatedButton(
+    Widget cancelButton = TextButton(
       onPressed: () {
         Get.back();
       },
       child: const Text('Cancelar')
     );
 
-    Widget confirmButton = ElevatedButton(
+    Widget confirmButton = TextButton(
       onPressed: () {
         isEnable2.value = false;
         deleteAccount();
@@ -165,7 +166,8 @@ class UpdateProfileController extends GetxController {
 
     AlertDialog alertDialog = AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      title: const Text('¿Estás seguro de que quieres eliminar la cuenta?'),
+      title: const Text('Eliminar cuenta'),
+      content: const Text('¿Estás seguro de que quieres eliminar la cuenta?'),
       actions: [
         cancelButton,
         confirmButton
@@ -182,7 +184,7 @@ class UpdateProfileController extends GetxController {
   }
 
   void showAlertDialog( BuildContext context ) {
-    Widget galleryButton = ElevatedButton(
+    Widget galleryButton = TextButton(
       // style: ButtonStyle(backgroundColor:MaterialStateProperty.all<Color>(const Color(0xFF303F9F)) ),
       onPressed: () {
         Get.back();
@@ -191,7 +193,7 @@ class UpdateProfileController extends GetxController {
       child: const Text('GALERIA')
     );
 
-    Widget cameraButton = ElevatedButton(
+    Widget cameraButton = TextButton(
       onPressed: () {
         selectImage(ImageSource.camera);
       },
@@ -200,7 +202,8 @@ class UpdateProfileController extends GetxController {
 
     AlertDialog alertDialog = AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      title: const Text('Selecciona tu imagen'),
+      title: const Text('Elegir imagen'),
+      content: const Text('¿De dónde quieres tomar la imagen?'),
       actions: [
         galleryButton,
         cameraButton
