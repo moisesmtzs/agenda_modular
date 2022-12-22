@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:agenda_app/src/models/user.dart';
 import 'package:agenda_app/src/models/response_api.dart';
 import 'package:agenda_app/src/providers/usersProvider.dart';
+import 'package:agenda_app/src/ui/app_colors.dart';
 
 class RegisterController extends GetxController {
 
@@ -54,8 +55,8 @@ class RegisterController extends GetxController {
         Get.snackbar(
           'Datos no válidos',
           responseApi?.message ?? '',
-          backgroundColor: Colors.red[200],
-          colorText: Colors.white
+          backgroundColor: AppColors.colors.errorContainer,
+          colorText: AppColors.colors.onErrorContainer
         );
         isEnable.value = true;
       }

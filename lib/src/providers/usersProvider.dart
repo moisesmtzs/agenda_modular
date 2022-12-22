@@ -9,6 +9,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:agenda_app/src/api/environment.dart';
 import 'package:agenda_app/src/models/response_api.dart';
 import 'package:agenda_app/src/models/user.dart';
+import 'package:agenda_app/src/ui/app_colors.dart';
 
 class UsersProvider extends GetConnect {
 
@@ -45,7 +46,12 @@ class UsersProvider extends GetConnect {
     );
 
     if ( response.body == null ) {
-      Get.snackbar('Error', 'No se ha podido ejecutar la petición');
+      Get.snackbar(
+        'Error', 
+        'No se ha podido ejecutar la petición',
+        backgroundColor: AppColors.colors.errorContainer,
+        colorText: AppColors.colors.onErrorContainer
+      );
     }
 
     ResponseApi responseApi = ResponseApi.fromJson(response.body);
@@ -67,7 +73,12 @@ class UsersProvider extends GetConnect {
     // print("Datos del usuario: ${response.body}");
 
     if ( response.body == null ) {
-      Get.snackbar('Error', 'No se pudo actualizar la información');
+      Get.snackbar(
+        'Error', 
+        'No se pudo actualizar la información',
+        backgroundColor: AppColors.colors.errorContainer,
+        colorText: AppColors.colors.onErrorContainer
+      );
       return ResponseApi();
     }
 

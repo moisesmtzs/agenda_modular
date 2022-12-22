@@ -4,6 +4,7 @@ import 'package:get_storage/get_storage.dart';
 
 import 'package:agenda_app/src/models/response_api.dart';
 import 'package:agenda_app/src/providers/usersProvider.dart';
+import 'package:agenda_app/src/ui/app_colors.dart';
 
 class LoginController extends GetxController {
 
@@ -48,8 +49,8 @@ class LoginController extends GetxController {
         Get.snackbar(
           'Sesión fallida', 
           responseApi?.message ?? '',
-          backgroundColor: Colors.red[300],
-          colorText: Colors.white
+          backgroundColor: AppColors.colors.errorContainer,
+          colorText: AppColors.colors.onErrorContainer
         );
       }
 
