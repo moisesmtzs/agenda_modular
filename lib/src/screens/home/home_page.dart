@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:agenda_app/src/ia/ia_controller.dart';
 import 'package:agenda_app/src/screens/screens.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/config.dart';
@@ -11,6 +12,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
 import 'package:agenda_app/src/screens/home/home_controller.dart';
+
+//IA//
+import 'package:agenda_app/src/ia/text_to_speech.dart';
+import 'package:highlight_text/highlight_text.dart';
+import 'package:avatar_glow/avatar_glow.dart';
+
 // import 'package:agenda_app/src/widgets/card_container.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -22,14 +29,13 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
 
   int _selectedIndex = 0;
+  IA_Controller _ia = IA_Controller();
 
   @override
   Widget build(BuildContext context) {
     
     var scaffoldKey = GlobalKey<ScaffoldState>();
-
     MyDrawerController _zoomController = MyDrawerController();
-
     return Scaffold(
       extendBodyBehindAppBar: true,
       extendBody: true,
@@ -188,9 +194,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 foregroundColor: MaterialStateProperty.all<Color>(Colors.white)
               ),
               // isExtended: true,
-              onPressed: () {}, 
-              child: Icon(Icons.keyboard_voice_sharp, size: MediaQuery.of(context).size.height * 0.04,),
+              onPressed: () => _listen(), 
+              
+              child: Icon(_ia.getListening() ? Icons.mic : Icons.mic_none),
+              
             ),
+            
           ),
           SizedBox(height: MediaQuery.of(context).size.height * 0.02,),
           ClipRRect(
@@ -210,8 +219,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadiusDirectional.circular(8),
                     ),
-                    child: const Text(
-                      'Habla aqui',
+                    child: Text(
+                      _ia.getText(),
                       style: TextStyle(
                         color: Colors.white, 
                         fontSize: 20, 
@@ -221,12 +230,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   ),
                 ),
-                // child: const CardContainer(
-                //   child: Text(
-                //     'Habla aquí Habla aquí Habla aquí Habla aquí Habla aquí', 
-                //     style: TextStyle( fontSize: 20 )
-                //   ),
-                // ),
               ),
             ),
           ),
@@ -236,6 +239,36 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
 
+  }
+
+  //METODO QUE ESCUCHA LA VOZ//
+  void _listen() async {
+    if (!_ia.getListening()) {
+      bool available = await _ia.getSpeech().initialize(
+        onStatus: (val) => print('onStatus: $val'),
+        onError: (val) => print('onError: $val'),
+      );
+
+      if (available) {
+        setState(() => _ia.setListening(true));
+        _ia.getSpeech().listen(
+          onResult: (val) => setState(() {
+            _ia.setText(val.recognizedWords);
+
+            if (val.hasConfidenceRating && val.confidence > 0) {
+              _ia.setConfidence(val.confidence);
+            }
+          }),
+        );
+      }
+    } else {
+      setState(() => _ia.setListening(false));
+      if (_ia.getListening() == false) {
+        _ia.speakRosalind(_ia.getText());
+      }
+      _ia.setText("");
+      _ia.stopListening();
+    }
   }
 }
 
