@@ -8,7 +8,7 @@ class IA_Controller
   stt.SpeechToText _speech = stt.SpeechToText(); //ENCARGADO DE ESCUCHAR//
   bool _isListening = false; //BOOLEANO QUE DETERMIAN EL ESTADO DE LA VOZ//
   String _text = "¿En que puedo ayudarte?"; //MENSAJE DE BIENVENIDA//
-  double _confidence = 1.0; //CONFIABILIDAD//
+  double _confidence = 2.0; //CONFIABILIDAD//
   VoiceRosalind _voice = new VoiceRosalind();
 
   //CONSTRUCTOR//
