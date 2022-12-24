@@ -47,16 +47,21 @@ class AddTaskController extends GetxController {
       ResponseApi? responseApi = await tasksProvider.create(task);
 
       if (responseApi?.success == true) {
-        Get.snackbar(responseApi?.message ?? '', 'La tarea ha sido creada satisfactoriamente');
+        Get.snackbar(
+          responseApi?.message ?? '', 
+          'La tarea ha sido creada satisfactoriamente',
+          backgroundColor: AppColors.colors.secondary,
+          colorText: AppColors.colors.onSecondary
+        );
         Future.delayed(const Duration(milliseconds: 1000), () {
-          Get.offAllNamed('/menu');
+          Get.offAllNamed('/home');
         });
       } else {
         Get.snackbar(
           'Datos no válidos',
           responseApi?.message ?? '',
           backgroundColor: AppColors.colors.errorContainer,
-        colorText: AppColors.colors.onErrorContainer
+          colorText: AppColors.colors.onErrorContainer
         );
         // isEnable.value = true;
       }

@@ -18,11 +18,11 @@ class TaskController extends GetxController {
   List<String> status = <String>['PENDIENTE', 'COMPLETADO'].obs;
 
   var isSelected = false.obs;
-  bool? isUpdated;
+  var taskList = <Task?>[].obs;
 
   void openBottomSheet(BuildContext context, Task task) async {
 
-    isUpdated = await showMaterialModalBottomSheet(
+    await showMaterialModalBottomSheet(
       enableDrag: false,
       backgroundColor: AppColors.colors.secondaryContainer,
       shape: const RoundedRectangleBorder(
@@ -41,5 +41,11 @@ class TaskController extends GetxController {
   Future<List<Task?>> getTasks(String status) async {
     return await _tasksProvider.getByUserAndStatus(userSession.id ?? '0', status);
   }
-
+  
+  // getTasks(String status) async {
+  //     var tasks = await _tasksProvider.getByUserAndStatus(userSession.id ?? '0', status);
+  //     if ( tasks.isNotEmpty ) {
+  //       taskList.value = tasks;
+  //     }
+  // }
 }

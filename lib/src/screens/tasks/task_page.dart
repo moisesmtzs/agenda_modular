@@ -42,6 +42,24 @@ class TaskPage extends StatelessWidget {
           body: TabBarView(
             physics: const ClampingScrollPhysics(),
             children: _taskController.status.map((String status) {
+              // _taskController.getTasks(status);
+              // return Obx(() {
+              //   if ( _taskController.taskList!.isNotEmpty ) {
+              //     ListView.builder(
+              //       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              //       physics: const ClampingScrollPhysics(),
+              //       itemCount: _taskController.taskList?.length,
+              //       itemBuilder: (_, index) {
+              //         var task = _taskController.taskList![index];
+              //         print(task.toString());
+              //         return _taskCard(task, context);
+              //       }
+              //     );
+              //   } else {
+              //     return NoTaskWidget(text: 'No hay tareas agregadas');
+              //   }
+              //   return const Center(child: CircularProgressIndicator());
+              // });
               return FutureBuilder(
                 future: _taskController.getTasks(status),
                 builder: (context, AsyncSnapshot<List<Task?>> snapshot) {
@@ -59,7 +77,7 @@ class TaskPage extends StatelessWidget {
                       return NoTaskWidget(text: 'No hay tareas agregadas');
                     }
                   } else {
-                    return NoTaskWidget(text: 'No hay tareas agregadas');
+                    return const CircularProgressIndicator();
                   }
                 }
               );
