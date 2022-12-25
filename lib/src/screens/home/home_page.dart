@@ -266,7 +266,6 @@ class _MyHomePageState extends State<MyHomePage> {
       if (_ia.getListening() == false) {
         _ia.speakRosalind(_ia.getText());
       }
-      _ia.setText("");
       _ia.stopListening();
     }
   }

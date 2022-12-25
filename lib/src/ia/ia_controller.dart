@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:agenda_app/src/ia/text_to_speech.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
@@ -19,8 +20,59 @@ class IA_Controller
 
   //FUNCION PARA HABLAR//
   void speakRosalind(String TextSpeak) {
-    _voice.speak(TextSpeak);
+    debugPrint("El texto es: "+TextSpeak);
     _text = TextSpeak;
+    //VALIDAR PALABRAS ANTISONANTES//
+    if(badwords())
+    {
+      List<String> words = [];
+      _voice.speak("Gracias por no decir palabras antisonantes");
+      int cont = _text.length;
+      String actualWord="";
+      //SEPARAR POR PALABRAS//
+      for (var i=0; i<cont; i++)
+      {
+        if(_text[i]==" "||i==cont-1)
+        { 
+          words.add(actualWord);
+          actualWord="";
+        }
+        else
+        {
+          actualWord+=_text[i];
+        }
+      }
+      debugPrint("La cantidad de palabras es: "+words.length.toString());
+    }
+    else
+    {
+      _voice.speak("Lo siento, no estan permitidas palabras antisonantes. Intenta con otro comando");
+      _text = "¿En que puedo ayudarte?";
+    }
+  } 
+
+  //ANALIZAR TEXTO//
+  bool badwords() 
+  {
+    int contador = 0, sizeText = _text.length;
+    //CONTAR CUANTOS * EXISTEN//
+    for (var i = 0; i < sizeText; i++)
+    {
+      if(_text[i]=='*')
+      {
+        contador+=1;
+      }
+    }
+    //SI ES MAYOR QUE UNO ES UNA PALABRA ANTISONANTE//
+    if(contador > 0)
+    {
+      return false;
+    }
+    //SINO ES VALIDA//
+    else
+    {
+      return true;
+    }
   }
 
   //FUNCION PARA DEJAR DE ESCUCHAR//
