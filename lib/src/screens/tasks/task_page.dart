@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import 'package:agenda_app/src/models/task.dart';
+import 'package:agenda_app/src/screens/tasks/detail/task_detail_page.dart';
 import 'package:agenda_app/src/screens/tasks/task_controller.dart';
 import 'package:agenda_app/src/ui/app_colors.dart';
 import 'package:agenda_app/src/widgets/no_task_widget.dart';
@@ -70,14 +71,14 @@ class TaskPage extends StatelessWidget {
                         physics: const ClampingScrollPhysics(),
                         itemCount: snapshot.data?.length ?? 0,
                         itemBuilder: (_, index) {
-                          return _taskCard(snapshot.data![index], context);
+                          return _taskCard(snapshot.data![index]!, context);
                         }
                       );
                     } else {
                       return NoTaskWidget(text: 'No hay tareas agregadas');
                     }
                   } else {
-                    return const CircularProgressIndicator();
+                    return NoTaskWidget(text: 'No hay tareas agregadas');
                   }
                 }
               );
@@ -105,7 +106,14 @@ class TaskPage extends StatelessWidget {
 
     return GestureDetector(
       onTap: (){
-        _taskController.openBottomSheet(context, task!);
+        Get.bottomSheet(
+          TaskDetailPage(task: task),
+          enableDrag: false,
+          backgroundColor: AppColors.colors.secondaryContainer,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(topLeft: Radius.circular(10.0), topRight: Radius.circular(10.0)),
+          ),
+        );
       },
       child: Padding(
         padding: const EdgeInsets.symmetric( horizontal: 20 ),
@@ -218,5 +226,4 @@ class TaskPage extends StatelessWidget {
       )
     );
   }
-
 }
