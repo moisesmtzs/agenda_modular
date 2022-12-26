@@ -24,79 +24,70 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  
   final drawerController = ZoomDrawerController();
 
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Agenda App',
-      initialRoute: userSession.id != null ? '/home' : '/',
-      navigatorKey: Get.key,
-      defaultTransition: Transition.rightToLeft,
-      localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-      ],
-      supportedLocales: const [
-        Locale('en'),
-        Locale('es'),
-      ],
-      getPages: [
-        GetPage(
-          name: '/',
-          page: () => LoginPage(),
-          transition: Transition.leftToRight
-        ),
-        GetPage(
-          name: '/register',
-          page: () => RegisterPage(),
-          transition: Transition.rightToLeft
-        ),
-        GetPage(
-          name: '/home',
-          page: () => HomePage(),
-          transition: Transition.noTransition
-        ),
-        GetPage(
-          name: '/menu',
-          page: () => MenuPage(),
-          transition: Transition.noTransition
-        ),
-        GetPage(
-          name: '/updateProfile',
-          page: () => UpdateProfilePage(),
-          transition: Transition.noTransition
-        ),
-        GetPage(
-          name: '/search',
-          page: () => SearchPage(),
-          transition: Transition.noTransition
-        ),
-        GetPage(
-          name: '/task',
-          page: () => TaskPage(),
-        ),
-        GetPage(
-          name: '/addTask',
-          page: () => AddTaskPage(),
-          transition: Transition.noTransition
-        ),
-        GetPage(
-          name: '/schedule',
-          page: () => SchedulePage(),
-        ),
-        GetPage(
-            name: '/registerSubject',
-            page: () => RegisterSubjectPage(),
-            transition: Transition.rightToLeft),
-      ],
-      theme: ThemeData.light().copyWith(
-        useMaterial3: true,
-        textTheme: GoogleFonts.openSansTextTheme(Theme.of(context).textTheme),
-        colorScheme: lightColorScheme,
-      )
-    );
+        debugShowCheckedModeBanner: false,
+        title: 'Agenda App',
+        initialRoute: userSession.id != null ? '/home' : '/',
+        navigatorKey: Get.key,
+        defaultTransition: Transition.rightToLeft,
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        supportedLocales: const [
+          Locale('en'),
+          Locale('es'),
+        ],
+        getPages: [
+          GetPage(
+              name: '/',
+              page: () => LoginPage(),
+              transition: Transition.leftToRight),
+          GetPage(
+              name: '/register',
+              page: () => RegisterPage(),
+              transition: Transition.rightToLeft),
+          GetPage(
+              name: '/home',
+              page: () => HomePage(),
+              transition: Transition.noTransition),
+          GetPage(
+              name: '/menu',
+              page: () => MenuPage(),
+              transition: Transition.noTransition),
+          GetPage(
+              name: '/updateProfile',
+              page: () => UpdateProfilePage(),
+              transition: Transition.noTransition),
+          GetPage(
+              name: '/search',
+              page: () => SearchPage(),
+              transition: Transition.noTransition),
+          GetPage(
+            name: '/task',
+            page: () => TaskPage(),
+          ),
+          GetPage(
+              name: '/addTask',
+              page: () => AddTaskPage(),
+              transition: Transition.noTransition),
+          GetPage(
+            name: '/schedule',
+            page: () => SchedulePage(),
+          ),
+          GetPage(
+              name: '/registerSubject',
+              page: () => RegisterSubjectPage(),
+              transition: Transition.rightToLeft),
+        ],
+        theme: ThemeData.light().copyWith(
+          useMaterial3: true,
+          textTheme: GoogleFonts.openSansTextTheme(Theme.of(context).textTheme),
+          colorScheme: lightColorScheme,
+        ));
   }
 }

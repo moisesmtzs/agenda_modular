@@ -7,6 +7,7 @@ import 'package:agenda_app/src/widgets/auth_background.dart';
 import 'package:agenda_app/src/widgets/card_container.dart';
 import 'package:agenda_app/src/ui/input_decoration.dart';
 import 'package:agenda_app/src/screens/registersubject/registersubject_controller.dart';
+
 import 'package:agenda_app/src/screens/screens.dart';
 import 'package:agenda_app/src/ui/app_colors.dart';
 
@@ -37,13 +38,16 @@ class _RegisterSubjectPageState extends State<RegisterSubjectPage> {
 
   //Controladores
   ClassController classController = Get.put(ClassController());
-  ScheduleinterController scheduleController =
+  ScheduleinterController scheduleInterController =
       Get.put(ScheduleinterController());
 
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Crear materia', style: TextStyle(fontSize: 24),),
+        title: const Text(
+          'Crear materia',
+          style: TextStyle(fontSize: 24),
+        ),
       ),
       body: ListView(
         physics: const ClampingScrollPhysics(),
@@ -52,43 +56,43 @@ class _RegisterSubjectPageState extends State<RegisterSubjectPage> {
           _textName(),
           _textCodeSubject(),
           _textProfesorsName(),
-          _begin(),
-          _end(),
           _days(),
-          _clasroom(),
-          _building(),
+          // _begin(),
+          // _end(),
+          // _clasroom(),
+          // _building(),
         ],
       ),
       bottomNavigationBar: _registerButton(),
     );
   }
+
   //------------------CLASS---------------------------------------------
   Widget _textName() {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: AppColors.colors.primaryContainer,
-        borderRadius: BorderRadius.circular(15)
-      ),
+          color: AppColors.colors.primaryContainer,
+          borderRadius: BorderRadius.circular(15)),
       child: Form(
         autovalidateMode: AutovalidateMode.onUserInteraction,
         child: TextFormField(
-          controller: classController.nameClassController, ////<----
-          cursorRadius: const Radius.circular(8.0),
-          autocorrect: false,
-          keyboardType: TextInputType.name,
-          decoration: const InputDecoration(
-            hintText: "Matematicas",
-            labelText: "Nombre Materia",
-            prefixIcon: Icon(Icons.perm_identity_sharp)
-          ),
-          validator: (value) {
-            String pattern = r"\b([a-zA-ZÀ-ÿ][-,a-z. ']+[ ]*)+";
-            RegExp nameregExp = RegExp(pattern);
-            return nameregExp.hasMatch(value ?? '') ? null : 'Nombre no válido';
-          }
-        ),
+            controller: classController.nameClassController, ////<----
+            cursorRadius: const Radius.circular(8.0),
+            autocorrect: false,
+            keyboardType: TextInputType.name,
+            decoration: const InputDecoration(
+                hintText: "Matematicas",
+                labelText: "Nombre Materia",
+                prefixIcon: Icon(Icons.perm_identity_sharp)),
+            validator: (value) {
+              String pattern = r"\b([a-zA-ZÀ-ÿ][-,a-z. ']+[ ]*)+";
+              RegExp nameregExp = RegExp(pattern);
+              return nameregExp.hasMatch(value ?? '')
+                  ? null
+                  : 'Nombre no válido';
+            }),
       ),
     );
   }
@@ -98,27 +102,26 @@ class _RegisterSubjectPageState extends State<RegisterSubjectPage> {
       margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: AppColors.colors.primaryContainer,
-        borderRadius: BorderRadius.circular(15)
-      ),
+          color: AppColors.colors.primaryContainer,
+          borderRadius: BorderRadius.circular(15)),
       child: Form(
         autovalidateMode: AutovalidateMode.onUserInteraction,
         child: TextFormField(
-          controller: classController.codeClassController,
-          cursorRadius: const Radius.circular(8.0),
-          autocorrect: false,
-          keyboardType: TextInputType.number,
-          decoration: const InputDecoration(
-              hintText: "5909",
-              labelText: "Codigo Materia",
-              prefixIcon: Icon(Icons.numbers)
-            ),
-          validator: (value) {
-            String pattern = r"\b[0-9]";
-            RegExp nameregExp = RegExp(pattern);
-            return nameregExp.hasMatch(value ?? '') ? null : 'Codigo no válido';
-          }
-        ),
+            controller: classController.codeClassController,
+            cursorRadius: const Radius.circular(8.0),
+            autocorrect: false,
+            keyboardType: TextInputType.number,
+            decoration: const InputDecoration(
+                hintText: "5909",
+                labelText: "Codigo Materia",
+                prefixIcon: Icon(Icons.numbers)),
+            validator: (value) {
+              String pattern = r"\b[0-9]";
+              RegExp nameregExp = RegExp(pattern);
+              return nameregExp.hasMatch(value ?? '')
+                  ? null
+                  : 'Codigo no válido';
+            }),
       ),
     );
   }
@@ -128,27 +131,26 @@ class _RegisterSubjectPageState extends State<RegisterSubjectPage> {
       margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: AppColors.colors.primaryContainer,
-        borderRadius: BorderRadius.circular(15)
-      ),
+          color: AppColors.colors.primaryContainer,
+          borderRadius: BorderRadius.circular(15)),
       child: Form(
         autovalidateMode: AutovalidateMode.onUserInteraction,
         child: TextFormField(
-          controller: classController.profesorClassController,
-          cursorRadius: const Radius.circular(8.0),
-          autocorrect: false,
-          keyboardType: TextInputType.name,
-          decoration: const InputDecoration(
-              hintText: "Marcos",
-              labelText: "Nombre Profesor",
-              prefixIcon: Icon(Icons.perm_identity_sharp)
-            ),
-          validator: (value) {
-            String pattern = r"\b([a-zA-ZÀ-ÿ][-,a-z. ']+[ ]*)+";
-            RegExp nameregExp = RegExp(pattern);
-            return nameregExp.hasMatch(value ?? '') ? null : 'Nombre no válido';
-          }
-        ),
+            controller: classController.profesorClassController,
+            cursorRadius: const Radius.circular(8.0),
+            autocorrect: false,
+            keyboardType: TextInputType.name,
+            decoration: const InputDecoration(
+                hintText: "Marcos",
+                labelText: "Nombre Profesor",
+                prefixIcon: Icon(Icons.perm_identity_sharp)),
+            validator: (value) {
+              String pattern = r"\b([a-zA-ZÀ-ÿ][-,a-z. ']+[ ]*)+";
+              RegExp nameregExp = RegExp(pattern);
+              return nameregExp.hasMatch(value ?? '')
+                  ? null
+                  : 'Nombre no válido';
+            }),
       ),
     );
   }
@@ -159,9 +161,8 @@ class _RegisterSubjectPageState extends State<RegisterSubjectPage> {
       margin: const EdgeInsets.symmetric(horizontal: 45, vertical: 15),
       padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 10),
       decoration: BoxDecoration(
-        color: AppColors.colors.primaryContainer,
-        borderRadius: BorderRadius.circular(15)
-      ),
+          color: AppColors.colors.primaryContainer,
+          borderRadius: BorderRadius.circular(15)),
       child: DropdownButton(
         dropdownColor: AppColors.colors.onSecondary,
         borderRadius: BorderRadius.circular(16),
@@ -170,7 +171,7 @@ class _RegisterSubjectPageState extends State<RegisterSubjectPage> {
         icon: const Icon(Icons.keyboard_arrow_down),
         iconSize: 30,
         hint: const Text("Hora de Inicio"),
-        value: scheduleController.begineController,
+        value: scheduleInterController.begineController,
         items: items
             .map((String hora) => DropdownMenuItem<String>(
                   value: hora,
@@ -179,7 +180,7 @@ class _RegisterSubjectPageState extends State<RegisterSubjectPage> {
             .toList(),
         onChanged: (option) {
           setState(() {
-            scheduleController.begineController = option.toString();
+            scheduleInterController.begineController = option.toString();
           });
         },
       ),
@@ -191,9 +192,8 @@ class _RegisterSubjectPageState extends State<RegisterSubjectPage> {
       margin: const EdgeInsets.symmetric(horizontal: 45, vertical: 15),
       padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 10),
       decoration: BoxDecoration(
-        color: AppColors.colors.primaryContainer,
-        borderRadius: BorderRadius.circular(15)
-      ),
+          color: AppColors.colors.primaryContainer,
+          borderRadius: BorderRadius.circular(15)),
       child: DropdownButton(
         dropdownColor: AppColors.colors.onSecondary,
         borderRadius: BorderRadius.circular(16),
@@ -202,7 +202,7 @@ class _RegisterSubjectPageState extends State<RegisterSubjectPage> {
         icon: const Icon(Icons.keyboard_arrow_down),
         iconSize: 30,
         hint: const Text("Hora de Fin"),
-        value: scheduleController.endController,
+        value: scheduleInterController.endController,
         items: items
             .map((String hora) => DropdownMenuItem<String>(
                   value: hora,
@@ -211,42 +211,82 @@ class _RegisterSubjectPageState extends State<RegisterSubjectPage> {
             .toList(),
         onChanged: (option) {
           setState(() {
-            scheduleController.endController = option.toString();
+            scheduleInterController.endController = option.toString();
           });
         },
       ),
     );
   }
 
+  List<bool> dias = [false, false, false, false, false, false, false];
   Widget _days() {
-    //  l  m i j v s
-    //MODIFICAR------------------
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: AppColors.colors.primaryContainer,
-        borderRadius: BorderRadius.circular(15)
-      ),
-      child: Form(
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        child: TextFormField(
-          controller: scheduleController.daysController,
-          cursorRadius: const Radius.circular(8.0),
-          autocorrect: false,
-          keyboardType: TextInputType.text,
-          decoration: const InputDecoration(
-              hintText: "l m i j v s",
-              labelText: "Dias",
-              prefixIcon: Icon(Icons.calendar_month)
-            ),
-          validator: (value) {
-            String pattern =
-                r"^\s*([A-Za-z]{1,}([\.,] |[-']| ))+[A-Za-z]+\.?\s*$";
-            RegExp nameregExp = RegExp(pattern);
-            return nameregExp.hasMatch(value ?? '') ? null : 'Hora no válido';
-          }
-        ),
+    return Center(
+      child: Column(
+        children: <Widget>[
+          CheckboxListTile(
+            title: const Text('Lunes'),
+            value: dias[0],
+            onChanged: (bool? value) {
+              setState(() {
+                dias[0] = value!;
+              });
+            },
+          ),
+          CheckboxListTile(
+            title: const Text('Martes'),
+            value: dias[1],
+            onChanged: (bool? value) {
+              setState(() {
+                dias[1] = value!;
+              });
+            },
+          ),
+          CheckboxListTile(
+            title: const Text('Miercoles'),
+            value: dias[2],
+            onChanged: (bool? value) {
+              setState(() {
+                dias[2] = value!;
+              });
+            },
+          ),
+          CheckboxListTile(
+            title: const Text('Jueves'),
+            value: dias[3],
+            onChanged: (bool? value) {
+              setState(() {
+                dias[3] = value!;
+              });
+            },
+          ),
+          CheckboxListTile(
+            title: const Text('Viernes'),
+            value: dias[4],
+            onChanged: (bool? value) {
+              setState(() {
+                dias[4] = value!;
+              });
+            },
+          ),
+          CheckboxListTile(
+            title: const Text('Sabado'),
+            value: dias[5],
+            onChanged: (bool? value) {
+              setState(() {
+                dias[5] = value!;
+              });
+            },
+          ),
+          CheckboxListTile(
+            title: const Text('Domingo'),
+            value: dias[6],
+            onChanged: (bool? value) {
+              setState(() {
+                dias[5] = value!;
+              });
+            },
+          ),
+        ],
       ),
     );
   }
@@ -256,27 +296,26 @@ class _RegisterSubjectPageState extends State<RegisterSubjectPage> {
       margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: AppColors.colors.primaryContainer,
-        borderRadius: BorderRadius.circular(15)
-      ),
+          color: AppColors.colors.primaryContainer,
+          borderRadius: BorderRadius.circular(15)),
       child: Form(
         autovalidateMode: AutovalidateMode.onUserInteraction,
         child: TextFormField(
-          controller: scheduleController.clasroomController,
-          cursorRadius: const Radius.circular(8.0),
-          autocorrect: false,
-          keyboardType: TextInputType.number,
-          decoration: const InputDecoration(
-              hintText: "8",
-              labelText: "Numero de Salon",
-              prefixIcon: Icon(Icons.numbers)
-            ),
-          validator: (value) {
-            String pattern = r"\b[0-9]";
-            RegExp nameregExp = RegExp(pattern);
-            return nameregExp.hasMatch(value ?? '') ? null : 'Nombre no válido';
-          }
-        ),
+            controller: scheduleInterController.clasroomController,
+            cursorRadius: const Radius.circular(8.0),
+            autocorrect: false,
+            keyboardType: TextInputType.number,
+            decoration: const InputDecoration(
+                hintText: "8",
+                labelText: "Numero de Salon",
+                prefixIcon: Icon(Icons.numbers)),
+            validator: (value) {
+              String pattern = r"\b[0-9]";
+              RegExp nameregExp = RegExp(pattern);
+              return nameregExp.hasMatch(value ?? '')
+                  ? null
+                  : 'Nombre no válido';
+            }),
       ),
     );
   }
@@ -286,46 +325,53 @@ class _RegisterSubjectPageState extends State<RegisterSubjectPage> {
       margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: AppColors.colors.primaryContainer,
-        borderRadius: BorderRadius.circular(15)
-      ),
+          color: AppColors.colors.primaryContainer,
+          borderRadius: BorderRadius.circular(15)),
       child: Form(
         autovalidateMode: AutovalidateMode.onUserInteraction,
         child: TextFormField(
-          controller: scheduleController.buildingController,
-          cursorRadius: const Radius.circular(8.0),
-          autocorrect: false,
-          keyboardType: TextInputType.text,
-          decoration: const InputDecoration(
-              hintText: "A", labelText: "Edificio", prefixIcon: Icon(Icons.abc)
-          ),
-          validator: (value) {
-            String pattern = r"\b[a-zA-Z]";
-            RegExp nameregExp = RegExp(pattern);
-            return nameregExp.hasMatch(value ?? '') ? null : 'Nombre no válido';
-          }
-        ),
+            controller: scheduleInterController.buildingController,
+            cursorRadius: const Radius.circular(8.0),
+            autocorrect: false,
+            keyboardType: TextInputType.text,
+            decoration: const InputDecoration(
+                hintText: "A",
+                labelText: "Edificio",
+                prefixIcon: Icon(Icons.abc)),
+            validator: (value) {
+              String pattern = r"\b[a-zA-Z]";
+              RegExp nameregExp = RegExp(pattern);
+              return nameregExp.hasMatch(value ?? '')
+                  ? null
+                  : 'Nombre no válido';
+            }),
       ),
     );
   }
 
   //-------------------------------------------------------------------------------
   Widget _registerButton() {
+    String finaldays = "";
+    if (dias[0] == true) finaldays = finaldays + 'l';
+    if (dias[1] == true) finaldays = finaldays + 'm';
+    if (dias[2] == true) finaldays = finaldays + 'i';
+    if (dias[3] == true) finaldays = finaldays + 'j';
+    if (dias[4] == true) finaldays = finaldays + 'v';
+    if (dias[5] == true) finaldays = finaldays + 's';
     return Container(
       width: double.infinity,
       height: 50,
       margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-      child: MaterialButton(
-        shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(15) ),
-        color: AppColors.colors.secondaryContainer,
+      //child: MaterialButton(
+      child: ElevatedButton(
         //onPressed: () => scheduleController.voidschedule(),
         onPressed: () {
-          classController.voidClass();
-          scheduleController.voidschedule();
+          scheduleInterController.daysController = finaldays;
+          classController.register(context);
+          //scheduleInterController.register(context);
         },
         child: const Text(
           'Registrar Materia',
-          // style: TextStyle(color: Colors.indigo),
         ),
       ),
     );

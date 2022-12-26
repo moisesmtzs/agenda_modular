@@ -1,28 +1,48 @@
-//import 'package:agenda_app/src/models/class.dart'; //NUEVO POR MODIFICAR
-import 'package:agenda_app/src/models/user.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+
+import 'package:agenda_app/src/models/class.dart';
+
+import 'package:agenda_app/src/models/response_api.dart';
+import 'package:agenda_app/src/providers/classProvider.dart';
+
+import 'package:agenda_app/src/models/user.dart';
 import 'package:get_storage/get_storage.dart';
 
-//CLASE PARA DATOS DE TABLA CLASS
 class ClassController extends GetxController {
   User userSession = User.fromJson(GetStorage().read('user') ?? {});
   TextEditingController nameClassController = TextEditingController();
   TextEditingController codeClassController = TextEditingController();
   TextEditingController profesorClassController = TextEditingController();
 
-  void voidClass() {
+  ClassProvider classProvider = ClassProvider();
+
+  //void voidClass() {
+  void register(BuildContext context) async {
     String idUser = userSession.id as String;
     String name = nameClassController.text;
     String code = codeClassController.text.trim();
     String profesor = profesorClassController.text;
 
     if (isValidForm(name, code, profesor)) {
-      Get.snackbar('ID usuario: ', idUser);
-      Get.snackbar('Nombre materia: ', name);
-      Get.snackbar('Codigo: ', code);
-      Get.snackbar('Profesor: ', profesor);
+      Class clase = Class(
+          id_user: idUser,
+          name: name,
+          subject_code: code,
+          professor_name: profesor);
+
+      ResponseApi? responseApi = await classProvider.create(clase);
+      Get.snackbar('', 'Entro');
+      if (responseApi?.success == true) {
+        Get.snackbar(responseApi?.message ?? '', 'Clase creada correctamente');
+        Future.delayed(const Duration(milliseconds: 1000), () {
+          Get.offNamed('/schedule');
+        });
+      } else {
+        Get.snackbar('Datos no válidos', responseApi?.message ?? '',
+            backgroundColor: Colors.red[200], colorText: Colors.white);
+      }
     }
   }
 
@@ -50,18 +70,18 @@ class ClassController extends GetxController {
 class ScheduleinterController extends GetxController {
   String? begineController;
   String? endController;
-  TextEditingController daysController = TextEditingController();
+  String? daysController;
   TextEditingController clasroomController = TextEditingController();
   TextEditingController buildingController = TextEditingController();
 
-  void voidschedule() {
+  void register(BuildContext context) async {
     String? inicio = begineController;
     String? fin = endController;
-    String days = daysController.text.trim();
+    String? days = daysController;
     String clasroom = clasroomController.text;
     String building = buildingController.text;
 
-    if (isValidForms(inicio!, fin!, days, clasroom, building)) {
+    if (isValidForms(inicio!, fin!, days!, clasroom, building)) {
       Get.snackbar('Inicio: ', inicio);
       Get.snackbar('Fin: ', fin);
       Get.snackbar('Dias: ', days);
