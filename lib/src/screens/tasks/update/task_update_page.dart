@@ -34,7 +34,7 @@ class TaskUpdatePage extends StatelessWidget {
               )
             ),
             onPressed: () {
-              // taskUpdateController.updateTask(context);
+              taskUpdateController.updateTask(context);
             },
           ),
           const SizedBox(height: 25),

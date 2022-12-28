@@ -1,3 +1,5 @@
+import 'package:agenda_app/src/models/response_api.dart';
+import 'package:agenda_app/src/ui/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -34,6 +36,47 @@ class TaskUpdateController extends GetxController {
     typeController.text = task.type!;
     _selectedDate = DateTime.parse(task.deliveryDate ?? '');
     value.value = _selectedDate.toString();
+  }
+
+  void updateTask(BuildContext context) async {
+
+    String name = nameController.text;
+    String description = descriptionController.text;
+    String date = _selectedDate.toString();
+    String subject = subjectController.text.trim();
+    String type = typeController.text.trim();
+
+    if (isValidForm(name, description, date, subject, type)) {
+      
+      task.name = name;
+      task.description = description;
+      task.deliveryDate = date;
+      task.subject = subject;
+      task.type = type;
+
+      ResponseApi? responseApi = await tasksProvider.updateTask(task);
+      if( responseApi!.success! ) {
+        Get.snackbar(
+          responseApi.message ?? '',
+          'La tarea ha sido actualizada satisfactoriamente',
+          backgroundColor: AppColors.colors.secondary,
+          colorText: AppColors.colors.onSecondary
+        );
+        Future.delayed(const Duration(milliseconds: 1000), () {
+          Navigator.pop(context);
+          Navigator.pop(context);
+        });
+      } else {
+        Get.snackbar(
+          responseApi.message ?? '', 
+          'Ha ocurrido un error al actualizar la tarea',
+          backgroundColor: AppColors.colors.errorContainer,
+          colorText: AppColors.colors.onErrorContainer
+        );
+      }
+
+    }
+
   }
 
   bool isValidForm( String name, String description, String date, String subject, String type ) {

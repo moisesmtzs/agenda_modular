@@ -45,14 +45,14 @@ class UsersProvider extends GetConnect {
       }
     );
 
-    if ( response.body == null ) {
-      Get.snackbar(
-        'Error', 
-        'No se ha podido ejecutar la petición',
-        backgroundColor: AppColors.colors.errorContainer,
-        colorText: AppColors.colors.onErrorContainer
-      );
-    }
+    // if ( response.body == null ) {
+    //   Get.snackbar(
+    //     'Error', 
+    //     'No se ha podido ejecutar la petición',
+    //     backgroundColor: AppColors.colors.errorContainer,
+    //     colorText: AppColors.colors.onErrorContainer
+    //   );
+    // }
 
     ResponseApi responseApi = ResponseApi.fromJson(response.body);
     return responseApi;

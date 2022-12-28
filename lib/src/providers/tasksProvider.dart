@@ -30,7 +30,7 @@ class TasksProvider extends GetConnect {
 
   }
 
-  Future <List<Task?>> getByUserAndStatus( String idUser, String status ) async {
+  Future<List<Task?>> getByUserAndStatus( String idUser, String status ) async {
 
     try {
       Uri _url = Uri.http(Environment.API_URL_OLD, '/api/tasks/findByUserAndStatus/$idUser/$status');
@@ -48,6 +48,44 @@ class TasksProvider extends GetConnect {
     } catch (e) {
       return [];
     }
+
+  }
+
+  Future<ResponseApi?> updateTask(Task? task) async {
+
+    Response response = await put(
+      '$url/update',
+      task!.toJson(),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': userSession.sessionToken ?? ''
+      }
+    );
+
+    ResponseApi responseApi = ResponseApi.fromJson(response.body);
+    return responseApi;
+
+  }
+
+  Future<ResponseApi?> updateStatusTask( String? id, String? status ) async {
+
+    Map<String, dynamic> body = {
+      'id': id ?? '',
+      'status': status ?? ''
+    };
+    String jsonBody = json.encode(body);
+
+    Response response = await put(
+      '$url/updateStatus/$id/$status',
+      jsonBody,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': userSession.sessionToken ?? ''
+      }
+    );
+
+    ResponseApi responseApi = ResponseApi.fromJson(response.body);
+    return responseApi;
 
   }
 

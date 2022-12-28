@@ -85,7 +85,12 @@ class UpdateProfileController extends GetxController {
         newUser?.sessionToken = userSession.sessionToken;
         if ( responseApi?.success == true ) {
           GetStorage().write('user', newUser?.toJson());
-          Get.snackbar( 'Actualización finalizada' ,responseApi?.message ?? '');
+          Get.snackbar(
+            'Actualización finalizada', 
+            responseApi?.message ?? '',
+            backgroundColor: AppColors.colors.secondary,
+            colorText: AppColors.colors.onSecondary
+          );
           isEnable.value = true;
         } else {
           isEnable.value = true;
@@ -101,14 +106,19 @@ class UpdateProfileController extends GetxController {
           newUser?.sessionToken = userSession.sessionToken;
           if (responseApi.success == true) {
             GetStorage().write('user', newUser?.toJson());
-            Get.snackbar( 'Actualización finalizada' ,responseApi.message ?? '');
+            Get.snackbar(
+              'Actualización finalizada', 
+              responseApi.message ?? '',
+              backgroundColor: AppColors.colors.secondary,
+              colorText: AppColors.colors.onSecondary
+            );
             isEnable.value = true;
           } else {
             Get.snackbar(
               'Datos no válidos',
               responseApi.message ?? '',
-              backgroundColor: Colors.red[200],
-              colorText: Colors.white
+              backgroundColor: AppColors.colors.errorContainer,
+              colorText: AppColors.colors.onErrorContainer
             );
             isEnable.value = true;
           }
