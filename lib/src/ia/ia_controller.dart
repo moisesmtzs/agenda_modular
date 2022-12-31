@@ -1,7 +1,10 @@
+import 'package:agenda_app/src/models/ia_task.dart';
+import 'package:agenda_app/src/providers/ia_taskProvider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:agenda_app/src/ia/text_to_speech.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
+import 'package:get/get.dart';
 
 class IA_Controller
 {
@@ -11,6 +14,7 @@ class IA_Controller
   String _text = "¿En que puedo ayudarte?"; //MENSAJE DE BIENVENIDA//
   double _confidence = 1.0; //CONFIABILIDAD//
   VoiceRosalind _voice = new VoiceRosalind();
+  final ia_taskProvider ia_provider =  Get.put(ia_taskProvider());
 
   //CONSTRUCTOR//
   IA_Controller() {
@@ -19,7 +23,7 @@ class IA_Controller
   }
 
   //FUNCION PARA HABLAR//
-  void speakRosalind(String TextSpeak) {
+  void speakRosalind(String TextSpeak) async {
     debugPrint("El texto es: "+TextSpeak);
     _text = TextSpeak;
     //VALIDAR PALABRAS ANTISONANTES//
@@ -33,8 +37,12 @@ class IA_Controller
       for (var i=0; i<cont; i++)
       {
         if(_text[i]==" "||i==cont-1)
-        { 
-          words.add(actualWord);
+        {
+          if(i==cont-1)
+          {
+            actualWord+=_text[i];
+          }
+          words.add(actualWord.toUpperCase());
           actualWord="";
         }
         else
@@ -43,6 +51,11 @@ class IA_Controller
         }
       }
       debugPrint("La cantidad de palabras es: "+words.length.toString());
+      debugPrint("PALABRAS: "+words.toString());
+      List<ia_task?> bd_list = await ia_provider.getAll();
+      List<ia_task?> bd_exist = await ia_provider.getByWord("INSERTAR");
+      debugPrint(bd_exist.length.toString());
+      debugPrint(bd_exist[0]?.word.toString());
     }
     else
     {

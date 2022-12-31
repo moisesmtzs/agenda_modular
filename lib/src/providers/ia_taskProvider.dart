@@ -1,9 +1,12 @@
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'dart:convert';
+
+import 'package:http/http.dart' as http;
 
 import 'package:get_storage/get_storage.dart';
 import 'package:agenda_app/src/api/environment.dart';
 import 'package:agenda_app/src/models/user.dart';
-import 'package:agenda_app/src/models/response_api.dart';
 import 'package:agenda_app/src/models/ia_task.dart';
 
 class ia_taskProvider extends GetConnect 
@@ -12,18 +15,45 @@ class ia_taskProvider extends GetConnect
 
   User userSession = User.fromJson(GetStorage().read('user') ?? {});
 
-  Future<ResponseApi?> create(ia_task task) async {
+  Future<List<ia_task?>> getAll() async {
 
-    Response response = await post(
-      '$url/create',
-      task.toJson(),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    );
+    try {
+      Uri _url = Uri.http(Environment.API_URL_OLD, '/api/ia/getAll');
+      
+      Map<String, String> headers = {
+        'Content-Type': 'application/json',
+        'Authorization': userSession.sessionToken ?? ''
+      };
+      final res = await http.get(_url, headers: headers);
 
-    ResponseApi responseApi = ResponseApi.fromJson(response.body);
-    return responseApi;
+      final data = json.decode(res.body);
+      ia_task task = ia_task.fromJsonList(data);
+      return task.toList;
+
+    } catch (e) {
+      return [];
+    }
+  }
+
+  Future<List<ia_task?>> getByWord(String word) async {
+
+    try {
+      Uri _url = Uri.http(Environment.API_URL_OLD, '/api/ia/findByWord/$word');
+      
+      Map<String, String> headers = {
+        'Content-Type': 'application/json',
+        'Authorization': userSession.sessionToken ?? ''
+      };
+      final res = await http.get(_url, headers: headers);
+
+      final data = json.decode(res.body);
+      ia_task task = ia_task.fromJsonList(data);
+      return task.toList;
+
+    } catch (e) {
+      e.printError();
+      return [];
+    }
 
   }
 }
