@@ -30,7 +30,6 @@ class IA_Controller
     if(badwords())
     {
       List<String> words = [];
-      _voice.speak("Gracias por no decir palabras antisonantes");
       int cont = _text.length;
       String actualWord="";
       //SEPARAR POR PALABRAS//
@@ -50,12 +49,35 @@ class IA_Controller
           actualWord+=_text[i];
         }
       }
+      // -- PRINT DEBUG -- //
       debugPrint("La cantidad de palabras es: "+words.length.toString());
       debugPrint("PALABRAS: "+words.toString());
+
+      //RECORRER TODAS LAS PALABRAS DETECTADAS//
       List<ia_task?> bd_list = await ia_provider.getAll();
-      List<ia_task?> bd_exist = await ia_provider.getByWord("INSERTAR");
-      debugPrint(bd_exist.length.toString());
-      debugPrint(bd_exist[0]?.word.toString());
+      List<ia_task?> instruction = [];
+      for(var i=0; i<words.length; i++)
+      {
+        //BUSCA LA PALABRA ACTUAL//
+        List<ia_task?> bd_exist = await ia_provider.getByWord(words[i]);
+        //SI EXISTE UNA PALABRA ALMACENADA EN LA BD//
+        if(bd_exist.length>0)
+        {
+          debugPrint(bd_exist[0]?.word.toString());
+          instruction.add(bd_exist[0]);
+        }
+      }
+      //SI NO EXISTEN INSTRUCCIONES CON ESAS PALABRAS//
+      if(instruction.length==0)
+      {
+        _voice.speak("Lo siento, no conozco ese comando.");
+        _text = "¿En que puedo ayudarte?";
+      }
+      else
+      {
+        _voice.speak("Si conozco ese comando.");
+      }
+      
     }
     else
     {
