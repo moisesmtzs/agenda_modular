@@ -56,7 +56,7 @@ class _RegisterSubjectPageState extends State<RegisterSubjectPage> {
           _textName(),
           _textCodeSubject(),
           _textProfesorsName(),
-          _days(),
+          //_days(),
           // _begin(),
           // _end(),
           // _clasroom(),

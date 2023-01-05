@@ -5,7 +5,6 @@ import 'package:get_storage/get_storage.dart';
 import 'package:agenda_app/src/models/user.dart';
 
 class HomeController extends GetxController {
-
   User userSession = User.fromJson(GetStorage().read('user') ?? {});
 
   HomeController() {
@@ -28,44 +27,39 @@ class HomeController extends GetxController {
     Get.toNamed('/schedule');
   }
 
+  void goToRegisterSubject() {
+    Get.toNamed('/registerSubject');
+  }
+
   void logOut() {
     GetStorage().remove('user');
     Get.offNamedUntil('/', (route) => false);
   }
 
-  void confirmationDialog( BuildContext context ) {
-
+  void confirmationDialog(BuildContext context) {
     Widget cancelButton = TextButton(
-      onPressed: () {
-        Get.back();
-      },
-      child: const Text('Cancelar')
-    );
+        onPressed: () {
+          Get.back();
+        },
+        child: const Text('Cancelar'));
 
     Widget confirmButton = TextButton(
-      onPressed: () {
-        logOut();
-      },
-      child: const Text('Confirmar')
-    );
+        onPressed: () {
+          logOut();
+        },
+        child: const Text('Confirmar'));
 
     AlertDialog alertDialog = AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       title: const Text('Cerrar sesión'),
       content: const Text('¿Estás seguro de que quieres cerrar sesión?'),
-      actions: [
-        cancelButton,
-        confirmButton
-      ],
+      actions: [cancelButton, confirmButton],
     );
 
     showDialog(
         context: context,
         builder: (BuildContext context) {
           return alertDialog;
-        }
-    );
-
+        });
   }
-
 }
