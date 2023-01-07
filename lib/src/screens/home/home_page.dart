@@ -361,7 +361,7 @@ class MenuPage extends GetView<MyDrawerController> {
             const SizedBox(height: 15),
             ListTile(
                 contentPadding: const EdgeInsets.symmetric(horizontal: 20),
-                onTap: () => homeController.goToRegisterSubject(),
+                onTap: () => homeController.goToMatter(),
                 title: Text('Materias',
                     style: TextStyle(color: Colors.indigo[300], fontSize: 16)),
                 trailing:

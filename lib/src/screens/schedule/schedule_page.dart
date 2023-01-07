@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:agenda_app/src/screens/schedule/schedule_controller.dart';
 
 class SchedulePage extends StatelessWidget {
-  ScheduleController registerSubjectController = Get.put(ScheduleController());
+  ScheduleController subjectController = Get.put(ScheduleController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -15,8 +15,8 @@ class SchedulePage extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        label: const Text('Agregar horario'),
-        onPressed: () => registerSubjectController.goToRegisterSubject(),
+        label: const Text('Agregar Materia'),
+        onPressed: () => subjectController.goToSubject(),
         icon: const Icon(Icons.add_circle),
       ),
       body: Center(

@@ -1,17 +1,17 @@
 import 'dart:convert';
 
-Class classFromJson(String str) => Class.fromJson(json.decode(str));
+Subject subjectFromJson(String str) => Subject.fromJson(json.decode(str));
 
-String classToJson(Class data) => json.encode(data.toJson());
+String subjectToJson(Subject data) => json.encode(data.toJson());
 
-class Class {
+class Subject {
   String? id;
   String? id_user;
   String? name;
   String? subject_code;
   String? professor_name;
 
-  Class({
+  Subject({
     this.id,
     this.id_user,
     this.name,
@@ -19,7 +19,7 @@ class Class {
     this.professor_name,
   });
 
-  factory Class.fromJson(Map<String, dynamic> json) => Class(
+  factory Subject.fromJson(Map<String, dynamic> json) => Subject(
         id: json["id"],
         id_user: json["id_user"],
         name: json["name"],

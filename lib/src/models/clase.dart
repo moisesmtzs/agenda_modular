@@ -1,10 +1,12 @@
 import 'dart:convert';
 
-Classroom clasroomFromJson(String str) => Classroom.fromJson(json.decode(str));
+import 'package:agenda_app/src/screens/screens.dart';
 
-String classroomToJson(Classroom data) => json.encode(data.toJson());
+Clase claseFromJson(String str) => Clase.fromJson(json.decode(str));
 
-class Classroom {
+String claseToJson(Clase data) => json.encode(data.toJson());
+
+class Clase {
   String? id;
   String? id_class;
   String? begin_hour;
@@ -13,7 +15,7 @@ class Classroom {
   String? classroom;
   String? building;
 
-  Classroom({
+  Clase({
     this.id,
     this.id_class,
     this.begin_hour,
@@ -23,7 +25,7 @@ class Classroom {
     this.building,
   });
 
-  factory Classroom.fromJson(Map<String, dynamic> json) => Classroom(
+  factory Clase.fromJson(Map<String, dynamic> json) => Clase(
         id: json["id"],
         id_class: json["id_class"],
         begin_hour: json["begin_hour"],

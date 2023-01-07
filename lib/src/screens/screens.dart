@@ -8,4 +8,5 @@ export 'package:agenda_app/src/screens/tasks/detail/task_detail_page.dart';
 export 'package:agenda_app/src/screens/tasks/update/task_update_page.dart';
 export 'package:agenda_app/src/screens/tasks/add_task/add_task_page.dart';
 export 'package:agenda_app/src/screens/schedule/schedule_page.dart';
-export 'package:agenda_app/src/screens/registersubject/registersubject_page.dart';//FARFAN
+export 'package:agenda_app/src/screens/subject/subject_page.dart';
+export 'package:agenda_app/src/screens/clase/clase_page.dart';

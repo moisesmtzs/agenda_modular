@@ -27,8 +27,12 @@ class HomeController extends GetxController {
     Get.toNamed('/schedule');
   }
 
-  void goToRegisterSubject() {
-    Get.toNamed('/registerSubject');
+  void goToSubject() {
+    Get.toNamed('/subject');
+  }
+
+  void goToMatter() {
+    Get.toNamed('/matter');
   }
 
   void logOut() {
