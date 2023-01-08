@@ -102,8 +102,8 @@ class AddTaskController extends GetxController {
       context: context,
       locale: const Locale('es', 'ES'),
       initialDate: _selectedDate,
-      firstDate: DateTime(2022), 
-      lastDate: DateTime(2023),
+      firstDate: DateTime(2023), 
+      lastDate: DateTime(2024),
       // builder: (context, child) {
       //   return Theme(
       //     data: ThemeData.dark().copyWith(
