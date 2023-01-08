@@ -1,20 +1,32 @@
+import 'dart:ffi';
+
 import 'package:agenda_app/src/models/ia_task.dart';
+import 'package:agenda_app/src/models/task.dart';
 import 'package:agenda_app/src/providers/ia_taskProvider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:agenda_app/src/ia/text_to_speech.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:get/get.dart';
+import 'package:agenda_app/src/models/user.dart';
 
 class IA_Controller
 {
   //ATRIBUTOS//
+  User userSession = User.fromJson(GetStorage().read('user') ?? {});
   stt.SpeechToText _speech = stt.SpeechToText(); //ENCARGADO DE ESCUCHAR//
   bool _isListening = false; //BOOLEANO QUE DETERMIAN EL ESTADO DE LA VOZ//
   String _text = "¿En que puedo ayudarte?"; //MENSAJE DE BIENVENIDA//
   double _confidence = 1.0; //CONFIABILIDAD//
   VoiceRosalind _voice = new VoiceRosalind();
   final ia_taskProvider ia_provider =  Get.put(ia_taskProvider());
+
+  //BANDERAS DE ACCION//
+  int isNewTask = 0;
+
+  //OBJETOS CON LOS QUE TRABAJARA LA IA//
+  Task NewTask = new Task();
 
   //CONSTRUCTOR//
   IA_Controller() {
@@ -24,7 +36,6 @@ class IA_Controller
 
   //FUNCION PARA HABLAR//
   void speakRosalind(String TextSpeak) async {
-    debugPrint("El texto es: "+TextSpeak);
     _text = TextSpeak;
     //VALIDAR PALABRAS ANTISONANTES//
     if(badwords())
@@ -49,42 +60,138 @@ class IA_Controller
           actualWord+=_text[i];
         }
       }
-      // -- PRINT DEBUG -- //
-      debugPrint("La cantidad de palabras es: "+words.length.toString());
-      debugPrint("PALABRAS: "+words.toString());
 
-      //RECORRER TODAS LAS PALABRAS DETECTADAS//
-      List<ia_task?> bd_list = await ia_provider.getAll();
-      List<ia_task?> instruction = [];
-      for(var i=0; i<words.length; i++)
+      //SE ESTA AGREGANDO UNA TAREA//
+      if(isNewTask!=0)
       {
-        //BUSCA LA PALABRA ACTUAL//
-        List<ia_task?> bd_exist = await ia_provider.getByWord(words[i]);
-        //SI EXISTE UNA PALABRA ALMACENADA EN LA BD//
-        if(bd_exist.length>0)
+        //NOMBRE//
+        if(isNewTask == 1)
         {
-          debugPrint(bd_exist[0]?.word.toString());
-          instruction.add(bd_exist[0]);
+          NewTask.name = _text;
+          _voice.speak("¿Cual es la descripcion de la tarea?");
+          _text = "¿Cual es la descripcion de la tarea?";
+          isNewTask = 2;
         }
-      }
-      //SI NO EXISTEN INSTRUCCIONES CON ESAS PALABRAS//
-      if(instruction.length==0)
-      {
-        _voice.speak("Lo siento, no conozco ese comando.");
-        _text = "¿En que puedo ayudarte?";
+        //DESCRIPCION//
+        else if(isNewTask==2)
+        {
+          NewTask.description = _text;
+          _voice.speak("¿Cual es la fecha de entrega de la tarea?");
+          _voice.speak("Se claro con la fecha, especifica dia y mes.");
+          _text = "¿Cual es la fecha de entrega de la tarea? (Se claro con la fecha, especifica dia y mes)";
+          isNewTask = 3;
+        }
+        //FECHA//
+        else if(isNewTask==3)
+        {
+          createDate(words);
+          _voice.speak("¿De que materia?");
+          _text = "¿De que materia?";
+          isNewTask = 4;
+        }
+          
+        
       }
       else
       {
-        _voice.speak("Si conozco ese comando.");
+        // -- PRINT DEBUG -- //
+        debugPrint("La cantidad de palabras es: "+words.length.toString());
+        debugPrint("PALABRAS: "+words.toString());
+
+        //RECORRER TODAS LAS PALABRAS DETECTADAS//
+        List<ia_task?> bd_list = await ia_provider.getAll();
+        List<ia_task?> instruction = [];
+        for(var i=0; i<words.length; i++)
+        {
+          //BUSCA LA PALABRA ACTUAL//
+          List<ia_task?> bd_exist = await ia_provider.getByWord(words[i]);
+          //SI EXISTE UNA PALABRA ALMACENADA EN LA BD//
+          if(bd_exist.length>0)
+          {
+            debugPrint(bd_exist[0]?.word.toString());
+            instruction.add(bd_exist[0]);
+          }
+        }
+        //SI NO EXISTEN INSTRUCCIONES CON ESAS PALABRAS//
+        if(instruction.length==0)
+        {
+          _voice.speak("Lo siento, no conozco ese comando.");
+          _text = "¿En que puedo ayudarte?";
+        }
+        else
+        {
+          //SI CONTIENE UN NUMERO DIFERENTE DE 2 PALABRAS CLAVES//
+          if(instruction.length!=2)
+          {
+            _voice.speak("Lo siento, el comando no es claro.");
+            _text = "¿En que puedo ayudarte?";
+          }
+          else
+          {
+            //ES UNA TAREA//
+            if(instruction[0]?.object=="TAREA" || instruction[1]?.object=="TAREA")
+            {
+              //INSERTAR//
+              isNewTask=1;
+              NewTask = new Task();
+              NewTask.idUser = userSession.id;    
+              _voice.speak("Bien agregaremos una Tarea.");
+              _voice.speak("¿Cual es el nombre de la tarea?");
+              _text = "¿Cual es el nombre de la tarea?";
+              //ELIMINAR//
+
+              //EDITAR//
+
+            }
+          }
+          
+        }       
       }
-      
+    } 
+    else
+    {
+      _voice.speak("Lo siento, no estan permitidas palabras antisonantes. Intenta de Nuevo");
+      _text = "¿En que puedo ayudarte?";
+    }   
+  }
+
+  //FUNCION PARA GENERAR UNA FECHA SEGUN EL TEXTO INGRESADO//
+  bool createDate(List<String> words)
+  {
+    String day = "", month = "";
+    for(var i=0; i<words.length; i++)
+    {
+      if(int.tryParse(words[i])!=null)
+      {
+        day = int.tryParse(words[i]).toString();
+      }
+      else if(words[i]=="PRIMERO") { day = "01"; }
+      else if(words[i]=="ENERO") { month = "01"; }
+      else if(words[i]=="FEBERO") { month = "02"; }
+      else if(words[i]=="MARZO") { month = "03"; }
+      else if(words[i]=="ABRIL") { month = "04"; }
+      else if(words[i]=="MAYO") { month = "05"; }
+      else if(words[i]=="JUNIO") { month = "06"; }
+      else if(words[i]=="JULIO") { month = "07"; }
+      else if(words[i]=="AGOSTO") { month = "08"; }
+      else if(words[i]=="SEPTIEMBRE") { month = "09"; }
+      else if(words[i]=="OCTUBRE") { month = "10"; }
+      else if(words[i]=="NOVIEMBRE") { month = "11"; }
+      else if(words[i]=="DICIEMBRE") { month = "12"; }      
+    }
+    if(day == "" || month == "")
+    {
+      return false;
     }
     else
     {
-      _voice.speak("Lo siento, no estan permitidas palabras antisonantes. Intenta con otro comando");
-      _text = "¿En que puedo ayudarte?";
+      var now =new DateTime.now();
+      String NewDate = day + "/"+month+"/"+now.year.toString();
+      NewTask.deliveryDate= NewDate;
+      debugPrint(NewDate);
+      return true;
     }
-  } 
+  }
 
   //ANALIZAR TEXTO//
   bool badwords() 
