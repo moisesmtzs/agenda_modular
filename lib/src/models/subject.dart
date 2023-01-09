@@ -10,6 +10,7 @@ class Subject {
   String? name;
   String? subject_code;
   String? professor_name;
+  List<Subject> toList = [];
 
   Subject({
     this.id,
@@ -34,4 +35,13 @@ class Subject {
         "subject_code": subject_code,
         "professor_name": professor_name,
       };
+
+  Subject.fromJsonList( List<dynamic> jsonList ) {
+      if ( jsonList == null ) return;
+
+      for (var element in jsonList) {
+        Subject subject = Subject.fromJson(element);
+        toList.add(subject);
+      }
+  }
 }

@@ -21,10 +21,10 @@ class TasksProvider extends GetConnect {
       '$url/create',
       task.toJson(),
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': userSession.sessionToken ?? ''
       }
     );
-
     ResponseApi responseApi = ResponseApi.fromJson(response.body);
     return responseApi;
 

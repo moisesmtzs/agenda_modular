@@ -1,15 +1,20 @@
 import 'dart:ffi';
 
 import 'package:agenda_app/src/models/ia_task.dart';
+import 'package:agenda_app/src/models/subject.dart';
 import 'package:agenda_app/src/models/task.dart';
 import 'package:agenda_app/src/providers/ia_taskProvider.dart';
+import 'package:agenda_app/src/providers/subjectProvider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:agenda_app/src/ia/text_to_speech.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:intl/intl.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:get/get.dart';
 import 'package:agenda_app/src/models/user.dart';
+
+import '../providers/tasksProvider.dart';
 
 class IA_Controller
 {
@@ -20,7 +25,11 @@ class IA_Controller
   String _text = "¿En que puedo ayudarte?"; //MENSAJE DE BIENVENIDA//
   double _confidence = 1.0; //CONFIABILIDAD//
   VoiceRosalind _voice = new VoiceRosalind();
+
+  //PROVIDERS//
   final ia_taskProvider ia_provider =  Get.put(ia_taskProvider());
+  final SubjectProvider subject_provider =  Get.put(SubjectProvider());
+  final TasksProvider task_provider =  Get.put(TasksProvider());
 
   //BANDERAS DE ACCION//
   int isNewTask = 0;
@@ -68,8 +77,8 @@ class IA_Controller
         if(isNewTask == 1)
         {
           NewTask.name = _text;
-          _voice.speak("¿Cual es la descripcion de la tarea?");
-          _text = "¿Cual es la descripcion de la tarea?";
+          _voice.speak("¿Cual es la descripción de la tarea?");
+          _text = "¿Cual es la descripción de la tarea?";
           isNewTask = 2;
         }
         //DESCRIPCION//
@@ -89,8 +98,85 @@ class IA_Controller
           _text = "¿De que materia?";
           isNewTask = 4;
         }
-          
-        
+        //MATERIA//
+        else if(isNewTask==4)
+        {
+          //VALIDAR SI EL USUARIO TIENE UNA MATERIA CON ESE NOMBRE//
+          String validSubject = "";
+          for(int i=0; i<_text.length; i++)
+          {
+            if(i==0)
+            {
+              validSubject+=_text[i].toUpperCase();
+            }
+            else
+            {
+              validSubject+=_text[i];
+            }
+          }
+          List<Subject?> ActualSubject = await subject_provider.getByName(validSubject, userSession.id.toString());
+          if(ActualSubject.length==0)
+          {
+            _voice.speak("Lo siento, no tienes una materia registrada con ese nombre, intenta con otra.");
+            _text = "¿De que materia?";
+          }
+          else
+          {
+            NewTask.subject = validSubject;
+            _voice.speak("¿Es de tipo Examen o Tarea?");
+            _text = "¿Es de tipo Examen o Tarea?";
+            isNewTask = 5;
+          }
+        }
+        //TIPO//
+        else if(isNewTask==5)
+        {
+          String isValidType = _text.toUpperCase();
+          if(isValidType == "EXAMEN" || isValidType == "TAREA")
+          {
+            if(isValidType == "EXAMEN")
+            {
+              NewTask.type="Examen";
+            }
+            else
+            {
+              NewTask.type="Tarea";
+            }
+            isNewTask = 6;
+            _voice.speak("A continuación, te muestro la informacion de la tarea, si es correcta di Guardar para registrarla o Cancelar para descartarla.");
+            _text = "El Nombre es: "+NewTask.name.toString() + "\nLa Descripcion es: "+NewTask.description.toString()+"\nLa Fecha es: "+NewTask.deliveryDate.toString()
+                  + "\nLa Materia es: "+NewTask.subject.toString() + "\nEl Tipo es: "+NewTask.type.toString();
+          }
+          else
+          {
+            _voice.speak("Lo siento, solo puede ser Examen o Tarea");
+            _text = "¿Es de tipo Examen o Tarea?";
+          }
+        }
+        //CONFIRMAR//
+        else if(isNewTask==6)
+        {
+          if(_text.toUpperCase() == "GUARDAR")
+          {
+            NewTask.status="PENDIENTE";
+            _voice.speak("Se guardara la tarea");
+            task_provider.create(NewTask);
+            isNewTask = 0;
+          }
+          else if(_text.toUpperCase() == "CANCELAR")
+          {
+            _voice.speak("Se ha descartado la tarea");
+            _text = "¿En que puedo ayudarte?";
+            NewTask = new Task();
+            isNewTask=0;
+          }
+          else
+          {
+            _voice.speak("Solo son validas las opciones Guardar o Cancelar.");
+            _text = "El Nombre es: "+NewTask.name.toString() + "\nLa Descripcion es: "+NewTask.description.toString()+"\nLa Fecha es: "+NewTask.deliveryDate.toString()
+                  + "\nLa Materia es: "+NewTask.subject.toString() + "\nEl Tipo es: "+NewTask.type.toString();
+          }
+        }
       }
       else
       {
@@ -135,7 +221,6 @@ class IA_Controller
               isNewTask=1;
               NewTask = new Task();
               NewTask.idUser = userSession.id;    
-              _voice.speak("Bien agregaremos una Tarea.");
               _voice.speak("¿Cual es el nombre de la tarea?");
               _text = "¿Cual es el nombre de la tarea?";
               //ELIMINAR//
@@ -185,10 +270,11 @@ class IA_Controller
     }
     else
     {
-      var now =new DateTime.now();
-      String NewDate = day + "/"+month+"/"+now.year.toString();
-      NewTask.deliveryDate= NewDate;
-      debugPrint(NewDate);
+      var now = new DateTime.now();
+      DateTime fecha = new DateTime(now.year,int.parse(month),int.parse(day));
+      String NewDate = day + "-"+month+"-"+now.year.toString()+" 00:00:00";
+      NewTask.deliveryDate= fecha.toString();
+      debugPrint(fecha.toString());
       return true;
     }
   }
