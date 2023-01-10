@@ -117,14 +117,14 @@ class IA_Controller
           List<Subject?> ActualSubject = await subject_provider.getByName(validSubject, userSession.id.toString());
           if(ActualSubject.length==0)
           {
-            _voice.speak("Lo siento, no tienes una materia registrada con ese nombre, intenta con otra.");
+            _voice.speak("Lo siento, no tienes una materia registrada con ese nombre, intenta con otra o verifica su ortografia.");
             _text = "¿De que materia?";
           }
           else
           {
             NewTask.subject = validSubject;
-            _voice.speak("¿Es de tipo Examen o Tarea?");
-            _text = "¿Es de tipo Examen o Tarea?";
+            _voice.speak("¿Es de tipo Examen, Tarea o Actividad?");
+            _text = "¿Es de tipo Examen, Tarea o Actividad?";
             isNewTask = 5;
           }
         }
@@ -132,25 +132,29 @@ class IA_Controller
         else if(isNewTask==5)
         {
           String isValidType = _text.toUpperCase();
-          if(isValidType == "EXAMEN" || isValidType == "TAREA")
+          if(isValidType == "EXAMEN" || isValidType == "TAREA" || isValidType == "ACTIVIDAD")
           {
             if(isValidType == "EXAMEN")
             {
               NewTask.type="Examen";
+            }
+            else if(isValidType == "ACTIVIDAD")
+            {
+              NewTask.type="Actividad";
             }
             else
             {
               NewTask.type="Tarea";
             }
             isNewTask = 6;
-            _voice.speak("A continuación, te muestro la informacion de la tarea, si es correcta di Guardar para registrarla o Cancelar para descartarla.");
-            _text = "El Nombre es: "+NewTask.name.toString() + "\nLa Descripcion es: "+NewTask.description.toString()+"\nLa Fecha es: "+NewTask.deliveryDate.toString()
+            _voice.speak("A continuación, te muestro la información de la tarea, si es correcta di Guardar para registrarla o Cancelar para descartarla.");
+            _text = "El Nombre es: "+NewTask.name.toString() + "\nLa Descripción es: "+NewTask.description.toString()+"\nLa Fecha es: "+NewTask.deliveryDate.toString()
                   + "\nLa Materia es: "+NewTask.subject.toString() + "\nEl Tipo es: "+NewTask.type.toString();
           }
           else
           {
-            _voice.speak("Lo siento, solo puede ser Examen o Tarea");
-            _text = "¿Es de tipo Examen o Tarea?";
+            _voice.speak("Lo siento, solo puede ser Examen, Tarea o Actividad");
+            _text = "¿Es de tipo Examen, Tarea o Actividad?";
           }
         }
         //CONFIRMAR//
@@ -159,8 +163,9 @@ class IA_Controller
           if(_text.toUpperCase() == "GUARDAR")
           {
             NewTask.status="PENDIENTE";
-            _voice.speak("Se guardara la tarea");
+            _voice.speak("Se guardó la tarea");
             task_provider.create(NewTask);
+            _text = "¿En que puedo ayudarte?";
             isNewTask = 0;
           }
           else if(_text.toUpperCase() == "CANCELAR")
