@@ -18,10 +18,12 @@ class AddTaskController extends GetxController {
   TextEditingController nameController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController subjectController = TextEditingController();
-  TextEditingController typeController = TextEditingController();
 
   var value = DateTime.now().toString().obs;
   DateTime _selectedDate = DateTime.now();
+
+  List<String> typeList = <String>['Actividad', 'Examen'].obs;
+  var typeSelected = ''.obs;
 
   void register( BuildContext context ) async {
 
@@ -29,7 +31,7 @@ class AddTaskController extends GetxController {
     String description = descriptionController.text;
     String date = _selectedDate.toString();
     String subject = subjectController.text.trim();
-    String type = typeController.text.trim();
+    String type = typeSelected.string;
 
     if ( isValidForm(name, description, date, subject, type) ) {
 
@@ -54,7 +56,7 @@ class AddTaskController extends GetxController {
           colorText: AppColors.colors.onSecondary
         );
         Future.delayed(const Duration(milliseconds: 1000), () {
-          Get.offAllNamed('/home');
+          Navigator.of(context).pop();
         });
       } else {
         Get.snackbar(
