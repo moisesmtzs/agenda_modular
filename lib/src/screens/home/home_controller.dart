@@ -31,8 +31,8 @@ class HomeController extends GetxController {
     Get.toNamed('/subject');
   }
 
-  void goToMatter() {
-    Get.toNamed('/matter');
+  void goToClase() {
+    Get.toNamed('/clase');
   }
 
   void logOut() {

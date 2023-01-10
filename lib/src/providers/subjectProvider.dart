@@ -22,8 +22,9 @@ class SubjectProvider extends GetConnect {
 
   Future<List<Subject?>> getByName(String name, String user) async {
     try {
-      Uri _url = Uri.http(Environment.API_URL_OLD, '/api/subject/findByName/$name/$user');
-      
+      Uri _url = Uri.http(
+          Environment.API_URL_OLD, '/api/subject/findByName/$name/$user');
+
       Map<String, String> headers = {
         'Content-Type': 'application/json',
         'Authorization': userSession.sessionToken ?? ''
@@ -34,7 +35,6 @@ class SubjectProvider extends GetConnect {
       final data = json.decode(res.body);
       Subject subject = Subject.fromJsonList(data);
       return subject.toList;
-
     } catch (e) {
       e.printError();
       return [];

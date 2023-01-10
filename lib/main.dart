@@ -84,7 +84,11 @@ class _MyAppState extends State<MyApp> {
               page: () => SubjectPage(),
               transition: Transition.rightToLeft),
           GetPage(
-              name: '/matter',
+              name: '/addSubject',
+              page: () => AddSubjectPage(),
+              transition: Transition.noTransition),
+          GetPage(
+              name: '/clase',
               page: () => ClasePage(),
               transition: Transition.noTransition),
         ],

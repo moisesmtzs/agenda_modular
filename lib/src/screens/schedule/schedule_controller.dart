@@ -5,7 +5,7 @@ import 'package:agenda_app/src/models/user.dart';
 
 class ScheduleController extends GetxController {
   User userSession = User.fromJson(GetStorage().read('user') ?? {});
-  void goToSubject() {
-    Get.toNamed('/subject');
+  void goToClase() {
+    Get.toNamed('/clase');
   }
 }
