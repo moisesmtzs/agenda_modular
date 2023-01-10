@@ -111,8 +111,8 @@ class TaskUpdateController extends GetxController {
       context: context,
       locale: const Locale('es', 'ES'),
       initialDate: _selectedDate,
-      firstDate: DateTime(2022), 
-      lastDate: DateTime(2023),
+      firstDate: DateTime(2023), 
+      lastDate: DateTime(2024),
     );
     if(picked != null && picked != _selectedDate) {
       value.value = picked.toString();

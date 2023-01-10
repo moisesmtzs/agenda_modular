@@ -179,35 +179,24 @@ class AddTaskPage extends StatelessWidget{
   Widget _taskType() {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 25),
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
       decoration: BoxDecoration(
         color: AppColors.colors.primaryContainer,
         borderRadius: BorderRadius.circular(15)
       ),
-      child: Form(
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        child: Column(
-          children: [
-            TextFormField(
-              controller: _controller.typeController,
-              textAlign: TextAlign.justify,
-              cursorRadius: const Radius.circular(8.0),
-              decoration: const InputDecoration(
-                hintText: "Examen",
-                labelText: "Tipo",
-                suffixIcon: Icon(Icons.assignment_late_outlined)
-              ),
-              validator: ( value ){
-                String pattern = r"\b([a-zA-ZÀ-ÿ][-,a-z. ']+[ ]*)+";
-                RegExp nameregExp  = RegExp(pattern);
-                return nameregExp.hasMatch( value ?? '' ) 
-                  ? null 
-                  : 'Tipo no válido';
-              }
-            )
-          ]
-        ),
+      child: Obx(() => DropdownButton(
+        hint: const Text('Tipo de tarea'),
+        isExpanded: true,
+        dropdownColor: AppColors.colors.primaryContainer,
+        borderRadius: BorderRadius.circular(12),
+        icon: const Icon(Icons.arrow_drop_down_circle_rounded),
+        value: _controller.typeSelected.value == '' ? null : _controller.typeSelected.value,
+        items: _dropDownItems(['Actividad', 'Examen']),
+        onChanged: (String? value) {
+          _controller.typeSelected.value = value!;
+        },
       ),
+      )
     );
     
   } 
@@ -233,5 +222,16 @@ class AddTaskPage extends StatelessWidget{
     );
 
   }
+
+  List<DropdownMenuItem<String>> _dropDownItems(List<String> types) {
+    List<DropdownMenuItem<String>> list = [];
+    for (var type in types) {
+      list.add(DropdownMenuItem(
+        child: Text(type),
+        value: type,
+      ));
+    }
+    return list;
+  } 
 
 }
