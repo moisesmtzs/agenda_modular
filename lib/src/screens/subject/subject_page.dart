@@ -23,7 +23,7 @@ class _SubjectPageState extends State<SubjectPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Crear materia',
+          'CREAR MATERIA',
           style: TextStyle(fontSize: 24),
         ),
       ),
