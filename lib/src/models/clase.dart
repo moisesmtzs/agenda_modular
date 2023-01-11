@@ -13,6 +13,7 @@ class Clase {
   String? days;
   String? classroom;
   String? building;
+  List<Clase> toList = [];
 
   Clase({
     this.id,
@@ -46,4 +47,13 @@ class Clase {
         "classroom": classroom,
         "building": building,
       };
+
+  Clase.fromJsonList(List<dynamic> jsonList) {
+    if (jsonList == null) return;
+
+    for (var element in jsonList) {
+      Clase clase = Clase.fromJson(element);
+      toList.add(clase);
+    }
+  }
 }

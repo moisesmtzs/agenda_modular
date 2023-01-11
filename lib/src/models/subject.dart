@@ -36,12 +36,12 @@ class Subject {
         "professor_name": professor_name,
       };
 
-  Subject.fromJsonList( List<dynamic> jsonList ) {
-      if ( jsonList == null ) return;
+  Subject.fromJsonList(List<dynamic> jsonList) {
+    if (jsonList == null) return;
 
-      for (var element in jsonList) {
-        Subject subject = Subject.fromJson(element);
-        toList.add(subject);
-      }
+    for (var element in jsonList) {
+      Subject subject = Subject.fromJson(element);
+      toList.add(subject);
+    }
   }
 }

@@ -20,6 +20,25 @@ class SubjectProvider extends GetConnect {
     return responseApi;
   }
 
+  Future<List<Subject?>> findByUser(String idUser) async {
+    try {
+      Uri _url =
+          Uri.http(Environment.API_URL_OLD, '/api/subject/findByUser/$idUser');
+
+      Map<String, String> headers = {
+        'Content-Type': 'application/json',
+        'Authorization': userSession.sessionToken ?? ''
+      };
+      final res = await http.get(_url, headers: headers);
+
+      final data = json.decode(res.body);
+      Subject subject = Subject.fromJsonList(data);
+      return subject.toList;
+    } catch (e) {
+      return [];
+    }
+  }
+
   Future<List<Subject?>> getByName(String name, String user) async {
     try {
       Uri _url = Uri.http(
@@ -39,5 +58,24 @@ class SubjectProvider extends GetConnect {
       e.printError();
       return [];
     }
+  }
+
+  Future<ResponseApi?> deleteSubject(String? id) async {
+    Response response = await delete('$url/delete/$id', headers: {
+      'Content-Type': 'application/json',
+      'Authorization': userSession.sessionToken ?? ''
+    });
+    ResponseApi responseApi = ResponseApi.fromJson(response.body);
+    return responseApi;
+  }
+
+  Future<ResponseApi?> updateSubject(Subject? subject) async {
+    Response response = await put('$url/update', subject!.toJson(), headers: {
+      'Content-Type': 'application/json',
+      'Authorization': userSession.sessionToken ?? ''
+    });
+
+    ResponseApi responseApi = ResponseApi.fromJson(response.body);
+    return responseApi;
   }
 }

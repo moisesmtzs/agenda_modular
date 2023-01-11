@@ -8,19 +8,13 @@ import 'package:agenda_app/src/providers/subjectProvider.dart';
 class SubjectController extends GetxController {
   User userSession = User.fromJson(GetStorage().read('user') ?? {});
 
-  final SubjectProvider _tasksProvider = SubjectProvider();
-
-  List<String> status = <String>['PENDIENTE', 'COMPLETADO'].obs;
-
-  var isSelected = false.obs;
-  var taskList = <Subject?>[].obs;
+  final SubjectProvider _subjectProvider = SubjectProvider();
 
   void goToAddSubject() {
     Get.toNamed('/addSubject');
   }
 
-  // Future<List<Subject?>> getTasks(String status) async {
-  //   return await _tasksProvider.getByUserAndStatus(
-  //       userSession.id ?? '0', status);
-  // }
+  Future<List<Subject?>> getTasks(String status) async {
+    return await _subjectProvider.findByUser(userSession.id ?? '0');
+  }
 }
