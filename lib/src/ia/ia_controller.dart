@@ -22,7 +22,8 @@ class IA_Controller
   User userSession = User.fromJson(GetStorage().read('user') ?? {});
   stt.SpeechToText _speech = stt.SpeechToText(); //ENCARGADO DE ESCUCHAR//
   bool _isListening = false; //BOOLEANO QUE DETERMIAN EL ESTADO DE LA VOZ//
-  String _text = "¿En que puedo ayudarte?"; //MENSAJE DE BIENVENIDA//
+  String _text = "¿En que puedo ayudarte?"; //MENSAJE A ANALIZAR//
+  String _stext = "¿En que puedo ayudarte?"; //MENSAJE AL USUARIO//
   double _confidence = 1.0; //CONFIABILIDAD//
   VoiceRosalind _voice = new VoiceRosalind();
 
@@ -32,7 +33,10 @@ class IA_Controller
   final TasksProvider task_provider =  Get.put(TasksProvider());
 
   //BANDERAS DE ACCION//
+  //TAREAS//
   int isNewTask = 0;
+  int deleteTask = 0;
+  Task? taskDb;
 
   //OBJETOS CON LOS QUE TRABAJARA LA IA//
   Task NewTask = new Task();
@@ -78,6 +82,7 @@ class IA_Controller
         {
           NewTask.name = _text;
           _voice.speak("¿Cual es la descripción de la tarea?");
+          _stext = "¿Cual es la descripción de la tarea?";
           _text = "¿Cual es la descripción de la tarea?";
           isNewTask = 2;
         }
@@ -87,7 +92,7 @@ class IA_Controller
           NewTask.description = _text;
           _voice.speak("¿Cual es la fecha de entrega de la tarea?");
           _voice.speak("Se claro con la fecha, especifica dia y mes.");
-          _text = "¿Cual es la fecha de entrega de la tarea? (Se claro con la fecha, especifica dia y mes)";
+          _stext = "¿Cual es la fecha de entrega de la tarea? (Se claro con la fecha, especifica dia y mes)";
           isNewTask = 3;
         }
         //FECHA//
@@ -95,7 +100,7 @@ class IA_Controller
         {
           createDate(words);
           _voice.speak("¿De que materia?");
-          _text = "¿De que materia?";
+          _stext = "¿De que materia?";
           isNewTask = 4;
         }
         //MATERIA//
@@ -118,13 +123,13 @@ class IA_Controller
           if(ActualSubject.length==0)
           {
             _voice.speak("Lo siento, no tienes una materia registrada con ese nombre, intenta con otra o verifica su ortografia.");
-            _text = "¿De que materia?";
+            _stext = "¿De que materia?";
           }
           else
           {
             NewTask.subject = validSubject;
             _voice.speak("¿Es de tipo Examen, Tarea o Actividad?");
-            _text = "¿Es de tipo Examen, Tarea o Actividad?";
+            _stext = "¿Es de tipo Examen, Tarea o Actividad?";
             isNewTask = 5;
           }
         }
@@ -148,13 +153,13 @@ class IA_Controller
             }
             isNewTask = 6;
             _voice.speak("A continuación, te muestro la información de la tarea, si es correcta di Guardar para registrarla o Cancelar para descartarla.");
-            _text = "El Nombre es: "+NewTask.name.toString() + "\nLa Descripción es: "+NewTask.description.toString()+"\nLa Fecha es: "+NewTask.deliveryDate.toString()
+            _stext = "El Nombre es: "+NewTask.name.toString() + "\nLa Descripción es: "+NewTask.description.toString()+"\nLa Fecha es: "+NewTask.deliveryDate.toString()
                   + "\nLa Materia es: "+NewTask.subject.toString() + "\nEl Tipo es: "+NewTask.type.toString();
           }
           else
           {
             _voice.speak("Lo siento, solo puede ser Examen, Tarea o Actividad");
-            _text = "¿Es de tipo Examen, Tarea o Actividad?";
+            _stext = "¿Es de tipo Examen, Tarea o Actividad?";
           }
         }
         //CONFIRMAR//
@@ -165,22 +170,68 @@ class IA_Controller
             NewTask.status="PENDIENTE";
             _voice.speak("Se guardó la tarea");
             task_provider.create(NewTask);
-            _text = "¿En que puedo ayudarte?";
+            _stext = "¿En que puedo ayudarte?";
             isNewTask = 0;
           }
           else if(_text.toUpperCase() == "CANCELAR")
           {
             _voice.speak("Se ha descartado la tarea");
-            _text = "¿En que puedo ayudarte?";
+            _stext = "¿En que puedo ayudarte?";
             NewTask = new Task();
             isNewTask=0;
           }
           else
           {
             _voice.speak("Solo son validas las opciones Guardar o Cancelar.");
-            _text = "El Nombre es: "+NewTask.name.toString() + "\nLa Descripcion es: "+NewTask.description.toString()+"\nLa Fecha es: "+NewTask.deliveryDate.toString()
+            _stext = "El Nombre es: "+NewTask.name.toString() + "\nLa Descripcion es: "+NewTask.description.toString()+"\nLa Fecha es: "+NewTask.deliveryDate.toString()
                   + "\nLa Materia es: "+NewTask.subject.toString() + "\nEl Tipo es: "+NewTask.type.toString();
           }
+        }
+      }
+      //ELIMINAR TAREA POR NOMBRE//
+      else if(deleteTask!=0)
+      {
+        //ELIMINAR LA TAREA POR NOMBRE//
+        if(deleteTask==1)
+        {
+          NewTask.name = _text.toUpperCase();
+          debugPrint(NewTask.name);
+          List<Task?> searchTask = await task_provider.getByUserAndName(userSession.id.toString(),NewTask.name.toString());
+          if(searchTask.length!=0)
+          {
+            taskDb = searchTask[0];
+            String? subjectName = taskDb?.name.toString();
+            _voice.speak("Existe la tarea, ¿Estas seguro de que quieres eliminarla?"); 
+            _stext = "Se eliminara la Tarea: "+ subjectName!;
+            deleteTask=2;
+          }
+          else
+          {
+            _voice.speak("Lo siento, no existe esa Tarea, intenta con otra.");
+            _stext = "¿En que puedo ayudarte?";
+            deleteTask=0;
+          }  
+        }
+        //CONFIRMACION
+        else if(deleteTask==2)
+        {
+          if(_text.toUpperCase() == "SÍ")
+          {
+            task_provider.deleteTask(taskDb?.id);
+            _voice.speak("Tarea eliminada exitosamente");
+            _stext = "¿En que puedo ayudarte?";
+            deleteTask=0;
+          }
+          else if(_text.toUpperCase() == "NO")
+          {
+            _voice.speak("No se eliminara la Tarea.");
+            _stext = "¿En que puedo ayudarte?";
+            deleteTask=0;
+          }
+          else
+          {
+            _voice.speak("Lo siento, utiliza Si, para confirmar y No, para cancelar");
+          } 
         }
       }
       else
@@ -207,7 +258,7 @@ class IA_Controller
         if(instruction.length==0)
         {
           _voice.speak("Lo siento, no conozco ese comando.");
-          _text = "¿En que puedo ayudarte?";
+          _stext = "¿En que puedo ayudarte?";
         }
         else
         {
@@ -215,21 +266,31 @@ class IA_Controller
           if(instruction.length!=2)
           {
             _voice.speak("Lo siento, el comando no es claro.");
-            _text = "¿En que puedo ayudarte?";
+            _stext = "¿En que puedo ayudarte?";
           }
           else
           {
             //ES UNA TAREA//
             if(instruction[0]?.object=="TAREA" || instruction[1]?.object=="TAREA")
             {
-              //INSERTAR//
-              isNewTask=1;
-              NewTask = new Task();
-              NewTask.idUser = userSession.id;    
-              _voice.speak("¿Cual es el nombre de la tarea?");
-              _text = "¿Cual es el nombre de la tarea?";
-              //ELIMINAR//
-
+              if(instruction[0]?.object=="INSERTAR" || instruction[1]?.object=="INSERTAR")
+              {
+                //INSERTAR//
+                isNewTask=1;
+                NewTask = new Task();
+                NewTask.idUser = userSession.id;    
+                _voice.speak("¿Cual es el nombre de la tarea?");
+                _stext = "¿Cual es el nombre de la tarea?";
+              }
+              else if(instruction[0]?.object=="ELIMINAR" || instruction[1]?.object=="ELIMINAR")
+              {
+                //ELIMINAR//
+                deleteTask=1;
+                NewTask = new Task();
+                NewTask.idUser = userSession.id; 
+                _voice.speak("¿Cual es el nombre de la tarea?");
+                _stext = "¿Cual es el nombre de la tarea?";
+              }
               //EDITAR//
 
             }
@@ -241,7 +302,7 @@ class IA_Controller
     else
     {
       _voice.speak("Lo siento, no estan permitidas palabras antisonantes. Intenta de Nuevo");
-      _text = "¿En que puedo ayudarte?";
+      _stext = "¿En que puedo ayudarte?";
     }   
   }
 
@@ -313,10 +374,22 @@ class IA_Controller
     _speech.stop();
   }
 
+  //REINICIAR TEXT//
+  void resetText()
+  {
+    _stext = "¿En que puedo ayudarte?";
+    _text = "¿En que puedo ayudarte?";
+  }
+
   //GETTERS//
   String getText()
   {
     return _text;
+  }
+
+  String getsText()
+  {
+    return _stext;
   }
 
   double getConfidence()
@@ -340,6 +413,12 @@ class IA_Controller
     _text = NewText;
   }
 
+  void setsText(String NewText)
+  {
+    _stext = NewText;
+    _text = NewText;
+  }
+
   void setListening(bool NewListening)
   {
     _isListening = NewListening;
@@ -349,5 +428,7 @@ class IA_Controller
   {
     _confidence=NewConfidence;
   }
+
+  
 
 }

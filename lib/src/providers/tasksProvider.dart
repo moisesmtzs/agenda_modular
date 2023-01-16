@@ -51,6 +51,28 @@ class TasksProvider extends GetConnect {
 
   }
 
+  //OBTENER POR NOMBRE Y USUARIO//
+  Future<List<Task?>> getByUserAndName( String idUser, String name ) async {
+
+    try {
+      Uri _url = Uri.http(Environment.API_URL_OLD, '/api/tasks/findByUserAndName/$idUser/$name');
+      
+      Map<String, String> headers = {
+        'Content-Type': 'application/json',
+        'Authorization': userSession.sessionToken ?? ''
+      };
+      final res = await http.get(_url, headers: headers);
+
+      final data = json.decode(res.body);
+      Task task = Task.fromJsonList(data);
+      return task.toList;
+
+    } catch (e) {
+      return [];
+    }
+
+  }
+
   Future<ResponseApi?> updateTask(Task? task) async {
 
     Response response = await put(
@@ -88,6 +110,7 @@ class TasksProvider extends GetConnect {
     return responseApi;
 
   }
+  
 
   Future<ResponseApi?> deleteTask( String? id ) async {
 

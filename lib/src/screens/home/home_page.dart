@@ -200,7 +200,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       borderRadius: BorderRadiusDirectional.circular(8),
                     ),
                     child: Text(
-                      _ia.getText(),
+                      _ia.getsText(),
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 20,
@@ -230,7 +230,7 @@ class _MyHomePageState extends State<MyHomePage> {
         setState(() => _ia.setListening(true));
         _ia.getSpeech().listen(
               onResult: (val) => setState(() {
-                _ia.setText(val.recognizedWords);
+                _ia.setsText(val.recognizedWords);
 
                 if (val.hasConfidenceRating && val.confidence > 0) {
                   _ia.setConfidence(val.confidence);
@@ -241,7 +241,7 @@ class _MyHomePageState extends State<MyHomePage> {
     } else {
       setState(() => _ia.setListening(false));
       if (_ia.getListening() == false) {
-        _ia.speakRosalind(_ia.getText());
+        _ia.speakRosalind(_ia.getsText());
       }
       _ia.stopListening();
     }
