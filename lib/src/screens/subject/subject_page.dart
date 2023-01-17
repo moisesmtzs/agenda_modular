@@ -8,9 +8,11 @@ import 'package:agenda_app/src/screens/subject/detail/subject_detail_controller.
 import 'package:agenda_app/src/screens/subject/update/subject_update_page.dart';
 import 'package:agenda_app/src/screens/subject/subject_controller.dart';
 import 'package:agenda_app/src/ui/app_colors.dart';
+import 'package:agenda_app/src/widgets/no_subject_widget.dart';
 
 class SubjectPage extends StatelessWidget {
   final SubjectController _subjectController = Get.put(SubjectController());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,12 +22,32 @@ class SubjectPage extends StatelessWidget {
           style: TextStyle(fontSize: 24),
         ),
       ),
+      body: FutureBuilder(
+          future: _subjectController.getSubjects(),
+          builder: (context, AsyncSnapshot<List<Subject?>> snapshot) {
+            if (snapshot.hasData) {
+              //preguntamos si viene informacion
+              if (snapshot.data!.isNotEmpty) {
+                return ListView.builder(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 10),
+                    physics: const ClampingScrollPhysics(),
+                    itemCount: snapshot.data?.length ?? 0,
+                    itemBuilder: (_, index) {
+                      return _subjectCard(snapshot.data![index]!, context);
+                    });
+              } else {
+                return NoSubjectWidget(text: 'No hay materias agregadas');
+              }
+            } else {
+              return NoSubjectWidget(text: 'No hay materias agregadas');
+            }
+          }),
       floatingActionButton: FloatingActionButton.extended(
         label: const Text('Agregar Materia'),
         onPressed: () => _subjectController.goToAddSubject(),
         icon: const Icon(Icons.add_circle),
       ),
-      body: Center(),
     );
   }
 
@@ -60,17 +82,6 @@ class SubjectPage extends StatelessWidget {
                 ]))));
   }
 
-  BoxDecoration _cardBorders() => BoxDecoration(
-          color: AppColors.colors.surface,
-          borderRadius: BorderRadius.circular(25),
-          boxShadow: const [
-            BoxShadow(
-              color: Colors.black12,
-              offset: Offset(0, 6),
-              blurRadius: 10,
-            )
-          ]);
-
   Widget _subjectText(String subjectName) {
     return SizedBox(
         width: 350,
@@ -84,4 +95,15 @@ class SubjectPage extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             )));
   }
+
+  BoxDecoration _cardBorders() => BoxDecoration(
+          color: AppColors.colors.surface,
+          borderRadius: BorderRadius.circular(25),
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black12,
+              offset: Offset(0, 6),
+              blurRadius: 10,
+            )
+          ]);
 }
