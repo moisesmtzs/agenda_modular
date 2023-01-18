@@ -191,7 +191,7 @@ class AddTaskPage extends StatelessWidget{
         borderRadius: BorderRadius.circular(12),
         icon: const Icon(Icons.arrow_drop_down_circle_rounded),
         value: _controller.typeSelected.value == '' ? null : _controller.typeSelected.value,
-        items: _dropDownItems(['Actividad', 'Examen']),
+        items: _dropDownItems(['Actividad', 'Examen', 'Tarea']),
         onChanged: (String? value) {
           _controller.typeSelected.value = value!;
         },

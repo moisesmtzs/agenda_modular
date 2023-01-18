@@ -22,7 +22,7 @@ class AddTaskController extends GetxController {
   var value = DateTime.now().toString().obs;
   DateTime _selectedDate = DateTime.now();
 
-  List<String> typeList = <String>['Actividad', 'Examen'].obs;
+  List<String> typeList = <String>['Actividad', 'Examen', 'Tarea'].obs;
   var typeSelected = ''.obs;
 
   void register( BuildContext context ) async {
