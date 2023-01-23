@@ -14,7 +14,7 @@ class SubjectController extends GetxController {
     Get.toNamed('/addSubject');
   }
 
-  Future<List<Subject?>> getTasks(String status) async {
+  Future<List<Subject?>> getSubjects() async {
     return await _subjectProvider.findByUser(userSession.id ?? '0');
   }
 }
