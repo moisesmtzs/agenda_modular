@@ -52,6 +52,7 @@ class SubjectProvider extends GetConnect {
       final res = await http.get(_url, headers: headers);
 
       final data = json.decode(res.body);
+      
       Subject subject = Subject.fromJsonList(data);
       return subject.toList;
     } catch (e) {

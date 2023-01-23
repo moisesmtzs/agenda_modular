@@ -6,20 +6,23 @@ String classToJson(ia_task data) => json.encode(data.toJson());
 
 class ia_task {
   String? id;
-  String? word;
-  String? object;
+  String? command;
+  String? type;
+  String? obj;
   List<ia_task> toList = [];
 
   ia_task({
     this.id,
-    this.word,
-    this.object,
+    this.command,
+    this.type,
+    this.obj,
   });
 
   factory ia_task.fromJson(Map<String, dynamic> json) => ia_task(
         id: json["id"],
-        word: json["word"],
-        object: json["object"],
+        command: json["command"],
+        type: json["type"],
+        obj: json["obj"],
       );
 
   ia_task.fromJsonList( List<dynamic> jsonList ) {
@@ -33,7 +36,8 @@ class ia_task {
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "word": word,
-        "object": object,
+        "command": command,
+        "type": type,
+        "obj": obj,
       };
 }

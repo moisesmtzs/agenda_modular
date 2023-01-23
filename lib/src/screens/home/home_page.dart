@@ -18,6 +18,8 @@ import 'package:agenda_app/src/ia/text_to_speech.dart';
 import 'package:highlight_text/highlight_text.dart';
 import 'package:avatar_glow/avatar_glow.dart';
 
+import '../../ia/ia_controller.dart';
+
 // import 'package:agenda_app/src/widgets/card_container.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -241,7 +243,7 @@ class _MyHomePageState extends State<MyHomePage> {
     } else {
       setState(() => _ia.setListening(false));
       if (_ia.getListening() == false) {
-        _ia.speakRosalind(_ia.getsText());
+        _ia.isCommand(_ia.getsText());
       }
       _ia.stopListening();
     }
