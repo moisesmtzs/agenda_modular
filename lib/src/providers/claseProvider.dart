@@ -39,4 +39,46 @@ class ClaseProvider extends GetConnect {
       return [];
     }
   }
+
+  Future<List<Clase?>> getByIdUserAndIdSubject(
+      String subjectt, String user) async {
+    try {
+      Uri _url = Uri.http(Environment.API_URL_OLD,
+          '/api/Clase/getByIdUserAndIdSubject/$subjectt/$user');
+
+      Map<String, String> headers = {
+        'Content-Type': 'application/json',
+        'Authorization': userSession.sessionToken ?? ''
+      };
+
+      final res = await http.get(_url, headers: headers);
+
+      final data = json.decode(res.body);
+
+      Clase subject = Clase.fromJsonList(data);
+      return subject.toList;
+    } catch (e) {
+      e.printError();
+      return [];
+    }
+  }
+
+  Future<ResponseApi?> deleteClase(String? id) async {
+    Response response = await delete('$url/delete/$id', headers: {
+      'Content-Type': 'application/json',
+      'Authorization': userSession.sessionToken ?? ''
+    });
+    ResponseApi responseApi = ResponseApi.fromJson(response.body);
+    return responseApi;
+  }
+
+  Future<ResponseApi?> updateClase(Clase? clase) async {
+    Response response = await put('$url/update', clase!.toJson(), headers: {
+      'Content-Type': 'application/json',
+      'Authorization': userSession.sessionToken ?? ''
+    });
+
+    ResponseApi responseApi = ResponseApi.fromJson(response.body);
+    return responseApi;
+  }
 }

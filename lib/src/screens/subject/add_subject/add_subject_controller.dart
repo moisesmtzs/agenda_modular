@@ -30,6 +30,7 @@ class AddSubjectController extends GetxController {
           name: name,
           subject_code: code,
           professor_name: profesor);
+
       ResponseApi? responseApi = await subjectProvider.create(subject);
       if (responseApi?.success == true) {
         Get.snackbar(
