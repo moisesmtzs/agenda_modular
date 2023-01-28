@@ -36,6 +36,8 @@ class IA_Controller
 
   List<command?> posCommands = []; //POSIBLES COMANDOS//
 
+  List<command?> descartList = []; //LISTA DE COMANDOS DESCARTADOS//
+
   String newCommand = "";
   
   //BANDERAS//
@@ -202,8 +204,23 @@ class IA_Controller
       {
         if(posCommands.length>0)
         {
+          descartList.add(posCommands[0]);
           posCommands.removeAt(0);
           waitAnswer=0;
+          //ELIMINAR IGUALES AL DESCARTADO//
+          for (int p = 0; p < posCommands.length; p++)
+          {
+            for (int d = 0; d < descartList.length; d++)
+            {
+              if(posCommands[p]!.task!.type == descartList[p]!.task!.type)
+              {
+                if(posCommands[d]!.task!.obj == descartList[d]!.task!.obj)
+                {
+                  posCommands.removeAt(p);
+                }
+              }
+            }
+          }
           searchNewCommand();
         }
         else
