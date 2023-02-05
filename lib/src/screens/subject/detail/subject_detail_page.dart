@@ -12,15 +12,15 @@ class SubjectDetailPage extends StatelessWidget {
       Get.put(SubjectDetailController());
 
   late Subject? subject;
-  //late var datetime = DateFormat("yyyy-MM-dd")
-  //    .format(DateTime.parse(subject?.deliveryDate ?? ''));
+  late Subject? code;
+  late Subject? profesor;
 
   SubjectDetailPage({Key? key, required this.subject}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.4,
+      height: MediaQuery.of(context).size.height * 1,
       margin: const EdgeInsets.only(top: 20, bottom: 40, left: 30, right: 30),
       child: ListView(physics: const ClampingScrollPhysics(), children: [
         Row(
@@ -64,6 +64,15 @@ class SubjectDetailPage extends StatelessWidget {
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 40),
+        Text(
+          subject?.subject_code ?? '',
+          style: const TextStyle(fontSize: 16),
+        ),
+        const SizedBox(height: 10),
+        Text(
+          subject?.professor_name ?? '',
+          style: const TextStyle(fontSize: 16),
+        ),
       ]),
     );
   }

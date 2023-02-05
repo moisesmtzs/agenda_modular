@@ -1,3 +1,4 @@
+import 'package:agenda_app/src/models/subject.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:agenda_app/src/screens/clase/add_clase/add_clase_controller.dart';
@@ -45,6 +46,7 @@ class _ClasePageState extends State<ClasePage> {
         physics: const ClampingScrollPhysics(),
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         children: [
+          _dropDownSubjects(claseController.subjects),
           _day(),
           _begin(),
           _end(),
@@ -56,9 +58,46 @@ class _ClasePageState extends State<ClasePage> {
     );
   }
 
+  Widget _dropDownSubjects(List<Subject?> subjects) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 20),
+      child: DropdownButton(
+        underline: Container(
+            alignment: Alignment.centerRight,
+            child: Icon(
+              Icons.arrow_drop_down_circle,
+            )),
+        elevation: 3,
+        isExpanded: true,
+        hint: Text(
+          'Seleccionar materia',
+          style: TextStyle(color: Colors.black, fontSize: 16),
+        ),
+        items: _dropDownItems(subjects),
+        value: claseController.idsubject,
+        onChanged: (option) {
+          claseController.idsubject = option.toString();
+        },
+      ),
+    );
+  }
+
+  List<DropdownMenuItem<String>> _dropDownItems(List<Subject?> subjects) {
+    //Recuperamos las categorias para mostrar en un dropdown
+    List<DropdownMenuItem<String>> list = [];
+    subjects.forEach((subjects) {
+      list.add(DropdownMenuItem(
+        child: Text(subjects?.name ?? ''),
+        value: subjects?.id,
+      ));
+      //debugPrint(subjects?.name.toString());
+    });
+    return list;
+  }
+
   Widget _begin() {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 45, vertical: 15),
+      margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
       padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 10),
       decoration: BoxDecoration(
           color: AppColors.colors.primaryContainer,
@@ -89,7 +128,7 @@ class _ClasePageState extends State<ClasePage> {
 
   Widget _end() {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 45, vertical: 15),
+      margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
       padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 10),
       decoration: BoxDecoration(
           color: AppColors.colors.primaryContainer,

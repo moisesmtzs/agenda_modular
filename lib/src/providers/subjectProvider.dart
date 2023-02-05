@@ -21,6 +21,7 @@ class SubjectProvider extends GetConnect {
   }
 
   Future<List<Subject?>> findByUser(String idUser) async {
+    //retorna una lista de tipo subject
     try {
       Uri _url =
           Uri.http(Environment.API_URL_OLD, '/api/subject/findByUser/$idUser');
@@ -32,8 +33,9 @@ class SubjectProvider extends GetConnect {
       final res = await http.get(_url, headers: headers);
 
       final data = json.decode(res.body);
-      Subject subject = Subject.fromJsonList(data);
-      return subject.toList;
+      Subject subject = Subject.fromJsonList(data); //recuperamos los datos
+      return subject
+          .toList; //retornamos los datos y los regresamos como una lista
     } catch (e) {
       return [];
     }
@@ -52,7 +54,7 @@ class SubjectProvider extends GetConnect {
       final res = await http.get(_url, headers: headers);
 
       final data = json.decode(res.body);
-      
+
       Subject subject = Subject.fromJsonList(data);
       return subject.toList;
     } catch (e) {

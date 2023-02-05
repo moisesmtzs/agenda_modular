@@ -37,6 +37,7 @@ class Subject {
       };
 
   Subject.fromJsonList(List<dynamic> jsonList) {
+    //Contiene los datos que recuperamos del backend
     if (jsonList == null) return;
 
     for (var element in jsonList) {

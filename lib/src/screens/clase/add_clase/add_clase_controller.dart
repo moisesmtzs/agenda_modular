@@ -1,3 +1,5 @@
+import 'package:agenda_app/src/models/subject.dart';
+import 'package:agenda_app/src/providers/subjectProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -10,25 +12,42 @@ import 'package:get_storage/get_storage.dart';
 
 class ClaseController extends GetxController {
   User userSession = User.fromJson(GetStorage().read('user') ?? {});
+  String? idsubject;
   String? begineController;
   String? endController;
   String? daysController;
   TextEditingController clasroomController = TextEditingController();
   TextEditingController buildingController = TextEditingController();
+  SubjectProvider subjectProvider = SubjectProvider();
+
+  //dropdown
+  List<Subject?> subjects = <Subject>[].obs;
+
+  ClaseController() {
+    getSubjects();
+  }
+
+  void getSubjects() async {
+    var result = await subjectProvider.findByUser(userSession.id as String);
+    subjects.clear();
+    subjects.addAll(result);
+  }
 
   ClaseProvider claseProvider = ClaseProvider();
 
   void register(BuildContext context) async {
     String idUser = userSession.id as String;
+    String? idSubject = idsubject;
     String? inicio = begineController;
     String? fin = endController;
     String? days = daysController;
     String clasroom = clasroomController.text;
     String building = buildingController.text;
 
-    if (isValidForms(inicio!, fin!, days!, clasroom, building)) {
+    if (isValidForms(idSubject!, inicio!, fin!, days!, clasroom, building)) {
       Clase clase = Clase(
         id_user: idUser,
+        id_subject: idSubject,
         begin_hour: inicio,
         end_hour: fin,
         days: days,
@@ -40,7 +59,7 @@ class ClaseController extends GetxController {
       if (responseApi?.success == true) {
         Get.snackbar(responseApi?.message ?? '', 'Clase creada correctamente');
         Future.delayed(const Duration(milliseconds: 1000), () {
-          Get.offNamed('/clase');
+          Get.offNamed('/schedule');
         });
       } else {
         Get.snackbar('Datos no válidos', responseApi?.message ?? '',
@@ -49,14 +68,18 @@ class ClaseController extends GetxController {
     }
   }
 
-  bool isValidForms(String inicio, String fin, String days, String clasroom,
-      String building) {
+  bool isValidForms(String idSubject, String inicio, String fin, String days,
+      String clasroom, String building) {
+    if (idSubject.isEmpty) {
+      Get.snackbar("Datos no válidos", "Debes seleccionar una materia");
+      return false;
+    }
     if (inicio.isEmpty) {
-      Get.snackbar("Datos no válidos", "Debes ingresar una hora de inicio");
+      Get.snackbar("Datos no válidos", "Debes seleccionar una hora de inicio");
       return false;
     }
     if (fin.isEmpty) {
-      Get.snackbar("Datos no válidos", "Debes ingresar una hora de fin");
+      Get.snackbar("Datos no válidos", "Debes seleccionar una hora de fin");
       return false;
     }
     if (days.isEmpty) {

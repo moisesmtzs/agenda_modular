@@ -15,7 +15,7 @@ class SchedulePage extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        label: const Text('Agregar Materia'),
+        label: const Text('Agregar Clase'),
         onPressed: () => subjectController.goToClase(),
         icon: const Icon(Icons.add_circle),
       ),
