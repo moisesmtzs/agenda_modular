@@ -201,6 +201,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadiusDirectional.circular(8),
                     ),
+                    
                     child: Text(
                       _ia.getsText(),
                       style: TextStyle(
@@ -209,6 +210,39 @@ class _MyHomePageState extends State<MyHomePage> {
                           fontWeight: FontWeight.bold),
                       textAlign: TextAlign.justify,
                     ),
+
+                  ),
+                ),
+              ),
+            ),
+          ),
+
+          ClipRRect(
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 8.0, sigmaY: 8.0),
+              child: Container(
+                margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                decoration: BoxDecoration(
+                    color: const Color.fromRGBO(62, 66, 107, 0.8),
+                    borderRadius: BorderRadius.circular(16.0)),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadiusDirectional.circular(8),
+                    ),
+                    
+                    child: Text(
+                      _ia.getText(),
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.justify,
+                    ),
+                    
                   ),
                 ),
               ),
@@ -232,7 +266,7 @@ class _MyHomePageState extends State<MyHomePage> {
         setState(() => _ia.setListening(true));
         _ia.getSpeech().listen(
               onResult: (val) => setState(() {
-                _ia.setsText(val.recognizedWords);
+                _ia.setText(val.recognizedWords);
 
                 if (val.hasConfidenceRating && val.confidence > 0) {
                   _ia.setConfidence(val.confidence);
@@ -243,7 +277,7 @@ class _MyHomePageState extends State<MyHomePage> {
     } else {
       setState(() => _ia.setListening(false));
       if (_ia.getListening() == false) {
-        _ia.isCommand(_ia.getsText());
+        _ia.isCommand(_ia.getText());
       }
       _ia.stopListening();
     }

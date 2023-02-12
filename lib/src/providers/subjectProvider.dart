@@ -77,8 +77,29 @@ class SubjectProvider extends GetConnect {
       'Content-Type': 'application/json',
       'Authorization': userSession.sessionToken ?? ''
     });
-
     ResponseApi responseApi = ResponseApi.fromJson(response.body);
     return responseApi;
+  }
+
+   //OBTENER POR NOMBRE Y USUARIO//
+  Future<List<Subject?>> getByUserNameIA( String idUser, String name ) async {
+
+    try {
+      Uri _url = Uri.http(Environment.API_URL_OLD, '/api/subject/findByNameIA/$name/$idUser');
+      
+      Map<String, String> headers = {
+        'Content-Type': 'application/json',
+        'Authorization': userSession.sessionToken ?? ''
+      };
+      final res = await http.get(_url, headers: headers);
+
+      final data = json.decode(res.body);
+      Subject task = Subject.fromJsonList(data);
+      return task.toList;
+
+    } catch (e) {
+      return [];
+    }
+
   }
 }

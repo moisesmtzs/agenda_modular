@@ -25,8 +25,9 @@ class IA_Controller
   bool _isListening = false; //BOOLEANO QUE DETERMIAN EL ESTADO DE LA VOZ//
   double _confidence = 1.0; //CONFIABILIDAD//
 
-  String _text = "¿En que puedo ayudarte?"; //MENSAJE A ANALIZAR//
-  String _stext = "¿En que puedo ayudarte?"; //MENSAJE AL USUARIO//
+  
+  String _stext = "¿En que puedo ayudarte?"; //MENSAJE A ANALIZAR//
+  String _text = ""; //MENSAJE AL USUARIO//
   
   VoiceRosalind _voice = new VoiceRosalind(); //ENCARGADO DE HABLAR//
 
@@ -70,6 +71,7 @@ class IA_Controller
 
   Subject NewSubject = new Subject();
   Subject? subjectDB;
+  int modCount = 0;
   
   // ---------------------------------------------------------------------------------------- //
 
@@ -84,9 +86,8 @@ class IA_Controller
   //ANALIZAR SI EL COMANDO ES VALIDO//
   void isCommand(String textSpeak) async 
   {
-    debugPrint(actualType.toString() + "|" + actualObj.toString());
     //CANCELAR ACCION//
-    if(_stext.toUpperCase() == "CANCELAR")
+    if(_text.toUpperCase() == "CANCELAR")
     {
       _voice.speak("Cancelando...");
       resetIA();
@@ -102,8 +103,6 @@ class IA_Controller
     }
     else
     {
-      debugPrint(_stext);
-
       //BUSCAR MALAS PALABRAS//
       if(badwords())
       {
@@ -134,7 +133,7 @@ class IA_Controller
           return;
         }
         //BUSCAMOS EL COMANDO EN LA BD//
-        String searchCommand = _stext.toUpperCase();
+        String searchCommand = _text.toUpperCase();
         List<ia_task?> bd_exist = await ia_provider.getByCommand(searchCommand);
         debugPrint("SIZE: "+bd_exist.length.toString());
         //SI EL COMANDO EXISTE//
@@ -151,6 +150,18 @@ class IA_Controller
             NewTask.idUser = userSession.id;    
             _voice.speak("Se agregará una nueva Tarea. ¿Cuál es el nombre de la tarea?");
             _stext = "¿Cual es el nombre de la tarea?";
+          }
+          //MODIFICAR TAREA//
+          else if(bd_exist[0]!.obj=="1" && bd_exist[0]!.type=="2")
+          {
+            //CAMBIAR A MODO MODIFICAR TAREA//
+            actualType=2;
+            actualObj=1;
+            actualProcess=1;
+            NewTask = new Task();
+            NewTask.idUser = userSession.id;    
+            _voice.speak("Se modificara una Tarea. ¿Cuál es el nombre de la Tarea?");
+            _stext = "¿Cual es el nombre de la Tarea?";
           }
           //ELIMINAR TAREA//
           else if(bd_exist[0]!.obj=="1" && bd_exist[0]!.type=="3")
@@ -176,6 +187,31 @@ class IA_Controller
             _voice.speak("Se agregará una nueva Materia. ¿Cuál es el nombre de la Materia?");
             _stext = "¿Cual es el nombre de la materia?";
           }
+          //MODIFICAR MATERIA//
+          else if(bd_exist[0]!.obj=="2" && bd_exist[0]!.type=="2")
+          {
+            //CAMBIAR A MODO ELIMINAR MATERIA//
+            actualType=2;
+            actualObj=2;
+            actualProcess=1;
+            NewSubject = new Subject();
+            NewSubject.id_user = userSession.id;    
+            _voice.speak("Se modificara una Materia. ¿Cuál es el nombre de la Materia?");
+            _stext = "¿Cual es el nombre de la Materia?";
+          }
+          //ELIMINAR MATERIA//
+          else if(bd_exist[0]!.obj=="2" && bd_exist[0]!.type=="3")
+          {
+            //CAMBIAR A MODO ELIMINAR MATERIA//
+            actualType=3;
+            actualObj=2;
+            actualProcess=1;
+            NewSubject = new Subject();
+            NewSubject.id_user = userSession.id;    
+            _voice.speak("Se eliminara una Materia. ¿Cuál es el nombre de la Materia?");
+            _stext = "¿Cual es el nombre de la Materia?";
+          }
+
         }
         else
         {
@@ -225,7 +261,7 @@ class IA_Controller
           {
             //CREAMOS UNA IA TASK//
             ia_task newTask = new ia_task();
-            newTask.command = _stext.toUpperCase();
+            newTask.command = _text.toUpperCase();
             newTask.obj = posCommands[0]!.task!.obj;
             newTask.type = posCommands[0]!.task!.type;
             ia_provider.create(newTask);
@@ -240,6 +276,20 @@ class IA_Controller
               NewTask.idUser = userSession.id;    
               _voice.speak("Se agregará una nueva Tarea. ¿Cuál es el nombre de la tarea?");
               _stext = "¿Cual es el nombre de la tarea?";
+              _text = "";
+            }
+            //MODIFICAR TAREA//
+            else if(bd_exist[0]!.obj=="1" && bd_exist[0]!.type=="2")
+            {
+              //CAMBIAR A MODO MODIFICAR MATERIA//
+              actualType=2;
+              actualObj=1;
+              actualProcess=1;
+              NewTask = new Task();
+              NewTask.idUser = userSession.id;       
+              _voice.speak("Se modificara una Tarea. ¿Cuál es el nombre de la Tarea?");
+              _stext = "¿Cual es el nombre de la Tarea?";
+              _text = "";
             }
             //ELIMINAR TAREA//
             else if(newTask.obj== "1" && newTask.type== "3")
@@ -252,6 +302,7 @@ class IA_Controller
               NewTask.idUser = userSession.id;    
               _voice.speak("Se eliminara una Tarea. ¿Cuál es el nombre de la tarea?");
               _stext = "¿Cual es el nombre de la tarea?";
+              _text = "";
             }
             //INSERTAR MATERIA//
             else if(newTask.obj == "2" && newTask.type == "1")
@@ -264,6 +315,33 @@ class IA_Controller
               NewSubject.id_user = userSession.id;    
               _voice.speak("Se agregará una nueva Materia. ¿Cuál es el nombre de la Materia?");
               _stext = "¿Cual es el nombre de la materia?";
+              _text = "";
+            }
+            //MODIFICAR MATERIA//
+            else if(bd_exist[0]!.obj=="2" && bd_exist[0]!.type=="2")
+            {
+              //CAMBIAR A MODO ELIMINAR MATERIA//
+              actualType=2;
+              actualObj=2;
+              actualProcess=1;
+              NewSubject = new Subject();
+              NewSubject.id_user = userSession.id;    
+              _voice.speak("Se modificara una Materia. ¿Cuál es el nombre de la Materia?");
+              _stext = "¿Cual es el nombre de la Materia?";
+              _text = "";
+            }
+            //ELIMINAR MATERIA//
+            else if(bd_exist[0]!.obj=="2" && bd_exist[0]!.type=="3")
+            {
+              //CAMBIAR A MODO ELIMINAR MATERIA//
+              actualType=3;
+              actualObj=2;
+              actualProcess=1;
+              NewSubject = new Subject();
+              NewSubject.id_user = userSession.id;    
+              _voice.speak("Se eliminara una Materia. ¿Cuál es el nombre de la Materia?");
+              _stext = "¿Cual es el nombre de la Materia?";
+              _text = "";
             }
             else
             {
@@ -274,7 +352,7 @@ class IA_Controller
           else if(posCommands.length > 1)
           {
             isNewCommand = true;
-            newCommand = _stext.toUpperCase();
+            newCommand = _text.toUpperCase();
             waitAnswer=0;
             //PRIMER DESCARTE//
             searchNewCommand();
@@ -320,9 +398,9 @@ class IA_Controller
     //ESPERA UN SI O NO// 
     if(waitAnswer != 0)
     {
-      debugPrint(_stext);
+      debugPrint(_text);
       //SI LA RESPUESTA ES NO//
-      if(_stext.toUpperCase() == "NO")
+      if(_text.toUpperCase() == "NO")
       {
         if(posCommands.isNotEmpty)
         {
@@ -344,7 +422,7 @@ class IA_Controller
         }
       }
       //SI LA RESPUESTA ES SI//
-      else if(_stext.toUpperCase() == "SÍ")
+      else if(_text.toUpperCase() == "SÍ" || _text.toUpperCase() == "SI")
       {
         //INSERTAR TAREA//
         if(waitAnswer==1)
@@ -359,10 +437,32 @@ class IA_Controller
           //CAMBIAR A MODO REGISTRAR TAREA//
           actualType=1;
           actualObj=1;
+          actualProcess=1;
           NewTask = new Task();
           NewTask.idUser = userSession.id;    
           _voice.speak("¿Cual es el nombre de la tarea?");
           _stext = "¿Cual es el nombre de la tarea?";
+          _text = "";
+        }
+        //MODIFICAR MATERIA//
+        else if(waitAnswer==4)
+        {
+          //CREAMOS UNA IA TASK//
+          ia_task newTask = new ia_task();
+          newTask.command = newCommand.toUpperCase();
+          newTask.obj = posCommands[0]!.task!.obj;
+          newTask.type = posCommands[0]!.task!.type;
+          ia_provider.create(newTask);
+          debugPrint(newTask.toJson().toString());
+          //CAMBIAR A MODO MODIFICAR TAREA//
+          actualType=2;
+          actualObj=1;
+          actualProcess=1;
+          NewTask = new Task();
+          NewTask.idUser = userSession.id;       
+          _voice.speak("¿Cual es el nombre de la Tarea?");
+          _stext = "¿Cual es el nombre de la Tarea?";
+          _text = "";
         }
         //ELIMINAR TAREA//
         else if(waitAnswer==7)
@@ -375,17 +475,18 @@ class IA_Controller
           ia_provider.create(newTask);
           debugPrint(newTask.toJson().toString());
           //CAMBIAR A MODO ELIMINAR TAREA//
-          actualType=1;
+          actualType=3;
           actualObj=1;
+          actualProcess=1;
           NewTask = new Task();
           NewTask.idUser = userSession.id;    
           _voice.speak("¿Cual es el nombre de la tarea?");
           _stext = "¿Cual es el nombre de la tarea?";
+          _text = "";
         }
         //INSERTAR MATERIA//
         else if(waitAnswer==2)
         {
-          
           //CAMBIAR A MODO REGISTRAR MATERIA//
           actualType=1;
           actualObj=2;
@@ -394,6 +495,47 @@ class IA_Controller
           NewSubject.id_user = userSession.id;    
           _voice.speak("Se agregará una nueva Materia. ¿Cuál es el nombre de la Materia?");
           _stext = "¿Cual es el nombre de la materia?";
+          _text = "";
+        }
+        //MODIFICAR MATERIA//
+        else if(waitAnswer==5)
+        {
+          //CREAMOS UNA IA TASK//
+          ia_task newTask = new ia_task();
+          newTask.command = newCommand.toUpperCase();
+          newTask.obj = posCommands[0]!.task!.obj;
+          newTask.type = posCommands[0]!.task!.type;
+          ia_provider.create(newTask);
+          debugPrint(newTask.toJson().toString());
+          //CAMBIAR A MODO MODIFICAR TAREA//
+          actualType=2;
+          actualObj=2;
+          actualProcess=1;
+          NewSubject = new Subject();
+          NewSubject.id_user = userSession.id;     
+          _voice.speak("¿Cual es el nombre de la Materia?");
+          _stext = "¿Cual es el nombre de la Materia?";
+          _text = "";
+        }
+        //ELIMINAR MATERIA//
+        else if(waitAnswer==8)
+        {
+          //CREAMOS UNA IA TASK//
+          ia_task newTask = new ia_task();
+          newTask.command = newCommand.toUpperCase();
+          newTask.obj = posCommands[0]!.task!.obj;
+          newTask.type = posCommands[0]!.task!.type;
+          ia_provider.create(newTask);
+          debugPrint(newTask.toJson().toString());
+          //CAMBIAR A MODO ELIMINAR TAREA//
+          actualType=3;
+          actualObj=2;
+          actualProcess = 1;
+          NewSubject = new Subject();
+          NewSubject.id_user = userSession.id;     
+          _voice.speak("¿Cual es el nombre de la Materia?");
+          _stext = "¿Cual es el nombre de la Materia?";
+          _text = "";
         }
       }
       else
@@ -429,6 +571,7 @@ class IA_Controller
           {
             _voice.speak("¿Quieres insertar una Tarea?");
             _stext = "¿Quieres insertar una Tarea?";
+            _text = "";
             waitAnswer = 1;
           }
           //INSERTAR MATERIA - waitAnswer: 2//
@@ -436,6 +579,7 @@ class IA_Controller
           {
             _voice.speak("¿Quieres insertar una Tarea?");
             _stext = "¿Quieres insertar una Tarea?";
+            _text = "";
             waitAnswer = 2;
           }
           //INSERTAR MATERIA - waitAnswer: 3//
@@ -443,6 +587,7 @@ class IA_Controller
           {
             _voice.speak("¿Quieres insertar una Clase?");
             _stext = "¿Quieres insertar una Clase?";
+            _text = "";
             waitAnswer = 3;
           }
           else
@@ -464,11 +609,11 @@ class IA_Controller
           //MODIFICAR MATERIA - waitAnswer: 5//
           else if(posCommands[0]!.task!.obj == "2")
           {
-            _voice.speak("¿Quieres modificar una Tarea?");
-            _stext = "¿Quieres modificar una Tarea?";
+            _voice.speak("¿Quieres modificar una Materia?");
+            _stext = "¿Quieres modificar una Materia?";
             waitAnswer = 5;
           }
-          //MODIFICAR MATERIA - waitAnswer: 6//
+          //MODIFICAR CLASE - waitAnswer: 6//
           else if(posCommands[0]!.task!.obj == "3")
           {
             _voice.speak("¿Quieres modificar una Clase?");
@@ -484,21 +629,23 @@ class IA_Controller
         //ELIMINAR//
         else if(posCommands[0]!.task!.type == "3")
         {
-          //MODIFICAR TAREA - waitAnswer: 7//
+          //ELIMINAR TAREA - waitAnswer: 7//
           if(posCommands[0]!.task!.obj == "1")
           {
             _voice.speak("¿Quieres eliminar una Tarea?");
             _stext = "¿Quieres eliminar una Tarea?";
+            _text = "";
             waitAnswer = 7;
           }
-          //MODIFICAR MATERIA - waitAnswer: 8//
+          //ELIMINAR MATERIA - waitAnswer: 8//
           else if(posCommands[0]!.task!.obj == "2")
           {
             _voice.speak("¿Quieres eliminar una Tarea?");
             _stext = "¿Quieres eliminar una Tarea?";
+            _text = "";
             waitAnswer = 8;
           }
-          //MODIFICAR MATERIA - waitAnswer: 9//
+          //ELIMINAR MATERIA - waitAnswer: 9//
           else if(posCommands[0]!.task!.obj == "3")
           {
             _voice.speak("¿Quieres eliminar una Clase?");
@@ -552,7 +699,7 @@ class IA_Controller
   //REINICIAR IA//
   void resetIA() 
   {
-    _text = "¿En que puedo ayudarte?"; 
+    _text = ""; 
     _stext = "¿En que puedo ayudarte?";
     commandsBD = [];
     posCommands = []; 
@@ -564,6 +711,7 @@ class IA_Controller
     actualType = 0;
     actualObj = 0;
     actualProcess = 0;
+    modCount = 0;
   }
 
   // ------------------------------------SETTERS|GETTERS------------------------------------ //
@@ -603,7 +751,6 @@ class IA_Controller
   void setsText(String NewText)
   {
     _stext = NewText;
-    _text = NewText;
   }
 
   void setListening(bool NewListening)
@@ -631,7 +778,7 @@ class IA_Controller
         NewTask.name = _text;
         _voice.speak("¿Cual es la descripción de la tarea?");
         _stext = "¿Cual es la descripción de la tarea?";
-        _text = "¿Cual es la descripción de la tarea?";
+        _text = "";
         actualProcess++;
       }
       //DESCRIPCION//
@@ -641,6 +788,7 @@ class IA_Controller
         _voice.speak("¿Cual es la fecha de entrega de la tarea?");
         _voice.speak("Se claro con la fecha, especifica dia y mes.");
         _stext = "¿Cual es la fecha de entrega de la tarea? (Se claro con la fecha, especifica dia y mes)";
+        _text = "";
         actualProcess++;
       }
       //FECHA//
@@ -669,6 +817,7 @@ class IA_Controller
         createDate(words);
         _voice.speak("¿De que materia?");
         _stext = "¿De que materia?";
+        _text = "";
         actualProcess++;
       }
       //MATERIA//
@@ -692,12 +841,14 @@ class IA_Controller
         {
           _voice.speak("Lo siento, no tienes una materia registrada con ese nombre, intenta con otra o verifica su ortografia.");
           _stext = "¿De que materia?";
+          _text = "";
         }
         else
         {
           NewTask.subject = validSubject;
           _voice.speak("¿Es de tipo Examen, Tarea o Actividad?");
           _stext = "¿Es de tipo Examen, Tarea o Actividad?";
+          _text = "";
           actualProcess++;
         }
       }
@@ -723,11 +874,13 @@ class IA_Controller
           _voice.speak("A continuación, te muestro la información de la tarea, si es correcta di Guardar para registrarla o Cancelar para descartarla.");
           _stext = "El Nombre es: "+NewTask.name.toString() + "\nLa Descripción es: "+NewTask.description.toString()+"\nLa Fecha es: "+NewTask.deliveryDate.toString()
                 + "\nLa Materia es: "+NewTask.subject.toString() + "\nEl Tipo es: "+NewTask.type.toString();
+                _text = "";
         }
         else
         {
           _voice.speak("Lo siento, solo puede ser Examen, Tarea o Actividad");
           _stext = "¿Es de tipo Examen, Tarea o Actividad?";
+          _text = "";
         }
       }
       //CONFIRMAR//
@@ -738,13 +891,11 @@ class IA_Controller
           NewTask.status="PENDIENTE";
           _voice.speak("Se guardó la tarea");
           task_provider.create(NewTask);
-          _stext = "¿En que puedo ayudarte?";
           resetIA();
         }
         else if(_text.toUpperCase() == "CANCELAR")
         {
           _voice.speak("Se ha descartado la tarea");
-          _stext = "¿En que puedo ayudarte?";
           NewTask = new Task();
           resetIA();
         }
@@ -753,6 +904,249 @@ class IA_Controller
           _voice.speak("Solo son validas las opciones Guardar o Cancelar.");
           _stext = "El Nombre es: "+NewTask.name.toString() + "\nLa Descripcion es: "+NewTask.description.toString()+"\nLa Fecha es: "+NewTask.deliveryDate.toString()
                  + "\nLa Materia es: "+NewTask.subject.toString() + "\nEl Tipo es: "+NewTask.type.toString();
+                 _text = "";
+        }
+      }
+    }
+    //MODIFICAR UNA TAREA
+    else if(actualObj == 1 && actualType == 2)
+    {
+      //MODIFICAR LA MATERIA POR NOMBRE//
+      if(actualProcess==1)
+      {
+        NewTask.name = _text.toUpperCase();
+        debugPrint(NewTask.name);
+        List<Task?> searchTask = await task_provider.getByUserAndName(userSession.id.toString(),NewTask.name.toString());
+        if(searchTask.length!=0)
+        {
+          taskDb = searchTask[0];
+          String? TaskName = taskDb?.name.toString();
+          _voice.speak("Existe la Tarea, ¿Qué deseas modificar?"); 
+          _stext = "Se modificara la Tarea: "+ TaskName!;
+          _text = "";
+          actualProcess=2;
+        }
+        else
+        {
+          _voice.speak("Lo siento, no existe esa Tarea, intenta con otra.");
+          resetIA();
+        }  
+      }
+      else if(actualProcess==2)
+      {
+        //LEER EL CAMPO A MODIFICAR//
+        String aux = _text.toUpperCase();
+        //NOMBRE//
+        if(aux == "NOMBRE")
+        {
+          _voice.speak("¿Cual es el nuevo Nombre de la Tarea?");
+          _stext = "¿Cual es el nuevo Nombre de la Tarea?";
+          _text = "";
+          actualProcess++;
+          modCount = 1;
+        }
+        //DESCRIPCIÓN//
+        else if(aux == "DESCRIPCIÓN")
+        {
+          _voice.speak("¿Cual es la nueva Descripción de la Tarea?");
+          _stext = "¿Cual es el la nueva Descripción de la Tarea?";
+          _text = "";
+          actualProcess++;
+          modCount = 2;
+        }
+        //FECHA//
+        else if(aux == "FECHA" || aux=="FECHA DE ENTREGA")
+        {
+          _voice.speak("¿Cual es la nueva Fecha de Entrega de la Tarea? (Especifica solo dia y mes)");
+          _stext = "¿Cual es la nueva Fecha de Entrega de la Tarea?";
+          _text = "";
+          actualProcess++;
+          modCount = 3;
+        }
+        //MATERIA//
+        else if(aux == "MATERIA")
+        {
+          _voice.speak("¿Cual es la nueva Materia de la Tarea?");
+          _stext = "¿Cual es la nueva Materia de la Tarea?";
+          _text = "";
+          actualProcess++;
+          modCount = 4;
+        }
+        //TIPO//
+        else if(aux == "TIPO")
+        {
+          _voice.speak("¿Cual es el nuevo Tipo de la Tarea?");
+          _stext = "¿Cual es el nuevo Tipo de la Tarea?";
+          _text = "";
+          actualProcess++;
+          modCount = 5;
+        }
+        //ESTATUS//
+        else if(aux == "ESTATUS")
+        {
+          _voice.speak("¿Cual es el nuevo Estatus de la Tarea?");
+          _stext = "¿Cual es el nuevo Estatus de la Tarea?";
+          _text = "";
+          actualProcess++;
+          modCount = 6;
+        }
+        else
+        {
+          _voice.speak("Lo siento, la Tarea no cuenta con ese atributo. Intenta con Nombre, Descripción, Fecha, Materia, Tipo o Estatus");
+        }
+      }
+      //ASIGNAR MODIFICACION//
+      else if(actualProcess==3)
+      {
+        if(modCount == 1)
+        {
+          String? OldName = NewTask.name;
+          taskDb!.name = _text;
+          _voice.speak("Se modificara el Nombre de la Tarea. Di Guardar para confirmar los cambios o Cancelar para descartarlos.");
+          _stext = "Antes: "+OldName!+"\nNuevo: "+taskDb!.name!;
+          _text = "";
+          actualProcess++;
+        }
+        else if(modCount == 2)
+        {
+          taskDb!.description = _text;
+          _voice.speak("Se modificara la Descripción de la Tarea. Di Guardar para confirmar los cambios o Cancelar para descartarlos.");
+          _stext = "Nueva Descripcion: "+taskDb!.description!;
+          _text = "";
+          actualProcess++;
+        }
+        else if(modCount == 3)
+        {
+          List<String> words = [];
+          int cont = _text.length;
+          String actualWord="";
+          //SEPARAR POR PALABRAS//
+          for (var i=0; i<cont; i++)
+          {
+            if(_text[i]==" "||i==cont-1)
+            {
+              if(i==cont-1)
+              {
+                actualWord+=_text[i];
+              }
+              words.add(actualWord.toUpperCase());
+              actualWord="";
+            }
+            else
+            {
+              actualWord+=_text[i];
+            }
+          }
+          createDate(words);
+          taskDb!.deliveryDate = NewTask.deliveryDate;
+          _voice.speak("Se modificara la Fecha de Entrega de la Tarea. Di Guardar para confirmar los cambios o Cancelar para descartarlos.");
+          _stext = "Nueva Fecha: "+NewTask.deliveryDate.toString();
+          _text = "";
+          actualProcess++;
+        }
+        else if(modCount == 4)
+        {
+          String? OldSubj = NewTask.subject;
+          //VALIDAR SI EL USUARIO TIENE UNA MATERIA CON ESE NOMBRE//
+          String validSubject = "";
+          for(int i=0; i<_text.length; i++)
+          {
+            if(i==0)
+            {
+              validSubject+=_text[i].toUpperCase();
+            }
+            else
+            {
+              validSubject+=_text[i];
+            }
+          }
+          List<Subject?> ActualSubject = await subject_provider.getByUserNameIA(userSession.id.toString(), validSubject.toUpperCase());
+          if(ActualSubject.length==0)
+          {
+            _voice.speak("Lo siento, no tienes una materia registrada con ese nombre, intenta con otra o verifica su ortografía.");
+            _stext = "¿De que materia?";
+            _text = "";
+          }
+          else
+          {
+            taskDb!.subject = validSubject;
+            _voice.speak("Se modificara la Materia de la Tarea. Di Guardar para confirmar los cambios o Cancelar para descartarlos.");
+            _stext = "Nueva Materia: "+taskDb!.subject!;
+            _text = "";
+            actualProcess++;
+          }          
+        }
+        else if(modCount == 5)
+        {
+          String? OldType = NewTask.type;
+          String isValidType = _text.toUpperCase();
+          if(isValidType == "EXAMEN" || isValidType == "TAREA" || isValidType == "ACTIVIDAD")
+          {
+            if(isValidType == "EXAMEN")
+            {
+              taskDb!.type="Examen";
+            }
+            else if(isValidType == "ACTIVIDAD")
+            {
+              taskDb!.type="Actividad";
+            }
+            else
+            {
+              taskDb!.type="Tarea";
+            }
+            _voice.speak("Se modificara el Tipo de la Tarea. Di Guardar para confirmar los cambios o Cancelar para descartarlos.");
+            _stext = "Nuevo Tipo: "+taskDb!.type!;
+            _text = "";
+            actualProcess++;
+          }
+          else
+          {
+            _voice.speak("Lo siento, solo puede ser Examen, Tarea o Actividad");
+            _stext = "¿Es de tipo Examen, Tarea o Actividad?";
+            _text = "";
+          }
+        }
+        else if(modCount == 6)
+        {
+          String aux = _text.toUpperCase();
+          if(aux == "PENDIENTE" || aux == "COMPLETADA")
+          {
+            taskDb!.status = aux;
+            _voice.speak("Se modificara el Estatus de la Tarea. Di Guardar para confirmar los cambios o Cancelar para descartarlos.");
+            _stext = "Nuevo Estatus: "+taskDb!.status!;
+            _text = "";
+            actualProcess++;
+          }
+          else
+          {
+            _voice.speak("Solo son validas las opciones Pendiente o Completada.");
+            _stext = "Solo son validas las opciones Pendiente o Completada.";
+            _text = "";
+          }      
+        }      
+      }
+      //CONFIRMACION
+      else if(actualProcess==4)
+      {
+        if(_text.toUpperCase() == "GUARDAR")
+        {
+          _voice.speak("Se modifico la Tarea");
+          debugPrint(taskDb!.id);
+          debugPrint(taskDb!.name);
+          task_provider.updateTask(taskDb!);
+          resetIA();
+        }
+        else if(_text.toUpperCase() == "CANCELAR")
+        {
+          _voice.speak("No se ha modifico la Tarea");
+          NewTask = new Task();
+          resetIA();
+        }
+        else
+        {
+          _voice.speak("Solo son validas las opciones Guardar o Cancelar.");
+          _stext = "Solo son validas las opciones Guardar o Cancelar.";
+          _text = "";
         }
       }
     }
@@ -771,29 +1165,27 @@ class IA_Controller
             String? subjectName = taskDb?.name.toString();
             _voice.speak("Existe la tarea, ¿Estas seguro de que quieres eliminarla?"); 
             _stext = "Se eliminara la Tarea: "+ subjectName!;
+            _text = "";
             actualProcess=2;
           }
           else
           {
             _voice.speak("Lo siento, no existe esa Tarea, intenta con otra.");
-            _stext = "¿En que puedo ayudarte?";
             resetIA();
           }  
         }
         //CONFIRMACION
         else if(actualProcess==2)
         {
-          if(_text.toUpperCase() == "SÍ")
+          if(_text.toUpperCase() == "SÍ"||_text.toUpperCase() == "SI")
           {
             task_provider.deleteTask(taskDb?.id);
             _voice.speak("Tarea eliminada exitosamente");
-            _stext = "¿En que puedo ayudarte?";
             resetIA();
           }
           else if(_text.toUpperCase() == "NO")
           {
             _voice.speak("No se eliminara la Tarea.");
-            _stext = "¿En que puedo ayudarte?";
             resetIA();
           }
           else
@@ -811,7 +1203,7 @@ class IA_Controller
         NewSubject.name = _text;
         _voice.speak("¿Cual es el codigo de la materia?");
         _stext = "¿Cual es el codigo de la materia?";
-        _text = "¿Cual es el codigo de la materia?";
+        _text = "";
         actualProcess++;
       }
       //CODIGO DE LA MATERIA//
@@ -820,6 +1212,7 @@ class IA_Controller
         NewSubject.subject_code = _text;
         _voice.speak("¿Cual es el nombre del profesor?");
         _stext = "¿Cual es el nombre del profesor?";
+        _text = "";
         actualProcess++;
       }
       //NOMBRE DEL PROFESOR//
@@ -828,6 +1221,7 @@ class IA_Controller
         NewSubject.professor_name = _text;
         _voice.speak("A continuación, te muestro la información de la materia, si es correcta di Guardar para registrarla o Cancelar para descartarla.");
         _stext = "El Nombre es: "+NewSubject.name.toString() + "\nEl Codigo de la Materia es: "+NewSubject.subject_code.toString()+"\nLa Fecha es: "+NewSubject.professor_name.toString();
+        _text = "";
         actualProcess++;
       }
       //CONFIRMAR//
@@ -837,28 +1231,183 @@ class IA_Controller
         {
           _voice.speak("Se guardó la Materia");
           subject_provider.create(NewSubject);
-          _stext = "¿En que puedo ayudarte?";
           resetIA();
         }
         else if(_text.toUpperCase() == "CANCELAR")
         {
           _voice.speak("Se ha descartado la tarea");
-          _stext = "¿En que puedo ayudarte?";
           NewSubject = new Subject();
           resetIA();
         }
         else
         {
           _voice.speak("Solo son validas las opciones Guardar o Cancelar.");
-          _stext = "El Nombre es: "+NewSubject.name.toString() + "\nEl Codigo de la Materia es: "+NewSubject.subject_code.toString()+"\nLa Fecha es: "+NewSubject.professor_name.toString();
+          _stext = "El Nombre es: "+NewSubject.name.toString() + "\nEl Codigo de la Materia es: "+NewSubject.subject_code.toString()+"\nEl profesor es: "+NewSubject.professor_name.toString();
+          _text = "";
         }
       }
     }
+    //MODIFICAR UNA MATERIA//
+    else if(actualObj == 2 && actualType == 2)
+    {
+        //MODIFICAR LA MATERIA POR NOMBRE//
+        if(actualProcess==1)
+        {
+          NewSubject.name = _text.toUpperCase();
+          debugPrint(NewSubject.name);
+          List<Subject?> searchSubject = await subject_provider.getByUserNameIA(userSession.id.toString(),NewSubject.name.toString());
+          if(searchSubject.length!=0)
+          {
+            subjectDB = searchSubject[0];
+            String? subjectName = subjectDB?.name.toString();
+            _voice.speak("Existe la Materia, ¿Qué deseas modificar?"); 
+            _stext = "Se modificara la Materia: "+ subjectName!;
+            _text = "";
+            actualProcess=2;
+          }
+          else
+          {
+            _voice.speak("Lo siento, no existe esa Materia, intenta con otra.");
+            resetIA();
+          }  
+        }
+        else if(actualProcess==2)
+        {
+          //LEER EL CAMPO A MODIFICAR//
+          String aux = _text.toUpperCase();
+          //NOMBRE//
+          if(aux == "NOMBRE")
+          {
+            _voice.speak("¿Cual es el nuevo Nombre de la Materia?");
+            _stext = "¿Cual es el nuevo Nombre de la Materia?";
+            _text = "";
+            actualProcess++;
+            modCount = 1;
+          }
+          //CODIGO//
+          else if(aux == "CÓDIGO")
+          {
+            _voice.speak("¿Cual es el nuevo Código de la Materia?");
+            _stext = "¿Cual es el nuevo Código de la Materia?";
+            _text = "";
+            actualProcess++;
+            modCount = 2;
+          }
+          //PROFESOR//
+          else if(aux == "PROFESOR")
+          {
+            _voice.speak("¿Cual es el nuevo Profesor de la Materia?");
+            _stext = "¿Cual es el nuevo Profesor de la Materia?";
+            _text = "";
+            actualProcess++;
+            modCount = 3;
+          }
+          else
+          {
+            _voice.speak("Lo siento, la Materia no cuenta con ese atributo. Intenta con Nombre, Código o Profesor");
+          }
+        }
+        //ASIGNAR MODIFICACION//
+        else if(actualProcess==3)
+        {
+          if(modCount == 1)
+          {
+            String? OldName = NewSubject.name;
+            subjectDB!.name = _text;
+            _voice.speak("Se modificara el Nombre de la materia. Di Guardar para confirmar los cambios o Cancelar para descartarlos.");
+            _stext = "Antes: "+OldName!+"\nNuevo: "+subjectDB!.name!;
+            _text = "";
+            actualProcess++;
+          }
+          else if(modCount == 2)
+          {
+            String? OldCode = NewSubject.subject_code;
+            subjectDB!.subject_code = _text;
+            _voice.speak("Se modificara el Código de la materia. Di Guardar para confirmar los cambios o Cancelar para descartarlos.");
+            _stext = "Antes: "+OldCode!+"\nNuevo: "+subjectDB!.subject_code!;
+            _text = "";
+            actualProcess++;
+          }
+          else if(modCount == 3)
+          {
+            String? OldProf = NewSubject.professor_name;
+            subjectDB!.professor_name = _text;
+            _voice.speak("Se modificara el Profesor de la materia. Di Guardar para confirmar los cambios o Cancelar para descartarlos.");
+            _stext = "Antes: "+OldProf!+"\nNuevo: "+subjectDB!.professor_name!;
+            _text = "";
+            actualProcess++;
+          }
+        }
+        //CONFIRMACION
+        else if(actualProcess==4)
+        {
+          if(_text.toUpperCase() == "GUARDAR")
+          {
+            _voice.speak("Se modifico la Materia");
+            debugPrint(subjectDB!.id);
+            debugPrint(subjectDB!.name);
+            subject_provider.updateSubject(subjectDB!);
+            resetIA();
+          }
+          else if(_text.toUpperCase() == "CANCELAR")
+          {
+            _voice.speak("No se ha modifico la Materia");
+            NewSubject = new Subject();
+            resetIA();
+          }
+          else
+          {
+            _voice.speak("Solo son validas las opciones Guardar o Cancelar.");
+            _stext = "Solo son validas las opciones Guardar o Cancelar.";
+            _text = "";
+          }
+        }
+    }
+    //ELIMINAR UNA MATERIA//
+    else if(actualObj == 2 && actualType == 3)
+    {
+        //ELIMINAR LA MATERIA POR NOMBRE//
+        if(actualProcess==1)
+        {
+          NewSubject.name = _text.toUpperCase();
+          debugPrint(NewSubject.name);
+          List<Subject?> searchSubject = await subject_provider.getByUserNameIA(userSession.id.toString(),NewSubject.name.toString());
+          if(searchSubject.length!=0)
+          {
+            subjectDB = searchSubject[0];
+            String? subjectName = subjectDB?.name.toString();
+            _voice.speak("Existe la Materia, ¿Estas seguro de que quieres eliminarla?"); 
+            _stext = "Se eliminara la Materia: "+ subjectName!;
+            _text = "";
+            actualProcess=2;
+          }
+          else
+          {
+            _voice.speak("Lo siento, no existe esa Materia, intenta con otra.");
+            resetIA();
+          }  
+        }
+        //CONFIRMACION
+        else if(actualProcess==2)
+        {
+          if(_text.toUpperCase() == "SÍ" || _text.toUpperCase() == "SI")
+          {
+            subject_provider.deleteSubject(subjectDB?.id);
+            _voice.speak("Materia eliminada exitosamente");
+            resetIA();
+          }
+          else if(_text.toUpperCase() == "NO")
+          {
+            _voice.speak("No se eliminara la Materia.");
+            resetIA();
+          }
+          else
+          {
+            _voice.speak("Lo siento, utiliza Si, para confirmar y No, para cancelar");
+          } 
+        }
+    }
   }
-
-
-
-
 
   //FUNCION PARA GENERAR UNA FECHA SEGUN EL TEXTO INGRESADO//
   bool createDate(List<String> words)
@@ -872,7 +1421,7 @@ class IA_Controller
       }
       else if(words[i]=="PRIMERO") { day = "01"; }
       else if(words[i]=="ENERO") { month = "01"; }
-      else if(words[i]=="FEBERO") { month = "02"; }
+      else if(words[i]=="FEBRERO") { month = "02"; }
       else if(words[i]=="MARZO") { month = "03"; }
       else if(words[i]=="ABRIL") { month = "04"; }
       else if(words[i]=="MAYO") { month = "05"; }
@@ -899,6 +1448,4 @@ class IA_Controller
     }
   }
   // ---------------------------------------------------------------------------------------- //
-
-
 }
