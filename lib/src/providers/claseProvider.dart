@@ -40,11 +40,34 @@ class ClaseProvider extends GetConnect {
     }
   }
 
-  Future<List<Clase?>> getByIdUserAndIdSubject(
-      String subjectt, String user) async {
+  // Future<List<Clase?>> getByIdUserAndIdSubject(
+  //     String subjectt, String user) async {
+  //   try {
+  //     Uri _url = Uri.http(Environment.API_URL_OLD,
+  //         '/api/Clase/getByIdUserAndIdSubject/$subjectt/$user');
+
+  //     Map<String, String> headers = {
+  //       'Content-Type': 'application/json',
+  //       'Authorization': userSession.sessionToken ?? ''
+  //     };
+
+  //     final res = await http.get(_url, headers: headers);
+
+  //     final data = json.decode(res.body);
+
+  //     Clase subject = Clase.fromJsonList(data);
+  //     return subject.toList;
+  //   } catch (e) {
+  //     e.printError();
+  //     return [];
+  //   }
+  // }
+
+  Future<List<Clase?>> findByUserAndDay(String idUser, String day) async {
+    //RETORNAMOS LAS CLASES POR DIA
     try {
       Uri _url = Uri.http(Environment.API_URL_OLD,
-          '/api/Clase/getByIdUserAndIdSubject/$subjectt/$user');
+          '/api/Clase/findByIdUserAndDay/$idUser/$day');
 
       Map<String, String> headers = {
         'Content-Type': 'application/json',
@@ -52,11 +75,10 @@ class ClaseProvider extends GetConnect {
       };
 
       final res = await http.get(_url, headers: headers);
-
       final data = json.decode(res.body);
 
-      Clase subject = Clase.fromJsonList(data);
-      return subject.toList;
+      Clase clasesbyDay = Clase.fromJsonList(data);
+      return clasesbyDay.toList;
     } catch (e) {
       e.printError();
       return [];

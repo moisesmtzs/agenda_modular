@@ -36,7 +36,7 @@ class AddSubjectController extends GetxController {
         Get.snackbar(
             responseApi?.message ?? '', 'Materia creada correctamente');
         Future.delayed(const Duration(milliseconds: 1000), () {
-          Get.offNamed('/subject');
+          Get.offNamed('/home');
         });
       } else {
         Get.snackbar('Datos no válidos', responseApi?.message ?? '',

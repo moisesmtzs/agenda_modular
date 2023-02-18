@@ -38,13 +38,20 @@ class ClaseController extends GetxController {
   void register(BuildContext context) async {
     String idUser = userSession.id as String;
     String? idSubject = idsubject;
-    String? inicio = begineController;
-    String? fin = endController;
+    String inicio = "0001-01-01 " + begineController.toString() + ":00";
+    String fin = "0001-01-01 " + endController.toString() + ":00";
     String? days = daysController;
     String clasroom = clasroomController.text;
     String building = buildingController.text;
 
-    if (isValidForms(idSubject!, inicio!, fin!, days!, clasroom, building)) {
+    if (isValidForms(idSubject!, inicio, fin, days!, clasroom, building)) {
+      // Get.snackbar('idUsuario', idSubject);
+      // Get.snackbar('inicio', inicio);
+      // Get.snackbar('fin', fin);
+      // Get.snackbar('days', days);
+      // Get.snackbar('clasroom', clasroom);
+      // Get.snackbar('building', building);
+
       Clase clase = Clase(
         id_user: idUser,
         id_subject: idSubject,
@@ -59,7 +66,7 @@ class ClaseController extends GetxController {
       if (responseApi?.success == true) {
         Get.snackbar(responseApi?.message ?? '', 'Clase creada correctamente');
         Future.delayed(const Duration(milliseconds: 1000), () {
-          Get.offNamed('/schedule');
+          Get.offNamed('/home');
         });
       } else {
         Get.snackbar('Datos no válidos', responseApi?.message ?? '',
@@ -93,6 +100,17 @@ class ClaseController extends GetxController {
     if (building.isEmpty) {
       Get.snackbar(
           "Datos no válidos", "Debes ingresar la letra o nombre del edificio");
+      return false;
+    }
+    if (idSubject.isEmpty) {
+      Get.snackbar("Datos no válidos", "Debes seleccionar una materia");
+      return false;
+    }
+    //Verificamos si la hora de inicio es antes que la de salida
+    int ini = int.parse(inicio.substring(11, 13));
+    int fi = int.parse(fin.substring(11, 13));
+    if (ini > fi) {
+      Get.snackbar("Horas invalidas", "Verifica tu hora de inicio y de salida");
       return false;
     }
     return true;

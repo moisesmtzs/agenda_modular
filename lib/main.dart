@@ -28,7 +28,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
+    var getMaterialApp = GetMaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Agenda App',
         initialRoute: userSession.id != null ? '/home' : '/',
@@ -97,5 +97,6 @@ class _MyAppState extends State<MyApp> {
           textTheme: GoogleFonts.openSansTextTheme(Theme.of(context).textTheme),
           colorScheme: lightColorScheme,
         ));
+    return getMaterialApp;
   }
 }
