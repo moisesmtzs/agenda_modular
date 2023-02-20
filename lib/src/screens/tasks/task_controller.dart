@@ -14,15 +14,33 @@ class TaskController extends GetxController {
 
   List<String> status = <String>['PENDIENTE', 'COMPLETADO'].obs;
 
-  var isSelected = false.obs;
-  var taskList = <Task?>[].obs;
+  var selectedTasks = [].obs;
+  RxList<Task?> taskList = <Task?>[].obs;
 
   void goToAddTaskPage() {
     Get.toNamed('/addTask');
   }
+
+  void onTaskSelected(bool? checked, String idTask) {
+    if ( checked == true ) {
+      selectedTasks.value.add(idTask);
+      _tasksProvider.updateStatusTask(idTask, 'COMPLETADO');
+      selectedTasks.refresh();
+    } else {
+      selectedTasks.value.remove(idTask);
+      _tasksProvider.updateStatusTask(idTask, 'PENDIENTE');
+      selectedTasks.refresh();
+    }
+  }
   
   Future<List<Task?>> getTasks(String status) async {
-    return await _tasksProvider.getByUserAndStatus(userSession.id ?? '0', status);
+    var tasks = await _tasksProvider.getByUserAndStatus(userSession.id ?? '0', status);
+    if ( status == 'COMPLETADO' ) {
+      for( int i = 0 ; i < tasks.length ; i++  ) {
+        selectedTasks.value.add(tasks[i]!.id);
+      }
+    }
+    return tasks;
   }
   
   // getTasks(String status) async {

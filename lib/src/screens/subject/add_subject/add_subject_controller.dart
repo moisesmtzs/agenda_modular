@@ -1,3 +1,4 @@
+import 'package:agenda_app/src/ui/app_colors.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -34,7 +35,11 @@ class AddSubjectController extends GetxController {
       ResponseApi? responseApi = await subjectProvider.create(subject);
       if (responseApi?.success == true) {
         Get.snackbar(
-            responseApi?.message ?? '', 'Materia creada correctamente');
+          responseApi?.message ?? '', 
+          'Materia creada correctamente',
+          backgroundColor: AppColors.colors.secondary,
+          colorText: AppColors.colors.onSecondary
+        );
         Future.delayed(const Duration(milliseconds: 1000), () {
           Get.offNamed('/home');
         });

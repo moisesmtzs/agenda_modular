@@ -51,6 +51,7 @@ class TaskDetailPage extends StatelessWidget {
                 color: AppColors.colors.primary,
                 onPressed: () {
                   taskDetailController.confirmationDialog(context, task?.id ?? '0');
+                  taskDetailController.refresh();
                 },
               ),
             ],

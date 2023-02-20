@@ -1,38 +1,51 @@
-import 'package:agenda_app/src/models/response_api.dart';
-import 'package:agenda_app/src/ui/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 
+import 'package:agenda_app/src/models/response_api.dart';
+import 'package:agenda_app/src/models/subject.dart';
 import 'package:agenda_app/src/models/task.dart';
 import 'package:agenda_app/src/models/user.dart';
+import 'package:agenda_app/src/providers/subjectProvider.dart';
 import 'package:agenda_app/src/providers/tasksProvider.dart';
+import 'package:agenda_app/src/ui/app_colors.dart';
 
 class TaskUpdateController extends GetxController {
 
   Task task = Task();
-  // TaskUpdateController({required this.task});
   TaskUpdateController(this.task) {
     setTask();
+    getSubjects();
   }
 
   User userSession = User.fromJson(GetStorage().read('user') ?? {});
 
   TasksProvider tasksProvider = TasksProvider();
+  SubjectProvider subjectProvider = SubjectProvider();
 
   TextEditingController nameController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
-  TextEditingController subjectController = TextEditingController();
   TextEditingController typeController = TextEditingController();
+  
+  List<String> typeList = <String>['Actividad', 'Examen', 'Tarea'].obs;
+  var typeSelected = ''.obs;
+  
+  List<Subject?> subjectList = <Subject?>[].obs;
+  var subjectSelected = ''.obs;
 
   var value = DateTime.now().toString().obs;
   DateTime _selectedDate = DateTime.now();
 
+  Future<List<Subject?>> getSubjects() async {
+    subjectList = await subjectProvider.findByUser(userSession.id ?? '');
+    return subjectList;
+  }
+
   void setTask() {
     nameController.text = task.name!;
     descriptionController.text = task.description!;
-    subjectController.text = task.subject!;
+    subjectSelected.value = task.subject!;
     typeController.text = task.type!;
     _selectedDate = DateTime.parse(task.deliveryDate ?? '');
     value.value = _selectedDate.toString();
@@ -43,7 +56,7 @@ class TaskUpdateController extends GetxController {
     String name = nameController.text;
     String description = descriptionController.text;
     String date = _selectedDate.toString();
-    String subject = subjectController.text.trim();
+    String subject = subjectSelected.string;
     String type = typeController.text.trim();
 
     if (isValidForm(name, description, date, subject, type)) {
@@ -82,23 +95,48 @@ class TaskUpdateController extends GetxController {
   bool isValidForm( String name, String description, String date, String subject, String type ) {
 
     if ( name.isEmpty ) {
-      Get.snackbar("Datos no válidos", "Debes ingresar un nombre a la tarea");
+      Get.snackbar(
+        "Datos no válidos", 
+        "Debes ingresar un nombre a la tarea",
+        backgroundColor: AppColors.colors.errorContainer,
+        colorText: AppColors.colors.onErrorContainer
+      );
       return false;
     }
     if ( description.isEmpty ) {
-      Get.snackbar("Datos no válidos", "Debes ingresar una descripción");
+      Get.snackbar(
+        "Datos no válidos", 
+        "Debes ingresar una descripción",
+        backgroundColor: AppColors.colors.errorContainer,
+        colorText: AppColors.colors.onErrorContainer
+      );
       return false;
     }
     if ( date.isEmpty ) {
-      Get.snackbar("Datos no válidos", "Debes ingresar una fecha de entrega");
+      Get.snackbar(
+        "Datos no válidos", 
+        "Debes ingresar una fecha de entrega",
+        backgroundColor: AppColors.colors.errorContainer,
+        colorText: AppColors.colors.onErrorContainer
+      );
       return false;
     }
     if ( subject.isEmpty ) {
-      Get.snackbar("Datos no válidos", "Debes ingresar una materia");
+      Get.snackbar(
+        "Datos no válidos", 
+        "Debes ingresar una materia",
+        backgroundColor: AppColors.colors.errorContainer,
+        colorText: AppColors.colors.onErrorContainer
+      );
       return false;
     }
     if ( type.isEmpty ) {
-      Get.snackbar("Datos no válidos", "Debes ingresar un tipo de tarea");
+      Get.snackbar(
+        "Datos no válidos", 
+        "Debes ingresar un tipo de tarea",
+        backgroundColor: AppColors.colors.errorContainer,
+        colorText: AppColors.colors.onErrorContainer
+      );
       return false;
     }
 

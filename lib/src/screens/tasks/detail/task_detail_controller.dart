@@ -22,6 +22,7 @@ class TaskDetailController extends GetxController {
         backgroundColor: AppColors.colors.secondary,
         colorText: AppColors.colors.onSecondary
       );
+      refresh();
     } else {
       Get.snackbar(
         'No se eliminó la tarea',

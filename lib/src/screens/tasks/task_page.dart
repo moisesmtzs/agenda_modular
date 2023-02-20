@@ -8,8 +8,13 @@ import 'package:agenda_app/src/screens/tasks/task_controller.dart';
 import 'package:agenda_app/src/ui/app_colors.dart';
 import 'package:agenda_app/src/widgets/no_task_widget.dart';
 
-class TaskPage extends StatelessWidget {
+class TaskPage extends StatefulWidget {
 
+  @override
+  State<TaskPage> createState() => _TaskPageState();
+}
+
+class _TaskPageState extends State<TaskPage> {
   final TaskController _taskController = Get.put(TaskController());
 
   @override
@@ -134,7 +139,7 @@ class TaskPage extends StatelessWidget {
                 // left: 5,
                 // top: 0,
                 // bottom: 5,
-                child: _taskChecked(task?.status ?? '')
+                child: _taskChecked(task?.id ?? '')
               ),
               Positioned(
                 top: 0,
@@ -178,7 +183,7 @@ class TaskPage extends StatelessWidget {
 
   }
 
-  Widget _taskChecked(String status) {
+  Widget _taskChecked(String id) {
 
     return Obx( () =>
       Transform.scale(
@@ -193,9 +198,11 @@ class TaskPage extends StatelessWidget {
           ),
           activeColor: AppColors.colors.onTertiaryContainer,
           checkColor: AppColors.colors.tertiaryContainer,
-          value: _taskController.isSelected.value,
+          value: _taskController.selectedTasks.contains(id),
           onChanged: (value) {
-            _taskController.isSelected.value = !_taskController.isSelected.value;
+            setState(() {
+              _taskController.onTaskSelected(value, id);
+            });
           }
           
         ),

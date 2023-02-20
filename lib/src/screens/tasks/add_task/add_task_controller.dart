@@ -1,23 +1,30 @@
+import 'package:agenda_app/main.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 
 import 'package:agenda_app/src/models/response_api.dart';
+import 'package:agenda_app/src/models/subject.dart';
 import 'package:agenda_app/src/models/task.dart';
 import 'package:agenda_app/src/models/user.dart';
+import 'package:agenda_app/src/providers/subjectProvider.dart';
 import 'package:agenda_app/src/providers/tasksProvider.dart';
 import 'package:agenda_app/src/ui/app_colors.dart';
 
 class AddTaskController extends GetxController {
 
+  AddTaskController() {
+    getSubjects();
+  }
+
   User userSession = User.fromJson(GetStorage().read('user') ?? {});
 
   TasksProvider tasksProvider = TasksProvider();
+  SubjectProvider subjectProvider = SubjectProvider();
 
   TextEditingController nameController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
-  TextEditingController subjectController = TextEditingController();
 
   var value = DateTime.now().toString().obs;
   DateTime _selectedDate = DateTime.now();
@@ -25,12 +32,20 @@ class AddTaskController extends GetxController {
   List<String> typeList = <String>['Actividad', 'Examen', 'Tarea'].obs;
   var typeSelected = ''.obs;
 
+  List<Subject?> subjectList = <Subject?>[].obs;
+  var subjectSelected = ''.obs;
+
+  Future<List<Subject?>> getSubjects() async {
+    subjectList = await subjectProvider.findByUser(userSession.id ?? '');
+    return subjectList;
+  }
+
   void register( BuildContext context ) async {
 
     String name = nameController.text;
     String description = descriptionController.text;
     String date = _selectedDate.toString();
-    String subject = subjectController.text.trim();
+    String subject = subjectSelected.string;
     String type = typeSelected.string;
 
     if ( isValidForm(name, description, date, subject, type) ) {
@@ -56,7 +71,7 @@ class AddTaskController extends GetxController {
           colorText: AppColors.colors.onSecondary
         );
         Future.delayed(const Duration(milliseconds: 1000), () {
-          Navigator.of(context).pop();
+          Get.offNamedUntil('/home', (route) => false);
         });
       } else {
         Get.snackbar(
@@ -75,23 +90,48 @@ class AddTaskController extends GetxController {
   bool isValidForm( String name, String description, String date, String subject, String type ) {
 
     if ( name.isEmpty ) {
-      Get.snackbar("Datos no válidos", "Debes ingresar un nombre a la tarea");
+      Get.snackbar(
+        "Datos no válidos", 
+        "Debes ingresar un nombre a la tarea",
+        backgroundColor: AppColors.colors.errorContainer,
+        colorText: AppColors.colors.onErrorContainer
+      );
       return false;
     }
     if ( description.isEmpty ) {
-      Get.snackbar("Datos no válidos", "Debes ingresar una descripción");
+      Get.snackbar(
+        "Datos no válidos", 
+        "Debes ingresar una descripción",
+        backgroundColor: AppColors.colors.errorContainer,
+        colorText: AppColors.colors.onErrorContainer
+      );
       return false;
     }
     if ( date.isEmpty ) {
-      Get.snackbar("Datos no válidos", "Debes ingresar una fecha de entrega");
+      Get.snackbar(
+        "Datos no válidos", 
+        "Debes ingresar una fecha de entrega",
+        backgroundColor: AppColors.colors.errorContainer,
+        colorText: AppColors.colors.onErrorContainer
+      );
       return false;
     }
     if ( subject.isEmpty ) {
-      Get.snackbar("Datos no válidos", "Debes ingresar una materia");
+      Get.snackbar(
+        "Datos no válidos", 
+        "Selecciona una materia",
+        backgroundColor: AppColors.colors.errorContainer,
+        colorText: AppColors.colors.onErrorContainer
+      );
       return false;
     }
     if ( type.isEmpty ) {
-      Get.snackbar("Datos no válidos", "Debes ingresar un tipo de tarea");
+      Get.snackbar(
+        "Datos no válidos", 
+        "Selecciona un tipo de tarea",
+        backgroundColor: AppColors.colors.errorContainer,
+        colorText: AppColors.colors.onErrorContainer
+      );
       return false;
     }
 

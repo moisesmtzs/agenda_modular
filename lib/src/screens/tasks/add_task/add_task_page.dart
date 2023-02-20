@@ -1,3 +1,4 @@
+import 'package:agenda_app/src/models/subject.dart';
 import 'package:agenda_app/src/ui/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -146,32 +147,18 @@ class AddTaskPage extends StatelessWidget{
         color: AppColors.colors.primaryContainer,
         borderRadius: BorderRadius.circular(15)
       ),
-      child: Form(
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        child: Column(
-          children: [
-            TextFormField(
-              controller: _controller.subjectController,
-              maxLines: 2,
-              maxLength: 120,
-              textAlign: TextAlign.justify,
-              cursorRadius: const Radius.circular(8.0),
-              decoration: const InputDecoration(
-                hintText: "Introducción a la computación",
-                labelText: "Materia",
-                suffixIcon: Icon(Icons.class_outlined)
-              ),
-              validator: ( value ){
-                String pattern = r"\b([a-zA-ZÀ-ÿ][-,a-z. ']+[ ]*)+";
-                RegExp nameregExp  = RegExp(pattern);
-                return nameregExp.hasMatch( value ?? '' ) 
-                  ? null 
-                  : 'Tema no válido';
-              }
-            )
-          ]
-        ),
-      ),
+      child: Obx(() => DropdownButton(
+        hint: const Text('Selecciona una materia'),
+        isExpanded: true,
+        dropdownColor: AppColors.colors.primaryContainer,
+        borderRadius: BorderRadius.circular(12),
+        icon: const Icon(Icons.arrow_drop_down_circle_rounded),
+        value: _controller.subjectSelected.value == '' ? null : _controller.subjectSelected.value,
+        items: _dropDownSubjects(),
+        onChanged: (String? value) {
+          _controller.subjectSelected.value = value!;
+        },
+      ),)
     );
     
   } 
@@ -191,12 +178,11 @@ class AddTaskPage extends StatelessWidget{
         borderRadius: BorderRadius.circular(12),
         icon: const Icon(Icons.arrow_drop_down_circle_rounded),
         value: _controller.typeSelected.value == '' ? null : _controller.typeSelected.value,
-        items: _dropDownItems(['Actividad', 'Examen', 'Tarea']),
+        items: _dropDownItems(_controller.typeList),
         onChanged: (String? value) {
           _controller.typeSelected.value = value!;
         },
-      ),
-      )
+      ),)
     );
     
   } 
@@ -229,6 +215,17 @@ class AddTaskPage extends StatelessWidget{
       list.add(DropdownMenuItem(
         child: Text(type),
         value: type,
+      ));
+    }
+    return list;
+  }
+
+  List<DropdownMenuItem<String>> _dropDownSubjects() {
+    List<DropdownMenuItem<String>> list = [];
+    for (var type in _controller.subjectList) {
+      list.add(DropdownMenuItem(
+        child: Text(type!.name ?? ''),
+        value: type.name,
       ));
     }
     return list;

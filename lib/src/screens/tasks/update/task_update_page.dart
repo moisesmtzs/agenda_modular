@@ -156,32 +156,18 @@ class TaskUpdatePage extends StatelessWidget {
         color: AppColors.colors.inversePrimary,
         borderRadius: BorderRadius.circular(15)
       ),
-      child: Form(
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        child: Column(
-          children: [
-            TextFormField(
-              controller: taskUpdateController.subjectController,
-              maxLines: 2,
-              maxLength: 120,
-              textAlign: TextAlign.justify,
-              cursorRadius: const Radius.circular(8.0),
-              decoration: const InputDecoration(
-                hintText: "Introducción a la computación",
-                labelText: "Materia",
-                suffixIcon: Icon(Icons.class_outlined)
-              ),
-              validator: ( value ){
-                String pattern = r"\b([a-zA-ZÀ-ÿ][-,a-z. ']+[ ]*)+";
-                RegExp nameregExp  = RegExp(pattern);
-                return nameregExp.hasMatch( value ?? '' ) 
-                  ? null 
-                  : 'Tema no válido';
-              }
-            )
-          ]
-        ),
-      ),
+      child: Obx(() => DropdownButton(
+        hint: const Text('Selecciona una materia'),
+        isExpanded: true,
+        dropdownColor: AppColors.colors.primaryContainer,
+        borderRadius: BorderRadius.circular(12),
+        icon: const Icon(Icons.arrow_drop_down_circle_rounded),
+        value: taskUpdateController.subjectSelected.value == '' ? null : taskUpdateController.subjectSelected.value,
+        items: _dropDownSubjects(),
+        onChanged: (String? value) {
+          taskUpdateController.subjectSelected.value = value!;
+        },
+      ),)
     );
     
   }
@@ -194,32 +180,42 @@ class TaskUpdatePage extends StatelessWidget {
         color: AppColors.colors.inversePrimary,
         borderRadius: BorderRadius.circular(15)
       ),
-      child: Form(
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        child: Column(
-          children: [
-            TextFormField(
-              controller: taskUpdateController.typeController,
-              textAlign: TextAlign.justify,
-              cursorRadius: const Radius.circular(8.0),
-              decoration: const InputDecoration(
-                hintText: "Examen",
-                labelText: "Tipo",
-                suffixIcon: Icon(Icons.assignment_late_outlined)
-              ),
-              validator: ( value ){
-                String pattern = r"\b([a-zA-ZÀ-ÿ][-,a-z. ']+[ ]*)+";
-                RegExp nameregExp  = RegExp(pattern);
-                return nameregExp.hasMatch( value ?? '' ) 
-                  ? null 
-                  : 'Tipo no válido';
-              }
-            )
-          ]
-        ),
-      ),
+      child: Obx(() => DropdownButton(
+        hint: const Text('Tipo de tarea'),
+        isExpanded: true,
+        dropdownColor: AppColors.colors.primaryContainer,
+        borderRadius: BorderRadius.circular(12),
+        icon: const Icon(Icons.arrow_drop_down_circle_rounded),
+        value: taskUpdateController.typeSelected.value == '' ? null : taskUpdateController.typeSelected.value,
+        items: _dropDownItems(taskUpdateController.typeList),
+        onChanged: (String? value) {
+          taskUpdateController.typeSelected.value = value!;
+        },
+      ),)
     );
     
   }
+
+  List<DropdownMenuItem<String>> _dropDownItems(List<String> types) {
+    List<DropdownMenuItem<String>> list = [];
+    for (var type in types) {
+      list.add(DropdownMenuItem(
+        child: Text(type),
+        value: type,
+      ));
+    }
+    return list;
+  }
+
+  List<DropdownMenuItem<String>> _dropDownSubjects() {
+    List<DropdownMenuItem<String>> list = [];
+    for (var type in taskUpdateController.subjectList) {
+      list.add(DropdownMenuItem(
+        child: Text(type!.name ?? ''),
+        value: type.name,
+      ));
+    }
+    return list;
+  } 
 
 }
