@@ -15,8 +15,8 @@ class TaskUpdateController extends GetxController {
 
   Task task = Task();
   TaskUpdateController(this.task) {
-    setTask();
     getSubjects();
+    setTask();
   }
 
   User userSession = User.fromJson(GetStorage().read('user') ?? {});
@@ -26,7 +26,6 @@ class TaskUpdateController extends GetxController {
 
   TextEditingController nameController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
-  TextEditingController typeController = TextEditingController();
   
   List<String> typeList = <String>['Actividad', 'Examen', 'Tarea'].obs;
   var typeSelected = ''.obs;
@@ -46,7 +45,7 @@ class TaskUpdateController extends GetxController {
     nameController.text = task.name!;
     descriptionController.text = task.description!;
     subjectSelected.value = task.subject!;
-    typeController.text = task.type!;
+    typeSelected.value = task.type!;
     _selectedDate = DateTime.parse(task.deliveryDate ?? '');
     value.value = _selectedDate.toString();
   }
@@ -57,7 +56,7 @@ class TaskUpdateController extends GetxController {
     String description = descriptionController.text;
     String date = _selectedDate.toString();
     String subject = subjectSelected.string;
-    String type = typeController.text.trim();
+    String type = typeSelected.string;
 
     if (isValidForm(name, description, date, subject, type)) {
       

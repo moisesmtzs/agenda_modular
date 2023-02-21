@@ -162,7 +162,7 @@ class TaskUpdatePage extends StatelessWidget {
         dropdownColor: AppColors.colors.primaryContainer,
         borderRadius: BorderRadius.circular(12),
         icon: const Icon(Icons.arrow_drop_down_circle_rounded),
-        value: taskUpdateController.subjectSelected.value == '' ? null : taskUpdateController.subjectSelected.value,
+        value: taskUpdateController.subjectSelected.value,
         items: _dropDownSubjects(),
         onChanged: (String? value) {
           taskUpdateController.subjectSelected.value = value!;
@@ -186,7 +186,7 @@ class TaskUpdatePage extends StatelessWidget {
         dropdownColor: AppColors.colors.primaryContainer,
         borderRadius: BorderRadius.circular(12),
         icon: const Icon(Icons.arrow_drop_down_circle_rounded),
-        value: taskUpdateController.typeSelected.value == '' ? null : taskUpdateController.typeSelected.value,
+        value: taskUpdateController.typeSelected.value,
         items: _dropDownItems(taskUpdateController.typeList),
         onChanged: (String? value) {
           taskUpdateController.typeSelected.value = value!;
@@ -209,10 +209,10 @@ class TaskUpdatePage extends StatelessWidget {
 
   List<DropdownMenuItem<String>> _dropDownSubjects() {
     List<DropdownMenuItem<String>> list = [];
-    for (var type in taskUpdateController.subjectList) {
+    for (var subject in taskUpdateController.subjectList) {
       list.add(DropdownMenuItem(
-        child: Text(type!.name ?? ''),
-        value: type.name,
+        child: Text(subject!.name ?? ''),
+        value: subject.name,
       ));
     }
     return list;
