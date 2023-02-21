@@ -52,8 +52,6 @@ class SubjectPage extends StatelessWidget {
   }
 
   Widget _subjectCard(Subject? subject, BuildContext context) {
-    //late var datetime = DateFormat("yyyy-MM-dd").format(DateTime.parse(subject?.deliveryDate ?? ''));
-
     return GestureDetector(
         onTap: () {
           Get.bottomSheet(

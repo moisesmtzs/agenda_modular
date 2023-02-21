@@ -4,30 +4,29 @@ import 'package:get_storage/get_storage.dart';
 
 import 'package:agenda_app/src/models/user.dart';
 import 'package:agenda_app/src/models/response_api.dart';
-import 'package:agenda_app/src/providers/subjectProvider.dart';
 import 'package:agenda_app/src/providers/claseProvider.dart';
-import 'package:agenda_app/src/models/clase.dart';
 import 'package:agenda_app/src/ui/app_colors.dart';
 
-class SubjectDetailController extends GetxController {
+class ClaseDetailController extends GetxController {
   User userSession = User.fromJson(GetStorage().read('user') ?? {});
 
-  final SubjectProvider _subjectProvider = SubjectProvider();
+  final ClaseProvider _claseProvider = ClaseProvider();
 
-  void delete(String idSubject) async {
-    ResponseApi? responseApi = await _subjectProvider.deleteSubject(idSubject);
+  void delete(String idClase) async {
+    ResponseApi? responseApi = await _claseProvider.deleteClase(idClase);
     if (responseApi?.success == true) {
       Get.snackbar(responseApi?.message ?? '', '',
           backgroundColor: AppColors.colors.secondary,
           colorText: AppColors.colors.onSecondary);
+      refresh();
     } else {
-      Get.snackbar('No se eliminó la materia', responseApi?.message ?? '',
+      Get.snackbar('No se eliminó la clase', responseApi?.message ?? '',
           backgroundColor: AppColors.colors.errorContainer,
           colorText: AppColors.colors.onErrorContainer);
     }
   }
 
-  void confirmationDialog(BuildContext context, String idTask) {
+  void confirmationDialog(BuildContext context, String idClase) {
     Widget cancelButton = TextButton(
       child: const Text('Cancelar'),
       onPressed: () {
@@ -38,7 +37,7 @@ class SubjectDetailController extends GetxController {
     Widget continueButton = TextButton(
       child: const Text('Confirmar'),
       onPressed: () {
-        delete(idTask);
+        delete(idClase);
         Get.back();
         Get.back();
       },
@@ -46,8 +45,8 @@ class SubjectDetailController extends GetxController {
 
     AlertDialog alertDialog = AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      title: const Text('Borrar Materia'),
-      content: const Text('¿Estás seguro de que quieres eliminar la materia?'),
+      title: const Text('Borrar clase'),
+      content: const Text('¿Estás seguro de que quieres eliminar la clase?'),
       actions: [cancelButton, continueButton],
     );
 
@@ -56,14 +55,5 @@ class SubjectDetailController extends GetxController {
         builder: (BuildContext context) {
           return alertDialog;
         });
-  }
-
-  //------------clases
-
-  final ClaseProvider _claseProvider = ClaseProvider();
-
-  Future<List<Clase?>> getClasesBySubject() async {
-    return await _claseProvider.findByUserAndSubject(
-        userSession.id ?? '0', "7");
   }
 }
