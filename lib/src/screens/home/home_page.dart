@@ -75,36 +75,29 @@ class _MyHomePageState extends State<MyHomePage> {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
               child: GNav(
-                  selectedIndex: _selectedIndex,
-                  padding: const EdgeInsets.all(15),
-                  tabBorderRadius: 18,
-                  color: Colors.white,
-                  tabBackgroundColor: Colors.indigo.shade100,
-                  activeColor: Colors.indigo[300],
-                  gap: 8,
-                  onTabChange: (index) {
-                    _selectedIndex = index;
-                  },
-                  tabs: [
-                    const GButton(
-                        // active: true,
-                        // iconActiveColor: Colors.white,
-                        icon: Icons.home_outlined,
-                        text: 'Página Principal'),
-                    GButton(
-                      onPressed: () =>
-                          Get.offNamedUntil('/search', (route) => false),
-                      icon: Icons.search_rounded,
-                      text: 'Buscar',
-                      // iconColor: Colors.white
-                    ),
-                    GButton(
-                      onPressed: () =>
-                          Get.offNamedUntil('/updateProfile', (route) => false),
-                      icon: Icons.person_outline_rounded,
-                      text: 'Perfil',
-                    ),
-                  ]),
+                selectedIndex: _selectedIndex,
+                padding: const EdgeInsets.symmetric( horizontal: 25, vertical: 15),
+                tabBorderRadius: 18,
+                color: Colors.white,
+                tabBackgroundColor: Colors.indigo.shade100,
+                activeColor: Colors.indigo[300],
+                gap: 10,
+                onTabChange: (index) {
+                  _selectedIndex = index;
+                },
+                tabs: [
+                  const GButton(
+                    icon: Icons.home_outlined,
+                    text: 'Página Principal'
+                  ),
+                  GButton(
+                    onPressed: () =>
+                      Get.offNamedUntil('/updateProfile', (route) => false),
+                    icon: Icons.person_outline_rounded,
+                    text: 'Perfil',
+                  ),
+                ]
+              ),
             ),
           ),
         ),
@@ -223,8 +216,9 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Container(
                 margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
                 decoration: BoxDecoration(
-                    color: const Color.fromRGBO(62, 66, 107, 0.8),
-                    borderRadius: BorderRadius.circular(16.0)),
+                  color: const Color.fromRGBO(62, 66, 107, 0.8),
+                  borderRadius: BorderRadius.circular(16.0)
+                ),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Container(
@@ -239,7 +233,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 20,
-                          fontWeight: FontWeight.bold),
+                          fontWeight: FontWeight.bold
+                      ),
                       textAlign: TextAlign.justify,
                     ),
                     

@@ -17,6 +17,7 @@ class TaskUpdateController extends GetxController {
   TaskUpdateController(this.task) {
     getSubjects();
     setTask();
+    subjectSelected.refresh();
   }
 
   User userSession = User.fromJson(GetStorage().read('user') ?? {});
