@@ -222,7 +222,7 @@ class AddTaskPage extends StatelessWidget{
 
   List<DropdownMenuItem<String>> _dropDownSubjects() {
     List<DropdownMenuItem<String>> list = [];
-    for (var type in _controller.subjectList) {
+    for (var type in _controller.data) {
       list.add(DropdownMenuItem(
         child: Text(type!.name ?? ''),
         value: type.name,

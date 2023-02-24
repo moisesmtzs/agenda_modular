@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import 'package:agenda_app/src/models/task.dart';
-import 'package:agenda_app/src/screens/tasks/detail/task_detail_page.dart';
+import 'package:agenda_app/src/screens/tasks/update/task_update_page.dart';
 import 'package:agenda_app/src/screens/tasks/task_controller.dart';
 import 'package:agenda_app/src/ui/app_colors.dart';
 import 'package:agenda_app/src/widgets/no_task_widget.dart';
@@ -15,12 +15,13 @@ class TaskPage extends StatefulWidget {
 }
 
 class _TaskPageState extends State<TaskPage> {
-  final TaskController _taskController = Get.put(TaskController());
+  
+  TaskController taskController = Get.put(TaskController());
 
   @override
   Widget build(BuildContext context) {
     return Obx( () => DefaultTabController(
-        length: _taskController.status.length,
+        length: taskController.status.length,
         child: Scaffold(
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * 0.15),
@@ -37,9 +38,9 @@ class _TaskPageState extends State<TaskPage> {
                 labelColor: AppColors.colors.inversePrimary,
                 unselectedLabelColor: AppColors.colors.onSecondaryContainer,
                 isScrollable: true,
-                tabs: List<Widget>.generate(_taskController.status.length, (index){
+                tabs: List<Widget>.generate(taskController.status.length, (index){
                   return Tab(
-                    child: Text(_taskController.status[index]),
+                    child: Text(taskController.status[index]),
                   );
                 }),
               )
@@ -47,16 +48,16 @@ class _TaskPageState extends State<TaskPage> {
           ),
           body: TabBarView(
             physics: const ClampingScrollPhysics(),
-            children: _taskController.status.map((String status) {
-              // _taskController.getTasks(status);
+            children: taskController.status.map((String status) {
+              // taskController.getTasks(status);
               // return Obx(() {
-              //   if ( _taskController.taskList!.isNotEmpty ) {
+              //   if ( taskController.taskList!.isNotEmpty ) {
               //     ListView.builder(
               //       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               //       physics: const ClampingScrollPhysics(),
-              //       itemCount: _taskController.taskList?.length,
+              //       itemCount: taskController.taskList?.length,
               //       itemBuilder: (_, index) {
-              //         var task = _taskController.taskList![index];
+              //         var task = taskController.taskList![index];
               //         print(task.toString());
               //         return _taskCard(task, context);
               //       }
@@ -67,7 +68,7 @@ class _TaskPageState extends State<TaskPage> {
               //   return const Center(child: CircularProgressIndicator());
               // });
               return FutureBuilder(
-                future: _taskController.getTasks(status),
+                future: taskController.getTasks(status),
                 builder: (context, AsyncSnapshot<List<Task?>> snapshot) {
                   if (snapshot.hasData) {
                     if ( snapshot.data!.isNotEmpty ) {
@@ -96,7 +97,7 @@ class _TaskPageState extends State<TaskPage> {
             icon: const Icon(Icons.add),
             label: const Text('Agregar tarea'),
             onPressed: () {
-              _taskController.goToAddTaskPage();
+              taskController.goToAddTaskPage();
             },
           ),
       
@@ -112,7 +113,7 @@ class _TaskPageState extends State<TaskPage> {
     return GestureDetector(
       onTap: (){
         Get.bottomSheet(
-          TaskDetailPage(task: task),
+          taskDetailPage(task),
           enableDrag: false,
           backgroundColor: AppColors.colors.secondaryContainer,
           shape: const RoundedRectangleBorder(
@@ -198,10 +199,10 @@ class _TaskPageState extends State<TaskPage> {
           ),
           activeColor: AppColors.colors.onTertiaryContainer,
           checkColor: AppColors.colors.tertiaryContainer,
-          value: _taskController.selectedTasks.contains(id),
+          value: taskController.selectedTasks.contains(id),
           onChanged: (value) {
             setState(() {
-              _taskController.onTaskSelected(value, id);
+              taskController.onTaskSelected(value, id);
             });
           }
           
@@ -233,4 +234,70 @@ class _TaskPageState extends State<TaskPage> {
       )
     );
   }
+
+  Widget taskDetailPage(Task? task) {
+      
+    late var datetime = DateFormat("yyyy-MM-dd").format(DateTime.parse(task?.deliveryDate ?? '') );
+
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.4,
+      margin: const EdgeInsets.only(top: 20, bottom: 40, left: 30, right: 30),
+      child: ListView(
+        physics: const ClampingScrollPhysics(),
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.edit_outlined, size: 30),
+                color: AppColors.colors.primary,
+                onPressed: () {
+                  Get.bottomSheet(
+                    TaskUpdatePage(task: task),
+                    enableDrag: true,
+                    isDismissible: true,
+                    isScrollControlled: true,
+                    ignoreSafeArea: false,
+                    backgroundColor: AppColors.colors.secondaryContainer,
+                    barrierColor: Colors.black.withOpacity(0),
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(topLeft: Radius.circular(10.0), topRight: Radius.circular(10.0)),
+                    ),
+                  );
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.delete_outline_rounded, size: 30),
+                color: AppColors.colors.primary,
+                onPressed: () {
+                  setState(() {
+                    taskController.confirmationDialog(context, task?.id ?? '0');
+                    taskController.selectedTasks.remove(task?.id);
+                    taskController.selectedTasks.refresh();
+                  });
+                },
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          Text(
+            (task?.name != '') ? task?.name ?? '' : "Sin nombre a tarea asignado",
+            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)
+          ),
+          const SizedBox(height: 20),
+          Text(
+            (task?.description != '') ? task?.description ?? '' : "Sin descripción a tarea asignada", 
+            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w400)
+          ),
+          const SizedBox(height: 20),
+          Text(
+            (task?.deliveryDate != '') ? 'Fecha de entrega: $datetime' : "Sin fecha de entrega asignada", 
+            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w400)
+          ),
+        ],
+      ),
+    );
+  }
+
 }

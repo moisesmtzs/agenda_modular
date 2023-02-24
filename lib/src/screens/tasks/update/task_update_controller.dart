@@ -18,6 +18,7 @@ class TaskUpdateController extends GetxController {
     getSubjects();
     setTask();
     subjectSelected.refresh();
+    data.refresh();
   }
 
   User userSession = User.fromJson(GetStorage().read('user') ?? {});
@@ -32,6 +33,7 @@ class TaskUpdateController extends GetxController {
   var typeSelected = ''.obs;
   
   List<Subject?> subjectList = <Subject?>[].obs;
+  RxList<Subject?> data = <Subject?>[].obs;
   var subjectSelected = ''.obs;
 
   var value = DateTime.now().toString().obs;
@@ -39,6 +41,9 @@ class TaskUpdateController extends GetxController {
 
   Future<List<Subject?>> getSubjects() async {
     subjectList = await subjectProvider.findByUser(userSession.id ?? '');
+    for ( var s in subjectList ) {
+      data.add(s);
+    }
     return subjectList;
   }
 

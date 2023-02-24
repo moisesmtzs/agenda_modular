@@ -101,7 +101,6 @@ class UsersProvider extends GetConnect {
       User user = User.fromJson(data);
       return user;
     } catch (e) {
-      print('Error: $e');
       return null;
     }
   }

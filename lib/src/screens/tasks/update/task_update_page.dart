@@ -209,7 +209,7 @@ class TaskUpdatePage extends StatelessWidget {
 
   List<DropdownMenuItem<String>> _dropDownSubjects() {
     List<DropdownMenuItem<String>> list = [];
-    for (var subject in taskUpdateController.subjectList) {
+    for (var subject in taskUpdateController.data) {
       list.add(DropdownMenuItem(
         child: Text(subject!.name ?? ''),
         value: subject.name,

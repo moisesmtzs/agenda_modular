@@ -16,6 +16,7 @@ class AddTaskController extends GetxController {
 
   AddTaskController() {
     getSubjects();
+    data.refresh();
   }
 
   User userSession = User.fromJson(GetStorage().read('user') ?? {});
@@ -33,10 +34,14 @@ class AddTaskController extends GetxController {
   var typeSelected = ''.obs;
 
   List<Subject?> subjectList = <Subject?>[].obs;
+  RxList<Subject?> data = <Subject?>[].obs;
   var subjectSelected = ''.obs;
 
   Future<List<Subject?>> getSubjects() async {
     subjectList = await subjectProvider.findByUser(userSession.id ?? '');
+    for ( var s in subjectList ) {
+      data.add(s);
+    }
     return subjectList;
   }
 
