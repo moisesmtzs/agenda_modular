@@ -56,7 +56,7 @@ class _MyAppState extends State<MyApp> {
           GetPage(
             name: '/home',
             page: () => HomePage(),
-            transition: Transition.leftToRight
+            transition: Transition.noTransition
           ),
           GetPage(
             name: '/menu',
@@ -66,7 +66,7 @@ class _MyAppState extends State<MyApp> {
           GetPage(
             name: '/updateProfile',
             page: () => UpdateProfilePage(),
-            transition: Transition.rightToLeft
+            transition: Transition.noTransition
           ),
           GetPage(
             name: '/search',
