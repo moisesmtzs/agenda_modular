@@ -65,9 +65,10 @@ class TaskController extends GetxController {
       child: const Text('Confirmar'),
       onPressed: () {
         delete(idTask);
+        Get.back();
+        Get.back();
         selectedTasks.remove(idTask);
-        Get.back();
-        Get.back();
+        selectedTasks.refresh();
       },
     );
     
@@ -97,6 +98,7 @@ class TaskController extends GetxController {
         selectedTasks.add(tasks[i]!.id);
       }
     }
+    selectedTasks.refresh();
     return tasks;
   }
   

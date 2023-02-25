@@ -3,23 +3,23 @@ import 'dart:convert';
 import 'dart:math';
 import 'dart:ui';
 
-import 'package:agenda_app/src/ui/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:provider/provider.dart';
 
+import 'package:agenda_app/src/screens/navigation_controller.dart';
 import 'package:agenda_app/src/screens/update/update_profile_controller.dart';
+import 'package:agenda_app/src/ui/app_colors.dart';
 import 'package:agenda_app/src/ui/input_decoration.dart';
 import 'package:agenda_app/src/widgets/card_container.dart';
 
 class UpdateProfilePage extends StatelessWidget {
 
+  NavigationController navigationController = Get.find();
   UpdateProfileController updatePageController = Get.put(UpdateProfileController());
 
-  int _selectedIndex = 1;
- 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,8 +63,8 @@ class UpdateProfilePage extends StatelessWidget {
             ),
             child: Padding(
               padding: const EdgeInsets.symmetric( horizontal: 15, vertical: 10 ),
-              child: GNav(
-                selectedIndex: _selectedIndex,
+              child: Obx( () => GNav(
+                selectedIndex: navigationController.selectedIndex.value,
                 backgroundColor: Colors.transparent,
                 padding: const EdgeInsets.symmetric( horizontal: 25, vertical: 15),
                 tabBorderRadius: 18,
@@ -72,20 +72,27 @@ class UpdateProfilePage extends StatelessWidget {
                 tabBackgroundColor: Colors.indigo.shade100,
                 activeColor: Colors.indigo[300],
                 gap: 10,
+                duration: const Duration( milliseconds: 800 ),
                 onTabChange: (index) {
-                  _selectedIndex = index;
+                  navigationController.changeIndex(index);
                 },
                 tabs: [
                   GButton(
                     onPressed: () => updatePageController.goToHomePage(),
                     icon: Icons.home_outlined,
-                    text: 'Página Principal'
+                    text: 'Página Principal',
+                    shadow: [
+                      BoxShadow(
+                        color: AppColors.colors.primary.withOpacity(0.4),
+                      )
+                    ],
                   ),
                   GButton(
                     icon: Icons.person_outline_rounded,
                     text: 'Perfil'
                   ),
                 ]
+              ),
               ),
             ),
           ),

@@ -1,17 +1,18 @@
 import 'dart:math';
 import 'dart:ui';
 
-import 'package:agenda_app/src/ia/ia_controller.dart';
-import 'package:agenda_app/src/screens/screens.dart';
+import 'package:agenda_app/src/ui/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/config.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:get/get.dart';
-
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
+import 'package:agenda_app/src/ia/ia_controller.dart';
 import 'package:agenda_app/src/screens/home/home_controller.dart';
+import 'package:agenda_app/src/screens/navigation_controller.dart';
+import 'package:agenda_app/src/screens/screens.dart';
 
 //IA//
 import 'package:agenda_app/src/ia/text_to_speech.dart';
@@ -28,7 +29,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _selectedIndex = 0;
+
+  NavigationController navigationController = Get.put(NavigationController());
   IA_Controller _ia = IA_Controller();
 
   @override
@@ -58,32 +60,37 @@ class _MyHomePageState extends State<MyHomePage> {
               color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
         ),
       ),
-      body: Stack(children: [
-        _fondoapp(),
-        SingleChildScrollView(
+      body: Stack(
+        children: [
+          _fondoapp(),
+          SingleChildScrollView(
             physics: const ClampingScrollPhysics(),
-            child: _buttonAssistant(context)),
-      ]),
+            child: _buttonAssistant(context)
+          ),
+        ]
+      ),
       bottomNavigationBar: ClipRRect(
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 6.0, sigmaY: 6.0),
           child: Container(
             margin: const EdgeInsets.only(left: 8, right: 8, bottom: 10),
             decoration: BoxDecoration(
-                color: const Color.fromRGBO(62, 66, 107, 0.6),
-                borderRadius: BorderRadius.circular(16.0)),
+              color: const Color.fromRGBO(62, 66, 107, 0.6),
+              borderRadius: BorderRadius.circular(16.0)
+            ),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-              child: GNav(
-                selectedIndex: _selectedIndex,
+              child: Obx( () => GNav(
+                selectedIndex: navigationController.selectedIndex.value,
                 padding: const EdgeInsets.symmetric( horizontal: 25, vertical: 15),
                 tabBorderRadius: 18,
                 color: Colors.white,
                 tabBackgroundColor: Colors.indigo.shade100,
                 activeColor: Colors.indigo[300],
                 gap: 10,
+                duration: const Duration( milliseconds: 800 ),
                 onTabChange: (index) {
-                  _selectedIndex = index;
+                  navigationController.changeIndex(index);
                 },
                 tabs: [
                   const GButton(
@@ -95,8 +102,14 @@ class _MyHomePageState extends State<MyHomePage> {
                       Get.offNamedUntil('/updateProfile', (route) => false),
                     icon: Icons.person_outline_rounded,
                     text: 'Perfil',
+                    shadow: [
+                      BoxShadow(
+                        color: AppColors.colors.primary.withOpacity(0.4),
+                      )
+                    ],
                   ),
                 ]
+              ),
               ),
             ),
           ),
@@ -145,30 +158,32 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget _buttonAssistant(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(
-          // vertical: MediaQuery.of(context).size.height * 0.0009,
-          horizontal: MediaQuery.of(context).size.width * 0.001),
+        horizontal: MediaQuery.of(context).size.width * 0.001
+      ),
       margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.13),
       child: Column(
         children: [
           Container(
             padding: EdgeInsets.symmetric(
-                horizontal: MediaQuery.of(context).size.width * 0.36),
+              horizontal: MediaQuery.of(context).size.width * 0.36
+            ),
             child: ElevatedButton(
               style: ButtonStyle(
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50))),
-                  padding: MaterialStateProperty.all<EdgeInsets>(
-                      EdgeInsets.symmetric(
-                          vertical:
-                              MediaQuery.of(context).size.height * 0.023)),
-                  fixedSize: MaterialStateProperty.all<Size>(
-                    Size.fromWidth(MediaQuery.of(context).size.width * 0.37),
-                  ),
-                  backgroundColor:
-                      MaterialStateProperty.all<Color>(Colors.indigo),
-                  foregroundColor:
-                      MaterialStateProperty.all<Color>(Colors.white)),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50))),
+                padding: MaterialStateProperty.all<EdgeInsets>(
+                    EdgeInsets.symmetric(
+                        vertical:
+                            MediaQuery.of(context).size.height * 0.023)),
+                fixedSize: MaterialStateProperty.all<Size>(
+                  Size.fromWidth(MediaQuery.of(context).size.width * 0.37),
+                ),
+                backgroundColor:
+                    MaterialStateProperty.all<Color>(AppColors.colors.primary),
+                foregroundColor:
+                    MaterialStateProperty.all<Color>(AppColors.colors.onPrimary)
+              ),
               // isExtended: true,
               onPressed: () => _listen(),
 
@@ -311,62 +326,59 @@ class MenuPage extends GetView<MyDrawerController> {
           padding: EdgeInsets.zero,
           children: [
             DrawerHeader(
-                padding: const EdgeInsets.fromLTRB(15, 15, 0, 0),
-                child: ListView(
-                  // mainAxisSize: MainAxisSize.max,
-                  physics: const ClampingScrollPhysics(),
-                  children: [
-                    Container(
-                        alignment: Alignment.topLeft,
-                        height: 60,
-                        margin: const EdgeInsets.only(top: 10),
-                        child: AspectRatio(
-                          aspectRatio: 1 / 1,
-                          child: ClipOval(
-                              child: GetBuilder<HomeController>(
-                                  builder: (value) => FadeInImage(
-                                        fit: BoxFit.cover,
-                                        fadeInDuration:
-                                            const Duration(milliseconds: 50),
-                                        placeholder: const AssetImage(
-                                            'assets/img/no-image.png'),
-                                        image: homeController
-                                                    .userSession.image !=
-                                                null
-                                            ? NetworkImage(homeController
-                                                .userSession.image!)
-                                            : const AssetImage(
-                                                    'assets/img/user_profile_2.png')
-                                                as ImageProvider,
-                                      ))),
-                        )),
-                    const SizedBox(height: 15),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          homeController.userSession.name ?? 'Moises',
-                          style: TextStyle(
-                              fontSize: 24.0,
-                              color: Colors.indigo[300],
-                              fontWeight: FontWeight.bold),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+              padding: const EdgeInsets.fromLTRB(15, 15, 0, 0),
+              child: ListView(
+                physics: const ClampingScrollPhysics(),
+                children: [
+                  Container(
+                    alignment: Alignment.topLeft,
+                    height: 60,
+                    margin: const EdgeInsets.only(top: 10),
+                    child: AspectRatio(
+                      aspectRatio: 1 / 1,
+                      child: ClipOval(
+                        child: GetBuilder<HomeController>(
+                          builder: (value) => FadeInImage(
+                                fit: BoxFit.cover,
+                                fadeInDuration: const Duration(milliseconds: 50),
+                                placeholder: const AssetImage('assets/img/no-image.png'),
+                                image: homeController.userSession.image != null
+                                  ? NetworkImage(homeController.userSession.image!)
+                                  : const AssetImage('assets/img/user_profile_2.png') as ImageProvider,
+                          )
+                        )
+                      ),
+                    )
+                  ),
+                  const SizedBox(height: 15),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        homeController.userSession.name ?? 'Moises',
+                        style: TextStyle(
+                          fontSize: 24.0,
+                          color: Colors.indigo[300],
+                          fontWeight: FontWeight.bold
                         ),
-                        // const SizedBox(height: 5),
-                        Text(
-                          homeController.userSession.email ?? 'Correo',
-                          style: TextStyle(
-                              fontSize: 14.0,
-                              color: Colors.indigo[200],
-                              fontWeight: FontWeight.bold),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    ),
-                  ],
-                )),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      // const SizedBox(height: 5),
+                      Text(
+                        homeController.userSession.email ?? 'Correo',
+                        style: TextStyle(
+                            fontSize: 14.0,
+                            color: Colors.indigo[200],
+                            fontWeight: FontWeight.bold),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
+                ],
+              )
+            ),
             Divider(
               thickness: 1.4,
               indent: MediaQuery.of(context).size.width * 0.06,
@@ -414,7 +426,6 @@ class MyDrawerController extends GetxController {
   final zoomDrawerController = ZoomDrawerController();
 
   void toggleDrawer() {
-    print("Toggle drawer");
     zoomDrawerController.toggle?.call();
     update();
   }

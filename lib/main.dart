@@ -44,53 +44,63 @@ class _MyAppState extends State<MyApp> {
         ],
         getPages: [
           GetPage(
-              name: '/',
-              page: () => LoginPage(),
-              transition: Transition.leftToRight),
+            name: '/',
+            page: () => LoginPage(),
+            transition: Transition.leftToRight
+          ),
           GetPage(
-              name: '/register',
-              page: () => RegisterPage(),
-              transition: Transition.rightToLeft),
+            name: '/register',
+            page: () => RegisterPage(),
+            transition: Transition.rightToLeft
+          ),
           GetPage(
-              name: '/home',
-              page: () => HomePage(),
-              transition: Transition.noTransition),
+            name: '/home',
+            page: () => HomePage(),
+            transition: Transition.leftToRight
+          ),
           GetPage(
-              name: '/menu',
-              page: () => MenuPage(),
-              transition: Transition.noTransition),
+            name: '/menu',
+            page: () => MenuPage(),
+            transition: Transition.noTransition
+          ),
           GetPage(
-              name: '/updateProfile',
-              page: () => UpdateProfilePage(),
-              transition: Transition.noTransition),
+            name: '/updateProfile',
+            page: () => UpdateProfilePage(),
+            transition: Transition.rightToLeft
+          ),
           GetPage(
-              name: '/search',
-              page: () => SearchPage(),
-              transition: Transition.noTransition),
+            name: '/search',
+            page: () => SearchPage(),
+            transition: Transition.noTransition
+          ),
           GetPage(
             name: '/task',
             page: () => TaskPage(),
           ),
           GetPage(
-              name: '/addTask',
-              page: () => AddTaskPage(),
-              transition: Transition.noTransition),
+            name: '/addTask',
+            page: () => AddTaskPage(),
+            transition: Transition.noTransition
+          ),
           GetPage(
             name: '/schedule',
             page: () => SchedulePage(),
           ),
           GetPage(
-              name: '/subject',
-              page: () => SubjectPage(),
-              transition: Transition.rightToLeft),
+            name: '/subject',
+            page: () => SubjectPage(),
+            transition: Transition.rightToLeft
+          ),
           GetPage(
-              name: '/addSubject',
-              page: () => AddSubjectPage(),
-              transition: Transition.noTransition),
+            name: '/addSubject',
+            page: () => AddSubjectPage(),
+            transition: Transition.noTransition
+          ),
           GetPage(
-              name: '/clase',
-              page: () => ClasePage(),
-              transition: Transition.noTransition),
+            name: '/clase',
+            page: () => ClasePage(),
+            transition: Transition.noTransition
+          ),
         ],
         theme: ThemeData.light().copyWith(
           useMaterial3: true,
