@@ -57,6 +57,7 @@ class SubjectPage extends StatelessWidget {
           Get.bottomSheet(
             SubjectDetailPage(subject: subject),
             enableDrag: false,
+            ignoreSafeArea: true,
             backgroundColor: AppColors.colors.secondaryContainer,
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.only(

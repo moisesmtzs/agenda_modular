@@ -64,6 +64,6 @@ class SubjectDetailController extends GetxController {
 
   Future<List<Clase?>> getClasesBySubject() async {
     return await _claseProvider.findByUserAndSubject(
-        userSession.id ?? '0', "7");
+        userSession.id ?? '0', "14");
   }
 }
