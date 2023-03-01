@@ -7,6 +7,7 @@ import 'package:agenda_app/src/screens/subject/detail/subject_detail_controller.
 import 'package:agenda_app/src/screens/subject/update/subject_update_page.dart';
 
 import 'package:agenda_app/src/models/clase.dart';
+import 'package:agenda_app/src/screens/clase/detail/clase_detail_controller.dart';
 import 'package:agenda_app/src/screens/clase/update/clase_update_page.dart';
 
 import 'package:agenda_app/src/ui/app_colors.dart';
@@ -15,6 +16,9 @@ import 'package:agenda_app/src/widgets/no_subject_widget.dart';
 class SubjectDetailPage extends StatelessWidget {
   final SubjectDetailController _subjectDetailController =
       Get.put(SubjectDetailController());
+
+  final ClaseDetailController _claseDetailController =
+      Get.put(ClaseDetailController());
 
   late Subject? subject;
   late Subject? code;
@@ -32,17 +36,18 @@ class SubjectDetailPage extends StatelessWidget {
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         children: [
           _datesSubject(context),
-          // _listclass(context),
         ],
       ),
     );
   }
 
   Widget _datesSubject(BuildContext context) {
-    //Mostramos los datos de la materia con la opcion de editar
+    late var idSubject = subject?.id ?? '';
+    late var professor = subject?.professor_name ?? '';
+    late var code = subject?.subject_code ?? '';
     return Container(
-      height: MediaQuery.of(context).size.height * 0.5,
-      margin: const EdgeInsets.only(top: 20, bottom: 20, left: 30, right: 30),
+      height: MediaQuery.of(context).size.height * 1,
+      margin: const EdgeInsets.only(top: 10, bottom: 10, left: 30, right: 30),
       child: ListView(
         physics: const ClampingScrollPhysics(),
         children: [
@@ -88,41 +93,55 @@ class SubjectDetailPage extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           Text(
-            subject?.subject_code ?? '',
+            (subject?.subject_code != '')
+                ? 'Codigo: $code'
+                : "Sin codigo asignada",
             style: const TextStyle(fontSize: 16),
           ),
           const SizedBox(height: 10),
           Text(
-            subject?.professor_name ?? '',
+            (subject?.professor_name != '')
+                ? 'Profesor: $professor'
+                : "Sin profesor asignada",
             style: const TextStyle(fontSize: 16),
           ),
-          Container(
-            margin:
-                const EdgeInsets.only(left: 25, right: 25, bottom: 10, top: 10),
-            child: const Text(
-              "Clases",
-              style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold),
-            ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Text(
+                "Clases" , 
+                style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.left,
+              ),
+              IconButton(
+                icon: const Icon(Icons.add),
+                color: AppColors.colors.primary,
+                onPressed: () => _subjectDetailController.goToClase(),
+              ),
+            ],
+            
           ),
-          _listclass(context),
+          _listclass(context, idSubject),
         ],
       ),
     );
   }
 
-  Widget _listclass(BuildContext context) {
+
+
+  Widget _listclass(BuildContext context, idSubject) {
     return SizedBox(
       height: MediaQuery.of(context).size.height * 0.3,
       child: FutureBuilder(
-        future: _subjectDetailController.getClasesBySubject(),
+        future: _subjectDetailController.getClasesBySubject(idSubject),//OCUPO PASARLE EL ID DE CUANDO LO TOQUE
         builder: (context, AsyncSnapshot<List<Clase?>> snapshot) {
           if (snapshot.hasData) {
             //preguntamos si viene informacion
             if (snapshot.data!.isNotEmpty) {
               return ListView.builder(
                   padding:
-                      const EdgeInsets.only(left: 10, right: 10, bottom: 50),
-                  //physics: const ClampingScrollPhysics(),
+                      const EdgeInsets.only(bottom: 50),
                   itemCount: snapshot.data?.length ?? 0,
                   itemBuilder: (_, index) {
                     return _claseCard(snapshot.data![index]!, context);
@@ -153,36 +172,96 @@ class SubjectDetailPage extends StatelessWidget {
           );
         },
         child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(),
             child: Container(
-                margin: const EdgeInsets.only(top: 10, bottom: 30),
+                margin: const EdgeInsets.only(top: 10, bottom: 10),
                 width: double.infinity,
                 height: 100,
                 decoration: _cardBorders(),
-                child: Stack(
-                  alignment: Alignment.topLeft, 
-                  children: [
-                    Positioned(left: 15, top: 40, child: _claseText(clase?.days ?? '')),
-                  ]
-                )
-            )
-          )
-        );
+                child: Stack(alignment: Alignment.topLeft, children: [
+                  Positioned(left: 15, child: _claseText(clase,context)),
+                ]))));
   }
 
-  Widget _claseText(String beginHour) {
-    //aqui tengo que mostrar los detalle de la clase
-    return SizedBox(
-        width: 350,
-        child: Container(
-            margin: const EdgeInsets.only(right: 25),
-            child: Text(
-              (beginHour != '')
-                  ? beginHour
-                  : "Sin horario de clase asignado", //modificar esto
-              maxLines: 3,
-              overflow: TextOverflow.ellipsis,
-            )));
+  Widget _claseText(Clase? clase,BuildContext context) {
+    late var beginHour =
+        DateFormat("HH:mm").format(DateTime.parse(clase?.begin_hour ?? ''));
+    late var endHour =
+        DateFormat("HH:mm").format(DateTime.parse(clase?.end_hour ?? ''));
+    late var day = clase?.days;
+    late var classroom = clase?.classroom;
+    late var building = clase?.building;
+
+
+    return Column(
+
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              IconButton(
+                    icon: const Icon(Icons.edit_outlined, size: 30),
+                    color: AppColors.colors.primary,
+                    onPressed: () {
+                      Get.bottomSheet(
+                        ClaseUpdatePage(clase: clase),
+                        enableDrag: true,
+                        isDismissible: true,
+                        isScrollControlled: true,
+                        ignoreSafeArea: false,
+                        backgroundColor: AppColors.colors.secondaryContainer,
+                        barrierColor: Colors.black.withOpacity(0),
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(10.0),
+                              topRight: Radius.circular(10.0)),
+                        ),
+                      );
+                    },
+                  ),
+              IconButton(
+                icon: const Icon(Icons.delete_outline_rounded, size: 30),
+                color: AppColors.colors.primary,
+                onPressed: () {
+                  _claseDetailController.confirmationDialog(
+                      context, clase?.id ?? '0');
+                },
+              ),
+            ],
+          ),
+              
+          Column(
+            children:[
+              
+              const SizedBox(height: 20),
+              Text(
+                (clase?.days != '')? 'Dia: $day \n\n' : '',
+                
+              ),
+              const SizedBox(height: 20),
+              Text(
+                (clase?.begin_hour != '')? 'Horario: $beginHour' : '',
+                
+              ),
+              Text(
+                (clase?.end_hour != '')? '- $endHour' : '',
+                
+              ),
+              const SizedBox(height: 20),
+              Text(
+                (clase?.classroom != '')? 'Salon: $classroom' : '',
+                
+              ),
+              const SizedBox(height: 20),
+              Text(
+                (clase?.building != '')? '$building' : '',
+                
+              ),
+            ]
+          ),
+        ],
+    );
   }
 
   BoxDecoration _cardBorders() => BoxDecoration(
@@ -196,75 +275,3 @@ class SubjectDetailPage extends StatelessWidget {
             )
           ]);
 }
-
-
-// class SubjectDetailPage extends StatelessWidget {
-//   SubjectDetailController subjectDetailController =
-//       Get.put(SubjectDetailController());
-
-//   late Subject? subject;
-//   late Subject? code;
-//   late Subject? profesor;
-
-//   SubjectDetailPage({Key? key, required this.subject}) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       height: MediaQuery.of(context).size.height * 1,
-//       margin: const EdgeInsets.only(top: 20, bottom: 40, left: 30, right: 30),
-//       child: ListView(physics: const ClampingScrollPhysics(), children: [
-//         Row(
-//           crossAxisAlignment: CrossAxisAlignment.end,
-//           mainAxisAlignment: MainAxisAlignment.end,
-//           children: [
-//             IconButton(
-//               icon: const Icon(Icons.edit_outlined, size: 30),
-//               color: AppColors.colors.primary,
-//               onPressed: () {
-//                 Get.bottomSheet(
-//                   SubjectUpdatePage(subject: subject),
-//                   enableDrag: true,
-//                   isDismissible: true,
-//                   isScrollControlled: true,
-//                   ignoreSafeArea: false,
-//                   backgroundColor: AppColors.colors.secondaryContainer,
-//                   barrierColor: Colors.black.withOpacity(0),
-//                   shape: const RoundedRectangleBorder(
-//                     borderRadius: BorderRadius.only(
-//                         topLeft: Radius.circular(10.0),
-//                         topRight: Radius.circular(10.0)),
-//                   ),
-//                 );
-//               },
-//             ),
-//             IconButton(
-//               icon: const Icon(Icons.delete_outline_rounded, size: 30),
-//               color: AppColors.colors.primary,
-//               onPressed: () {
-//                 subjectDetailController.confirmationDialog(
-//                     context, subject?.id ?? '0');
-//               },
-//             ),
-//           ],
-//         ),
-//         const SizedBox(height: 10),
-//         Text(
-//           subject?.name ?? '',
-//           style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-//           textAlign: TextAlign.center,
-//         ),
-//         const SizedBox(height: 40),
-//         Text(
-//           subject?.subject_code ?? '',
-//           style: const TextStyle(fontSize: 16),
-//         ),
-//         const SizedBox(height: 10),
-//         Text(
-//           subject?.professor_name ?? '',
-//           style: const TextStyle(fontSize: 16),
-//         ),
-//       ]),
-//     );
-//   }
-// }

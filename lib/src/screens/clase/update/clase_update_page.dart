@@ -40,8 +40,8 @@ class ClaseUpdatePage extends StatelessWidget {
                 claseUpdateController.updateClase(context);
               },
             ),
-            // const SizedBox(height: 25),
-            // _subjectName(),
+            const SizedBox(height: 25),
+            //_begin(),
             // const SizedBox(height: 20),
             // _subjectCode(),
             // const SizedBox(height: 20),
@@ -50,7 +50,7 @@ class ClaseUpdatePage extends StatelessWidget {
     );
   }
 
-  // Widget _subjectName() {
+  // Widget _begin() {
   //   return Container(
   //     margin: const EdgeInsets.symmetric(horizontal: 25),
   //     padding: const EdgeInsets.all(10),
@@ -61,7 +61,7 @@ class ClaseUpdatePage extends StatelessWidget {
   //       autovalidateMode: AutovalidateMode.onUserInteraction,
   //       child: Column(children: [
   //         TextFormField(
-  //             controller: claseUpdateController.nameController,
+  //             controller: claseUpdateController.begineController,
   //             cursorRadius: const Radius.circular(8.0),
   //             maxLength: 180,
   //             decoration: const InputDecoration(

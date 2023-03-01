@@ -14,6 +14,10 @@ class SubjectDetailController extends GetxController {
 
   final SubjectProvider _subjectProvider = SubjectProvider();
 
+  void goToClase() {
+    Get.toNamed('/clase');
+  }
+
   void delete(String idSubject) async {
     ResponseApi? responseApi = await _subjectProvider.deleteSubject(idSubject);
     if (responseApi?.success == true) {
@@ -61,9 +65,10 @@ class SubjectDetailController extends GetxController {
   //------------clases
 
   final ClaseProvider _claseProvider = ClaseProvider();
+  
 
-  Future<List<Clase?>> getClasesBySubject() async {
+  Future<List<Clase?>> getClasesBySubject(String idSubject) async {
     return await _claseProvider.findByUserAndSubject(
-        userSession.id ?? '0', "14");
+        userSession.id ?? '0', idSubject);
   }
 }
