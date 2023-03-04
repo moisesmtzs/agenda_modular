@@ -14,11 +14,10 @@ import 'package:agenda_app/src/ui/app_colors.dart';
 import 'package:agenda_app/src/widgets/no_subject_widget.dart';
 
 class SubjectDetailPage extends StatelessWidget {
-  final SubjectDetailController _subjectDetailController =
-      Get.put(SubjectDetailController());
 
-  final ClaseDetailController _claseDetailController =
-      Get.put(ClaseDetailController());
+  final SubjectDetailController _subjectDetailController = Get.put(SubjectDetailController());
+
+  final ClaseDetailController _claseDetailController = Get.put(ClaseDetailController());
 
   late Subject? subject;
   late Subject? code;
@@ -30,15 +29,16 @@ class SubjectDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: ListView(
-        physics: const ClampingScrollPhysics(),
-        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-        children: [
-          _datesSubject(context),
-        ],
-      ),
-    );
+    return _datesSubject(context);
+    // return Scaffold(
+    //   body: _datesSubject(context),
+    //   // ListView(
+    //   //   physics: const ClampingScrollPhysics(),
+    //   //   keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+    //   //   children: [
+    //   //   ],
+    //   // ),
+    // );
   }
 
   Widget _datesSubject(BuildContext context) {
@@ -46,7 +46,7 @@ class SubjectDetailPage extends StatelessWidget {
     late var professor = subject?.professor_name ?? '';
     late var code = subject?.subject_code ?? '';
     return Container(
-      height: MediaQuery.of(context).size.height * 1,
+      height: MediaQuery.of(context).size.height * 0.75,
       margin: const EdgeInsets.only(top: 10, bottom: 10, left: 30, right: 30),
       child: ListView(
         physics: const ClampingScrollPhysics(),
@@ -69,8 +69,9 @@ class SubjectDetailPage extends StatelessWidget {
                     barrierColor: Colors.black.withOpacity(0),
                     shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(10.0),
-                          topRight: Radius.circular(10.0)),
+                        topLeft: Radius.circular(10.0),
+                        topRight: Radius.circular(10.0)
+                      ),
                     ),
                   );
                 },
@@ -107,11 +108,11 @@ class SubjectDetailPage extends StatelessWidget {
           ),
           Row(
             crossAxisAlignment: CrossAxisAlignment.end,
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 "Clases" , 
-                style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.left,
               ),
               IconButton(
@@ -132,7 +133,7 @@ class SubjectDetailPage extends StatelessWidget {
 
   Widget _listclass(BuildContext context, idSubject) {
     return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.3,
+      height: MediaQuery.of(context).size.height * 0.5,
       child: FutureBuilder(
         future: _subjectDetailController.getClasesBySubject(idSubject),//OCUPO PASARLE EL ID DE CUANDO LO TOQUE
         builder: (context, AsyncSnapshot<List<Clase?>> snapshot) {
@@ -140,17 +141,17 @@ class SubjectDetailPage extends StatelessWidget {
             //preguntamos si viene informacion
             if (snapshot.data!.isNotEmpty) {
               return ListView.builder(
-                  padding:
-                      const EdgeInsets.only(bottom: 50),
-                  itemCount: snapshot.data?.length ?? 0,
-                  itemBuilder: (_, index) {
-                    return _claseCard(snapshot.data![index]!, context);
-                  });
+                padding: const EdgeInsets.only(bottom: 50),
+                itemCount: snapshot.data?.length ?? 0,
+                itemBuilder: (_, index) {
+                  return _claseCard(snapshot.data![index]!, context);
+                }
+              );
             } else {
-              return NoSubjectWidget(text: 'No hay Clases agregadas');
+              return NoSubjectWidget(text: 'No hay clases agregadas');
             }
           } else {
-            return NoSubjectWidget(text: 'No hay Clases agregadas');
+            return NoSubjectWidget(text: 'No hay clases agregadas');
           }
         },
       ),
@@ -159,28 +160,34 @@ class SubjectDetailPage extends StatelessWidget {
 
   Widget _claseCard(Clase? clase, BuildContext context) {
     return GestureDetector(
-        onTap: () {
-          Get.bottomSheet(
-            ClaseUpdatePage(clase: clase),
-            enableDrag: false,
-            backgroundColor: AppColors.colors.secondaryContainer,
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(10.0),
-                  topRight: Radius.circular(10.0)),
-            ),
-          );
-        },
-        child: Padding(
-            padding: const EdgeInsets.symmetric(),
-            child: Container(
-                margin: const EdgeInsets.only(top: 10, bottom: 10),
-                width: double.infinity,
-                height: 100,
-                decoration: _cardBorders(),
-                child: Stack(alignment: Alignment.topLeft, children: [
-                  Positioned(left: 15, child: _claseText(clase,context)),
-                ]))));
+      onTap: () {
+        Get.bottomSheet(
+          ClaseUpdatePage(clase: clase),
+          enableDrag: false,
+          backgroundColor: AppColors.colors.secondaryContainer,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(10.0),
+                topRight: Radius.circular(10.0)),
+          ),
+        );
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(),
+        child: Container(
+            margin: const EdgeInsets.only(top: 10, bottom: 10),
+            width: double.infinity,
+            height: 100,
+            decoration: _cardBorders(),
+            child: Stack(
+              alignment: Alignment.topLeft, 
+              children: [
+                Positioned(left: 15, child: _claseText(clase,context)),
+              ]
+            )
+          )
+      )
+    );
   }
 
   Widget _claseText(Clase? clase,BuildContext context) {

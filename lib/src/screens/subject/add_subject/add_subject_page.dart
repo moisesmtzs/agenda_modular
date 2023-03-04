@@ -126,13 +126,19 @@ class _AddSubjectPageState extends State<AddSubjectPage> {
       width: double.infinity,
       height: 50,
       margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-      child: ElevatedButton(
+      child: MaterialButton(
+        shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(15) ),
+        disabledColor: Colors.grey,
+        color: AppColors.colors.secondaryContainer,
+        child: Container(
+          padding: const EdgeInsets.symmetric( horizontal: 30, vertical: 15 ),
+          child: const Text(
+            'Registrar Materia',
+          ),
+        ),
         onPressed: () {
           addSubjectController.register(context);
         },
-        child: const Text(
-          'Registrar Materia',
-        ),
       ),
     );
   }

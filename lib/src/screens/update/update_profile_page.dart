@@ -56,7 +56,7 @@ class UpdateProfilePage extends StatelessWidget {
         child: BackdropFilter(
           filter: ImageFilter.blur( sigmaX: 6.0, sigmaY: 6.0 ),
           child: Container(
-            margin: const EdgeInsets.only(left: 15, right: 15, bottom: 10),
+            margin: const EdgeInsets.only(left: 8, right: 8, bottom: 10),
             decoration: BoxDecoration(
               color: const Color.fromRGBO(62, 66, 107, 0.6),
               borderRadius: BorderRadius.circular(16.0)
@@ -72,7 +72,7 @@ class UpdateProfilePage extends StatelessWidget {
                 tabBackgroundColor: Colors.indigo.shade100,
                 activeColor: Colors.indigo[300],
                 gap: 10,
-                duration: const Duration( milliseconds: 800 ),
+                duration: const Duration( milliseconds: 1500 ),
                 onTabChange: (index) {
                   navigationController.changeIndex(index);
                 },

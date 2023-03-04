@@ -46,7 +46,7 @@ class _ClasePageState extends State<ClasePage> {
         physics: const ClampingScrollPhysics(),
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         children: [
-          _dropDownSubjects(claseController.subjects),
+          _dropDownSubjects(),
           _day(),
           _begin(),
           _end(),
@@ -58,65 +58,74 @@ class _ClasePageState extends State<ClasePage> {
     );
   }
 
-  Widget _dropDownSubjects(List<Subject?> subjects) {
+  Widget _dropDownSubjects() {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20),
-      child: DropdownButton(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+      decoration: BoxDecoration(
+        color: AppColors.colors.primaryContainer,
+        borderRadius: BorderRadius.circular(15)
+      ),
+      child: Obx( () => DropdownButton(
+        dropdownColor: AppColors.colors.onSecondary,
+        borderRadius: BorderRadius.circular(16),
         underline: Container(
-            alignment: Alignment.centerRight,
-            child: Icon(
-              Icons.arrow_drop_down_circle,
-            )),
+          alignment: Alignment.centerRight,
+          child: const Icon(Icons.arrow_drop_down_circle)
+        ),
         elevation: 3,
         isExpanded: true,
-        hint: Text(
+        hint: const Text(
           'Seleccionar materia',
           style: TextStyle(color: Colors.black, fontSize: 16),
         ),
-        items: _dropDownItems(subjects),
-        value: claseController.idsubject,
+        items: _dropDownItems(),
+        value: claseController.idsubject.value == '' ? null : claseController.idsubject.value,
         onChanged: (option) {
-          claseController.idsubject = option.toString();
+          claseController.idsubject.value = option.toString();
         },
+      ),
       ),
     );
   }
 
-  List<DropdownMenuItem<String>> _dropDownItems(List<Subject?> subjects) {
+  List<DropdownMenuItem<String>> _dropDownItems() {
     //Recuperamos las categorias para mostrar en un dropdown
     List<DropdownMenuItem<String>> list = [];
-    subjects.forEach((subjects) {
+    for (var subject in claseController.subjects) {
       list.add(DropdownMenuItem(
-        child: Text(subjects?.name ?? ''),
-        value: subjects?.id,
+        child: Text(subject?.name ?? ''),
+        value: subject?.id,
       ));
       //debugPrint(subjects?.name.toString());
-    });
+    }
     return list;
   }
 
   Widget _begin() {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
-      padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 10),
+      margin: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 5),
       decoration: BoxDecoration(
-          color: AppColors.colors.primaryContainer,
-          borderRadius: BorderRadius.circular(15)),
+        color: AppColors.colors.primaryContainer,
+        borderRadius: BorderRadius.circular(15)
+      ),
       child: DropdownButton(
         dropdownColor: AppColors.colors.onSecondary,
         borderRadius: BorderRadius.circular(16),
         alignment: Alignment.center,
         menuMaxHeight: 400,
-        icon: const Icon(Icons.keyboard_arrow_down),
-        iconSize: 30,
         hint: const Text("Hora de Inicio"),
         value: claseController.begineController,
-        items: items
-            .map((String hora) => DropdownMenuItem<String>(
-                  value: hora,
-                  child: Text(hora),
-                ))
-            .toList(),
+        icon: const Visibility(visible: false, child: Icon(Icons.arrow_drop_down_circle)),
+        underline: Container(
+          alignment: Alignment.centerRight,
+          child: const Icon(Icons.arrow_drop_down_circle)
+        ),
+        items: items.map((String hora) => DropdownMenuItem<String>(
+          value: hora,
+          child: Text(hora),
+        )).toList(),
         onChanged: (option) {
           setState(() {
             claseController.begineController = option.toString();
@@ -128,20 +137,25 @@ class _ClasePageState extends State<ClasePage> {
 
   Widget _end() {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
-      padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 10),
+      margin: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 5),
       decoration: BoxDecoration(
-          color: AppColors.colors.primaryContainer,
-          borderRadius: BorderRadius.circular(15)),
+        color: AppColors.colors.primaryContainer,
+        borderRadius: BorderRadius.circular(15)
+      ),
       child: DropdownButton(
         dropdownColor: AppColors.colors.onSecondary,
         borderRadius: BorderRadius.circular(16),
         alignment: Alignment.center,
         menuMaxHeight: 400,
-        icon: const Icon(Icons.keyboard_arrow_down),
+        icon: const Visibility(visible: false, child: Icon(Icons.arrow_drop_down_circle)),
         iconSize: 30,
         hint: const Text("Hora de Fin"),
         value: claseController.endController,
+        underline: Container(
+          alignment: Alignment.centerRight,
+          child: const Icon(Icons.arrow_drop_down_circle)
+        ),
         items: items
             .map((String hora) => DropdownMenuItem<String>(
                   value: hora,
@@ -164,6 +178,7 @@ class _ClasePageState extends State<ClasePage> {
         ListTile(
           title: const Text('lunes'),
           leading: Radio<SingingCharacter>(
+            activeColor: AppColors.colors.primary,
             value: SingingCharacter.lunes,
             groupValue: _character,
             onChanged: (SingingCharacter? value) {
@@ -177,6 +192,7 @@ class _ClasePageState extends State<ClasePage> {
         ListTile(
           title: const Text('martes'),
           leading: Radio<SingingCharacter>(
+            activeColor: AppColors.colors.primary,
             value: SingingCharacter.martes,
             groupValue: _character,
             onChanged: (SingingCharacter? value) {
@@ -190,6 +206,7 @@ class _ClasePageState extends State<ClasePage> {
         ListTile(
           title: const Text('miercoles'),
           leading: Radio<SingingCharacter>(
+            activeColor: AppColors.colors.primary,
             value: SingingCharacter.miercoles,
             groupValue: _character,
             onChanged: (SingingCharacter? value) {
@@ -203,6 +220,7 @@ class _ClasePageState extends State<ClasePage> {
         ListTile(
           title: const Text('jueves'),
           leading: Radio<SingingCharacter>(
+            activeColor: AppColors.colors.primary,
             value: SingingCharacter.jueves,
             groupValue: _character,
             onChanged: (SingingCharacter? value) {
@@ -216,6 +234,7 @@ class _ClasePageState extends State<ClasePage> {
         ListTile(
           title: const Text('viernes'),
           leading: Radio<SingingCharacter>(
+            activeColor: AppColors.colors.primary,
             value: SingingCharacter.viernes,
             groupValue: _character,
             onChanged: (SingingCharacter? value) {
@@ -229,6 +248,7 @@ class _ClasePageState extends State<ClasePage> {
         ListTile(
           title: const Text('sabado'),
           leading: Radio<SingingCharacter>(
+            activeColor: AppColors.colors.primary,
             value: SingingCharacter.sabado,
             groupValue: _character,
             onChanged: (SingingCharacter? value) {
@@ -307,14 +327,20 @@ class _ClasePageState extends State<ClasePage> {
       width: double.infinity,
       height: 50,
       margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-      child: ElevatedButton(
+      child: MaterialButton(
+        shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(15) ),
+        disabledColor: Colors.grey,
+        color: AppColors.colors.secondaryContainer,
+        child: Container(
+          padding: const EdgeInsets.symmetric( horizontal: 30, vertical: 15 ),
+          child: const Text(
+            'Registrar Materia',
+          ),
+        ),
         onPressed: () {
           //claseController.daysController = finaldays;
           claseController.register(context);
         },
-        child: const Text(
-          'Registrar Materia',
-        ),
       ),
     );
   }

@@ -1,4 +1,3 @@
-import 'package:agenda_app/src/models/subject.dart';
 import 'package:agenda_app/src/ui/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -142,7 +141,8 @@ class AddTaskPage extends StatelessWidget{
   Widget _taskSubject() {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 25),
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+      // padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: AppColors.colors.primaryContainer,
         borderRadius: BorderRadius.circular(15)
@@ -152,7 +152,11 @@ class AddTaskPage extends StatelessWidget{
         isExpanded: true,
         dropdownColor: AppColors.colors.primaryContainer,
         borderRadius: BorderRadius.circular(12),
-        icon: const Icon(Icons.arrow_drop_down_circle_rounded),
+        icon: const Visibility(visible: false, child: Icon(Icons.arrow_drop_down_circle_rounded)),
+        underline: Container(
+          alignment: Alignment.centerRight,
+          child: const Icon(Icons.arrow_drop_down_circle),
+        ),
         value: _controller.subjectSelected.value == '' ? null : _controller.subjectSelected.value,
         items: _dropDownSubjects(),
         onChanged: (String? value) {
@@ -176,7 +180,11 @@ class AddTaskPage extends StatelessWidget{
         isExpanded: true,
         dropdownColor: AppColors.colors.primaryContainer,
         borderRadius: BorderRadius.circular(12),
-        icon: const Icon(Icons.arrow_drop_down_circle_rounded),
+        icon: const Visibility(visible: false, child: Icon(Icons.arrow_drop_down_circle_rounded)),
+        underline: Container(
+          alignment: Alignment.centerRight,
+          child: const Icon(Icons.arrow_drop_down_circle)
+        ),
         value: _controller.typeSelected.value == '' ? null : _controller.typeSelected.value,
         items: _dropDownItems(_controller.typeList),
         onChanged: (String? value) {
@@ -213,7 +221,7 @@ class AddTaskPage extends StatelessWidget{
     List<DropdownMenuItem<String>> list = [];
     for (var type in types) {
       list.add(DropdownMenuItem(
-        child: Text(type),
+        child: Text(type, style: TextStyle( color: AppColors.colors.onPrimaryContainer ),),
         value: type,
       ));
     }
@@ -224,7 +232,7 @@ class AddTaskPage extends StatelessWidget{
     List<DropdownMenuItem<String>> list = [];
     for (var type in _controller.data) {
       list.add(DropdownMenuItem(
-        child: Text(type!.name ?? ''),
+        child: Text(type!.name ?? '', style: TextStyle( color: AppColors.colors.onPrimaryContainer ),),
         value: type.name,
       ));
     }

@@ -1,18 +1,19 @@
-import 'package:agenda_app/src/models/subject.dart';
-import 'package:agenda_app/src/providers/subjectProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:agenda_app/src/models/clase.dart';
 import 'package:agenda_app/src/models/response_api.dart';
+import 'package:agenda_app/src/models/subject.dart';
 import 'package:agenda_app/src/providers/claseProvider.dart';
+import 'package:agenda_app/src/providers/subjectProvider.dart';
+import 'package:agenda_app/src/ui/app_colors.dart';
 
 import 'package:agenda_app/src/models/user.dart';
 import 'package:get_storage/get_storage.dart';
 
 class ClaseController extends GetxController {
   User userSession = User.fromJson(GetStorage().read('user') ?? {});
-  String? idsubject;
+  var idsubject = ''.obs;
   String? begineController;
   String? endController;
   String? daysController;
@@ -21,30 +22,33 @@ class ClaseController extends GetxController {
   SubjectProvider subjectProvider = SubjectProvider();
 
   //dropdown
-  List<Subject?> subjects = <Subject>[].obs;
+  RxList<Subject?> subjects = <Subject?>[].obs;
 
   ClaseController() {
     getSubjects();
+    subjects.refresh();
   }
 
   void getSubjects() async {
     var result = await subjectProvider.findByUser(userSession.id as String);
     subjects.clear();
-    subjects.addAll(result);
+    for ( var s in result ) {
+      subjects.add(s!);
+    }
   }
 
   ClaseProvider claseProvider = ClaseProvider();
 
   void register(BuildContext context) async {
     String idUser = userSession.id as String;
-    String? idSubject = idsubject;
+    String? idSubject = idsubject.string;
     String inicio = "0001-01-01 " + begineController.toString() + ":00";
     String fin = "0001-01-01 " + endController.toString() + ":00";
     String? days = daysController;
     String clasroom = clasroomController.text;
     String building = buildingController.text;
 
-    if (isValidForms(idSubject!, inicio, fin, days!, clasroom, building)) {
+    if (isValidForms(idSubject, inicio, fin, days!, clasroom, building)) {
       // Get.snackbar('idUsuario', idSubject);
       // Get.snackbar('inicio', inicio);
       // Get.snackbar('fin', fin);
@@ -64,7 +68,12 @@ class ClaseController extends GetxController {
 
       ResponseApi? responseApi = await claseProvider.create(clase);
       if (responseApi?.success == true) {
-        Get.snackbar(responseApi?.message ?? '', 'Clase creada correctamente');
+        Get.snackbar(
+          responseApi?.message ?? '', 
+          'Clase creada correctamente',
+          backgroundColor: AppColors.colors.secondary,
+          colorText: AppColors.colors.onSecondary
+        );
         Future.delayed(const Duration(milliseconds: 1000), () {
           Get.offNamed('/home');
         });

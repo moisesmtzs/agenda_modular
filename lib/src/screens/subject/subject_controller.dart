@@ -6,6 +6,7 @@ import 'package:agenda_app/src/models/user.dart';
 import 'package:agenda_app/src/providers/subjectProvider.dart';
 
 class SubjectController extends GetxController {
+
   User userSession = User.fromJson(GetStorage().read('user') ?? {});
 
   final SubjectProvider _subjectProvider = SubjectProvider();
