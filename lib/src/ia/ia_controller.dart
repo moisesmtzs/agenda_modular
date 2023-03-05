@@ -1,4 +1,6 @@
 import 'dart:ffi';
+import 'package:agenda_app/src/models/clase.dart';
+import 'package:agenda_app/src/providers/claseProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:get/get.dart';
@@ -58,6 +60,7 @@ class IA_Controller
   //PROVIDERS//
   final SubjectProvider subject_provider =  Get.put(SubjectProvider());
   final TasksProvider task_provider =  Get.put(TasksProvider());
+  final ClaseProvider clase_provider = Get.put(ClaseProvider());
 
   //BANDERAS//
 
@@ -71,7 +74,16 @@ class IA_Controller
 
   Subject NewSubject = new Subject();
   Subject? subjectDB;
+
+  Clase NewClase = new Clase();
+  Clase? claseDB;
+
   int modCount = 0;
+
+  String NameMateria = "";
+
+  //HORA Y MINUTOS//
+  String Hora = "", Minutos = "";
   
   // ---------------------------------------------------------------------------------------- //
 
@@ -211,7 +223,32 @@ class IA_Controller
             _voice.speak("Se eliminara una Materia. ¿Cuál es el nombre de la Materia?");
             _stext = "¿Cual es el nombre de la Materia?";
           }
-
+          //INSERTAR CLASE//
+          else if(bd_exist[0]!.obj=="3" && bd_exist[0]!.type=="1")
+          {
+            //CAMBIAR A MODO REGISTRAR CLASE//
+            actualType=1;
+            actualObj=3;
+            actualProcess=1;
+            NewClase = new Clase();
+            NewClase.id_user = userSession.id;    
+            _voice.speak("Se agregará una nueva Clase. ¿De que Materia es la Clase?");
+            _stext = "¿De que Materia es la Clase?";
+          }
+          //ELIMINAR CLASE//
+          else if(bd_exist[0]!.obj=="3" && bd_exist[0]!.type=="3")
+          {
+            //CAMBIAR A MODO ELIMINAR CLASE//
+            actualType=3;
+            actualObj=3;
+            actualProcess=1;
+            NewClase = new Clase();
+            NewClase.id_user = userSession.id;    
+            _voice.speak("Se eliminara Clase. Te pedire la Hora y los Minutos de la Hora de Inicio por separado. ¿A qué Hora es la Clase?");
+            _stext = "¿A qué Hora es la Clase?";
+            _text = "";
+          }
+          
         }
         else
         {
@@ -341,6 +378,32 @@ class IA_Controller
               NewSubject.id_user = userSession.id;    
               _voice.speak("Se eliminara una Materia. ¿Cuál es el nombre de la Materia?");
               _stext = "¿Cual es el nombre de la Materia?";
+              _text = "";
+            }
+            //INSERTAR CLASE//
+            else if(newTask.obj== "3" && newTask.type=="1")
+            {
+              //CAMBIAR A MODO REGISTRAR TAREA//
+              actualType=2;
+              actualObj=3;
+              actualProcess=1;
+              NewClase = new Clase();
+              NewClase.id_user = userSession.id;    
+              _voice.speak("Se eliminara Clase. Te pedire la Hora y los Minutos de la Hora de Inicio por separado. ¿A qué Hora es la Clase?");
+              _stext = "¿A qué Hora es la Clase?";
+              _text = "";
+            }
+            //ELIMINAR CLASE//
+            else if(newTask.obj== "3" && newTask.type=="3")
+            {
+              //CAMBIAR A MODO ELIMINAR CLASE//
+              actualType=3;
+              actualObj=3;
+              actualProcess=1;
+              NewClase = new Clase();
+              NewClase.id_user = userSession.id;    
+              _voice.speak("Se eliminara Clase. Te pedire la Hora y los Minutos de la Hora de Inicio por separado. ¿A qué Hora es la Clase?");
+              _stext = "¿A qué Hora es la Clase?";
               _text = "";
             }
             else
@@ -537,6 +600,46 @@ class IA_Controller
           _stext = "¿Cual es el nombre de la Materia?";
           _text = "";
         }
+        //INSERTAR CLASE//
+        else if(waitAnswer==3)
+        {
+          //CREAMOS UNA IA TASK//
+          ia_task newTask = new ia_task();
+          newTask.command = newCommand.toUpperCase();
+          newTask.obj = posCommands[0]!.task!.obj;
+          newTask.type = posCommands[0]!.task!.type;
+          ia_provider.create(newTask);
+          debugPrint(newTask.toJson().toString());
+          //CAMBIAR A MODO REGISTRAR CLASE//
+          actualType=1;
+          actualObj=3;
+          actualProcess=1;
+          NewClase = new Clase();
+          NewClase.id_user = userSession.id;    
+          _voice.speak("Se agregará una nueva Clase. ¿De que Materia es la Clase?");
+          _stext = "¿De que Materia es la Clase?";
+          _text = "";
+        }
+        //ELIMINAR CLASE//
+        else if(waitAnswer==9)
+        {
+          //CREAMOS UNA IA TASK//
+          ia_task newTask = new ia_task();
+          newTask.command = newCommand.toUpperCase();
+          newTask.obj = posCommands[0]!.task!.obj;
+          newTask.type = posCommands[0]!.task!.type;
+          ia_provider.create(newTask);
+          debugPrint(newTask.toJson().toString());
+          //CAMBIAR A MODO ELIMINAR CLASE//
+          actualType=3;
+          actualObj=3;
+          actualProcess=1;
+          NewClase = new Clase();
+          NewClase.id_user = userSession.id;    
+          _voice.speak("Se eliminara Clase. Te pedire la Hora y los Minutos de la Hora de Inicio por separado. ¿A qué Hora es la Clase?");
+          _stext = "¿A qué Hora es la Clase?";
+          _text = "";   
+        }
       }
       else
       {
@@ -582,7 +685,7 @@ class IA_Controller
             _text = "";
             waitAnswer = 2;
           }
-          //INSERTAR MATERIA - waitAnswer: 3//
+          //INSERTAR CLASE - waitAnswer: 3//
           else if(posCommands[0]!.task!.obj == "3")
           {
             _voice.speak("¿Quieres insertar una Clase?");
@@ -645,7 +748,7 @@ class IA_Controller
             _text = "";
             waitAnswer = 8;
           }
-          //ELIMINAR MATERIA - waitAnswer: 9//
+          //ELIMINAR CLASE - waitAnswer: 9//
           else if(posCommands[0]!.task!.obj == "3")
           {
             _voice.speak("¿Quieres eliminar una Clase?");
@@ -712,6 +815,9 @@ class IA_Controller
     actualObj = 0;
     actualProcess = 0;
     modCount = 0;
+    Hora = ""; 
+    Minutos="";
+    NameMateria="";
   }
 
   // ------------------------------------SETTERS|GETTERS------------------------------------ //
@@ -1406,6 +1512,424 @@ class IA_Controller
             _voice.speak("Lo siento, utiliza Si, para confirmar y No, para cancelar");
           } 
         }
+    }
+    //INSERTAR UNA CLASE//
+    else if(actualObj == 3 && actualType == 1)
+    {
+      //MATERIA//
+      if(actualProcess == 1)
+      {
+        //VALIDAR SI EL USUARIO TIENE UNA MATERIA CON ESE NOMBRE//
+        String validSubject = "";
+        for(int i=0; i<_text.length; i++)
+        {
+          if(i==0)
+          {
+            validSubject+=_text[i].toUpperCase();
+          }
+          else
+          {
+            validSubject+=_text[i];
+          }
+        }
+        List<Subject?> ActualSubject = await subject_provider.getByName(validSubject, userSession.id.toString());
+        if(ActualSubject.length==0)
+        {
+          _voice.speak("Lo siento, no tienes una materia registrada con ese nombre, intenta con otra o verifica su ortografía.");
+          _stext = "¿De que Materia es la Clase?";
+          _text = "";
+        }
+        else
+        {
+          NameMateria = ActualSubject[0]!.name!;
+          NewClase.id_subject = validSubject;
+          _voice.speak("Te pedire hora y minutos por separado. ¿Cuál es la Hora de Inicio en formato 24 horas?");
+          _stext = "¿Cuál es la Hora de Inicio?";
+          _text = "";
+          actualProcess++;
+        }
+      }
+      //HORA DE INICIO//
+      else if(actualProcess == 2)
+      {
+        var num = int.tryParse(_text);
+        if(_text.length > 2)
+        {
+          _voice.speak("Lo siento, utiliza solo numeros no mayores a 2 digitos");
+          _stext = "¿Cuál es la Hora de Inicio?";
+          _text = "";
+        }
+        else if(num == null)
+        {
+          _voice.speak("Lo siento, no es un numero válido");
+          _stext = "¿Cuál es la Hora de Inicio?";
+          _text = "";
+        }
+        else if(num > 23 || num < 0)
+        {
+          _voice.speak("Lo siento, la hora no puede ser mayor a 23 ni menor a 0");
+          _stext = "¿Cuál es la Hora de Inicio?";
+          _text = "";
+        }
+        else
+        {
+          Hora = _text;
+          _voice.speak("¿Con cuantos minutos la Hora de Inicio?");
+          _stext = "¿Con cuantos minutos la Hora de Inicio?";
+          _text = "";
+          actualProcess++;
+        }
+      }
+      else if(actualProcess == 3)
+      {
+        var num = int.tryParse(_text);
+        if(_text.length > 2)
+        {
+          _voice.speak("Lo siento, utiliza solo numeros no mayores a 2 digitos");
+          _stext = "¿Con cuantos minutos la Hora de Inicio?";
+          _text = "";
+        }
+        else if(num == null)
+        {
+          _voice.speak("Lo siento, no es un numero válido");
+          _stext = "¿Con cuantos minutos la Hora de Inicio?";
+          _text = "";
+        }
+        else if(num > 59 || num < 0)
+        {
+          _voice.speak("Lo siento, la hora no puede ser mayor a 59 ni menor a 0");
+          _stext = "¿Con cuantos minutos la Hora de Inicio?";
+          _text = "";
+        }
+        else
+        {
+          Minutos = _text;
+          debugPrint(Hora+":"+Minutos);
+          Hora = ""; Minutos="";
+          NewClase.begin_hour = Hora+Minutos;
+          _voice.speak("Te pedire hora y minutos por separado. ¿Cuál es la Hora de Fin en formato 24 horas?");
+          _stext = "¿Cuál es la Hora de Fin?";
+          _text = "";
+          actualProcess++;
+        }
+      }
+      //HORA DE FIN//
+      else if(actualProcess == 4)
+      {
+        var num = int.tryParse(_text);
+        if(_text.length > 2)
+        {
+          _voice.speak("Lo siento, utiliza solo números no mayores a 2 digitos");
+          _stext = "¿Cuál es la Hora de Fin?";
+          _text = "";
+        }
+        else if(num == null)
+        {
+          _voice.speak("Lo siento, no es un número válido");
+          _stext = "¿Cuál es la Hora de Fin?";
+          _text = "";
+        }
+        else if(num > 23 || num < 0)
+        {
+          _voice.speak("Lo siento, la hora no puede ser mayor a 23 ni menor a 0");
+          _stext = "¿Cuál es la Hora de Fin?";
+          _text = "";
+        }
+        else
+        {
+          Hora = _text;
+          _voice.speak("¿Con cuantos minutos la Hora de Fin?");
+          _stext = "¿Con cuantos minutos la Hora de Fin?";
+          _text = "";
+          actualProcess++;
+        }
+      }
+      else if(actualProcess == 5)
+      {
+        var num = int.tryParse(_text);
+        if(_text.length > 2)
+        {
+          _voice.speak("Lo siento, utiliza solo números no mayores a 2 digitos");
+          _stext = "¿Con cuantos minutos la Hora de Fin?";
+          _text = "";
+        }
+        else if(num == null)
+        {
+          _voice.speak("Lo siento, no es un número válido");
+          _stext = "¿Con cuantos minutos la Hora de Fin?";
+          _text = "";
+        }
+        else if(num > 59 || num < 0)
+        {
+          _voice.speak("Lo siento, la hora no puede ser mayor a 59 ni menor a 0");
+          _stext = "¿Con cuantos minutos la Hora de Fin?";
+          _text = "";
+        }
+        else
+        {
+          Minutos = _text;
+          debugPrint(Hora+":"+Minutos);
+          NewClase.end_hour = Hora+Minutos;
+          _voice.speak("¿Qué día sera la Clase? Solo puedes mencionar un dia");
+          _stext = "¿Qué día sera la Clase?";
+          _text = "";
+          actualProcess++;
+        }
+      }
+      //DIA//
+      else if(actualProcess == 6)
+      {
+        bool isDay = false;
+        if(_text.toUpperCase() == "LUNES")
+        {
+          isDay = true;
+        }
+        else if(_text.toUpperCase() == "MARTES")
+        {
+          isDay = true;
+        }
+        else if(_text.toUpperCase() == "MIÉRCOLES")
+        {
+          isDay = true;
+        }
+        else if(_text.toUpperCase() == "JUEVES")
+        {
+          isDay = true;
+        }
+        else if(_text.toUpperCase() == "VIERNES")
+        {
+          isDay = true;
+        }
+        else if(_text.toUpperCase() == "SABADO")
+        {
+          isDay = true;
+        }
+        else if(_text.toUpperCase() == "DOMINGO")
+        {
+          isDay = true;
+        }
+        //PENDIENTE//
+        if(isDay)
+        {
+          NewClase.days=_text;
+          _voice.speak("A continuación, te muestro la información de la Clase, si es correcta di Guardar para registrarla o Cancelar para descartarla.");
+          _stext = "La Materia es: "+NameMateria + "\nEl Dia es: "+NewClase.days.toString()+"\nLa Hora Inicio es: "+NewClase.begin_hour.toString()+"\nLa Hora Fin es: "+NewClase.end_hour.toString();
+          _text = "";
+          actualProcess++;
+        }
+        else
+        {
+          _voice.speak("¿Qué día sera la Clase? Solo puedes mencionar un dia");
+          _stext = "¿Qué día sera la Clase?";
+          _text = "";
+        }
+      }
+      //CONFIRMAR//
+      else if(actualProcess == 7)
+      {
+        if(_text.toUpperCase() == "GUARDAR")
+        {
+          _voice.speak("Se guardó la Materia");
+          clase_provider.create(NewClase);
+          resetIA();
+        }
+        else if(_text.toUpperCase() == "CANCELAR")
+        {
+          _voice.speak("Se ha descartado la tarea");
+          NewClase = new Clase();
+          resetIA();
+        }
+        else
+        {
+          _voice.speak("Solo son validas las opciones Guardar o Cancelar.");
+        _stext = "La Materia es: "+NameMateria + "\nEl Dia es: "+NewClase.days.toString()+"\nLa Hora Inicio es: "+NewClase.begin_hour.toString()+"\nLa Hora Fin es: "+NewClase.end_hour.toString();
+          _text = "";
+        }
+      }
+    }
+    //MODIFICAR UNA CLASE//
+    else if(actualObj == 3 && actualType == 2)
+    {
+
+    }
+    //ELIMINAR UNA CLASE//
+    else if(actualObj == 3 && actualType == 3)
+    {
+      //HORA DE INICIO//
+      if(actualProcess == 1)
+      {
+        var num = int.tryParse(_text);
+        if(_text.length > 2)
+        {
+          _voice.speak("Lo siento, utiliza solo numeros no mayores a 2 digitos");
+          _stext = "¿Cuál es la Hora de Inicio?";
+          _text = "";
+        }
+        else if(num == null)
+        {
+          _voice.speak("Lo siento, no es un numero válido");
+          _stext = "¿Cuál es la Hora de Inicio?";
+          _text = "";
+        }
+        else if(num > 23 || num < 0)
+        {
+          _voice.speak("Lo siento, la hora no puede ser mayor a 23 ni menor a 0");
+          _stext = "¿Cuál es la Hora de Inicio?";
+          _text = "";
+        }
+        else
+        {
+          Hora = _text;
+          _voice.speak("¿Con cuantos minutos la Hora de Inicio?");
+          _stext = "¿Con cuantos minutos la Hora de Inicio?";
+          _text = "";
+          actualProcess++;
+        }
+      }
+      else if(actualProcess == 2)
+      {
+        var num = int.tryParse(_text);
+        if(_text.length > 2)
+        {
+          _voice.speak("Lo siento, utiliza solo numeros no mayores a 2 digitos");
+          _stext = "¿Con cuantos minutos la Hora de Inicio?";
+          _text = "";
+        }
+        else if(num == null)
+        {
+          _voice.speak("Lo siento, no es un numero válido");
+          _stext = "¿Con cuantos minutos la Hora de Inicio?";
+          _text = "";
+        }
+        else if(num > 59 || num < 0)
+        {
+          _voice.speak("Lo siento, la hora no puede ser mayor a 59 ni menor a 0");
+          _stext = "¿Con cuantos minutos la Hora de Inicio?";
+          _text = "";
+        }
+        else
+        {
+          Minutos = _text;
+          debugPrint(Hora+":"+Minutos);
+          Hora = ""; Minutos="";
+          NewClase.begin_hour = Hora+Minutos;
+          _voice.speak("Te pedire hora y minutos por separado. ¿Cuál es la Hora de Fin en formato 24 horas?");
+          _stext = "¿Cuál es la Hora de Fin?";
+          _text = "";
+          actualProcess++;
+        }
+      }
+      //HORA DE FIN//
+      else if(actualProcess == 3)
+      {
+        var num = int.tryParse(_text);
+        if(_text.length > 2)
+        {
+          _voice.speak("Lo siento, utiliza solo números no mayores a 2 digitos");
+          _stext = "¿Cuál es la Hora de Fin?";
+          _text = "";
+        }
+        else if(num == null)
+        {
+          _voice.speak("Lo siento, no es un número válido");
+          _stext = "¿Cuál es la Hora de Fin?";
+          _text = "";
+        }
+        else if(num > 23 || num < 0)
+        {
+          _voice.speak("Lo siento, la hora no puede ser mayor a 23 ni menor a 0");
+          _stext = "¿Cuál es la Hora de Fin?";
+          _text = "";
+        }
+        else
+        {
+          Hora = _text;
+          _voice.speak("¿Con cuantos minutos la Hora de Fin?");
+          _stext = "¿Con cuantos minutos la Hora de Fin?";
+          _text = "";
+          actualProcess++;
+        }
+      }
+      else if(actualProcess == 4)
+      {
+        var num = int.tryParse(_text);
+        if(_text.length > 2)
+        {
+          _voice.speak("Lo siento, utiliza solo números no mayores a 2 digitos");
+          _stext = "¿Con cuantos minutos la Hora de Fin?";
+          _text = "";
+        }
+        else if(num == null)
+        {
+          _voice.speak("Lo siento, no es un número válido");
+          _stext = "¿Con cuantos minutos la Hora de Fin?";
+          _text = "";
+        }
+        else if(num > 59 || num < 0)
+        {
+          _voice.speak("Lo siento, la hora no puede ser mayor a 59 ni menor a 0");
+          _stext = "¿Con cuantos minutos la Hora de Fin?";
+          _text = "";
+        }
+        else
+        {
+          Minutos = _text;
+          debugPrint(Hora+":"+Minutos);
+          NewClase.end_hour = Hora+Minutos;
+          _voice.speak("¿Qué día sera la Clase? Solo puedes mencionar un dia");
+          _stext = "¿Qué día sera la Clase?";
+          _text = "";
+          actualProcess++;
+        }
+      }
+      //DIA//
+      else if(actualProcess == 5)
+      {
+        bool isDay = false;
+        if(_text.toUpperCase() == "LUNES")
+        {
+          isDay = true;
+        }
+        else if(_text.toUpperCase() == "MARTES")
+        {
+          isDay = true;
+        }
+        else if(_text.toUpperCase() == "MIÉRCOLES")
+        {
+          isDay = true;
+        }
+        else if(_text.toUpperCase() == "JUEVES")
+        {
+          isDay = true;
+        }
+        else if(_text.toUpperCase() == "VIERNES")
+        {
+          isDay = true;
+        }
+        else if(_text.toUpperCase() == "SABADO")
+        {
+          isDay = true;
+        }
+        else if(_text.toUpperCase() == "DOMINGO")
+        {
+          isDay = true;
+        }
+        //PENDIENTE//
+        if(isDay)
+        {
+          NewClase.days=_text;
+          _voice.speak("A continuación, te muestro la información de la Clase, si es correcta di Guardar para registrarla o Cancelar para descartarla.");
+          _stext = "La Materia es: "+NameMateria + "\nEl Dia es: "+NewClase.days.toString()+"\nLa Hora Inicio es: "+NewClase.begin_hour.toString()+"\nLa Hora Fin es: "+NewClase.end_hour.toString();
+          _text = "";
+          actualProcess++;
+        }
+        else
+        {
+          _voice.speak("¿Qué día sera la Clase? Solo puedes mencionar un dia");
+          _stext = "¿Qué día sera la Clase?";
+          _text = "";
+        }
+      }
     }
   }
 

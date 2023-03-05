@@ -33,7 +33,7 @@ class LoginController extends GetxController {
     Get.offNamedUntil('/home', (route) => false);
     }
 
-    if ( isValidForm(email, password) ) {
+    if (isValidForm(email, password) ) {
 
       isEnable.value = false;
       
