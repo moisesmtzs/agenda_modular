@@ -247,8 +247,7 @@ class IA_Controller
             _voice.speak("Se eliminara Clase. Te pedire la Hora y los Minutos de la Hora de Inicio por separado. ¿A qué Hora es la Clase?");
             _stext = "¿A qué Hora es la Clase?";
             _text = "";
-          }
-          
+          } 
         }
         else
         {
@@ -715,13 +714,6 @@ class IA_Controller
             _voice.speak("¿Quieres modificar una Materia?");
             _stext = "¿Quieres modificar una Materia?";
             waitAnswer = 5;
-          }
-          //MODIFICAR CLASE - waitAnswer: 6//
-          else if(posCommands[0]!.task!.obj == "3")
-          {
-            _voice.speak("¿Quieres modificar una Clase?");
-            _stext = "¿Quieres modificar una Clase?";
-            waitAnswer = 6;
           }
           else
           {
@@ -1746,11 +1738,6 @@ class IA_Controller
           _text = "";
         }
       }
-    }
-    //MODIFICAR UNA CLASE//
-    else if(actualObj == 3 && actualType == 2)
-    {
-
     }
     //ELIMINAR UNA CLASE//
     else if(actualObj == 3 && actualType == 3)
