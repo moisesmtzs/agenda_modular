@@ -19,6 +19,12 @@ class _TaskPageState extends State<TaskPage> {
   TaskController taskController = Get.put(TaskController());
 
   @override
+  void initState() {
+    super.initState();
+    taskController.init(refresh);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Obx( () => DefaultTabController(
         length: taskController.status.length,
@@ -272,10 +278,6 @@ class _TaskPageState extends State<TaskPage> {
                 color: AppColors.colors.primary,
                 onPressed: () {
                   taskController.confirmationDialog(context, task?.id ?? '0');
-                  taskController.selectedTasks.remove(task?.id);
-                  setState(() {
-                    taskController.selectedTasks.refresh();
-                  });
                 },
               ),
             ],
@@ -298,6 +300,10 @@ class _TaskPageState extends State<TaskPage> {
         ],
       ),
     );
+  }
+
+  void refresh() {
+    setState(() {});
   }
 
 }

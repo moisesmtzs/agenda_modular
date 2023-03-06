@@ -18,6 +18,12 @@ class TaskController extends GetxController {
   
   var selectedTasks = [].obs;
 
+  late Function refresh2;
+
+  Future init(Function refresh2) async {
+    this.refresh2 = refresh2;
+  }
+
   void goToAddTaskPage() {
     Get.toNamed('/addTask');
   }
@@ -27,7 +33,8 @@ class TaskController extends GetxController {
       selectedTasks.add(idTask);
       _tasksProvider.updateStatusTask(idTask, 'COMPLETADO');
       selectedTasks.refresh();
-    } else {
+    }
+    if ( checked == false ) {
       selectedTasks.remove(idTask);
       _tasksProvider.updateStatusTask(idTask, 'PENDIENTE');
       selectedTasks.refresh();
@@ -67,8 +74,7 @@ class TaskController extends GetxController {
         delete(idTask);
         Get.back();
         Get.back();
-        selectedTasks.remove(idTask);
-        selectedTasks.refresh();
+        refresh2();
       },
     );
     
