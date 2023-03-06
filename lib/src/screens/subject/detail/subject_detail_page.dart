@@ -46,7 +46,7 @@ class SubjectDetailPage extends StatelessWidget {
     late var professor = subject?.professor_name ?? '';
     late var code = subject?.subject_code ?? '';
     return Container(
-      height: MediaQuery.of(context).size.height * 0.75,
+      height: MediaQuery.of(context).size.height * 0.80,
       margin: const EdgeInsets.only(top: 10, bottom: 10, left: 30, right: 30),
       child: ListView(
         physics: const ClampingScrollPhysics(),
@@ -243,7 +243,7 @@ class SubjectDetailPage extends StatelessWidget {
               
               const SizedBox(height: 20),
               Text(
-                (clase?.days != '')? 'Dia: $day \n\n' : '',
+                (clase?.days != '')? 'Dia: $day' : '',
                 
               ),
               const SizedBox(height: 20),

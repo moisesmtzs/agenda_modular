@@ -57,16 +57,13 @@ class ClaseDetailPage extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 10),
-        // Text(
-        //   clase?.name ?? '',
-        //   style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-        //   textAlign: TextAlign.center,
-        // ),
-        // const SizedBox(height: 40),
-        // Text(
-        //   task?.description ?? '',
-        //   style: const TextStyle(fontSize: 16),
-        // ),
+        Text(
+          clase?.begin_hour ?? '',
+          style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 40),
+        
         const SizedBox(height: 10),
       ]),
     );

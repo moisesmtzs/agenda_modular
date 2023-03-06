@@ -49,12 +49,6 @@ class ClaseController extends GetxController {
     String building = buildingController.text;
 
     if (isValidForms(idSubject, inicio, fin, days!, clasroom, building)) {
-      // Get.snackbar('idUsuario', idSubject);
-      // Get.snackbar('inicio', inicio);
-      // Get.snackbar('fin', fin);
-      // Get.snackbar('days', days);
-      // Get.snackbar('clasroom', clasroom);
-      // Get.snackbar('building', building);
 
       Clase clase = Clase(
         id_user: idUser,
