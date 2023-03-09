@@ -23,6 +23,8 @@ class SubjectDetailPage extends StatelessWidget {
   late Subject? code;
   late Subject? profesor;
 
+  late Clase? clase;
+
   late Clase? begin_hour;
 
   SubjectDetailPage({Key? key, required this.subject}) : super(key: key);
@@ -30,15 +32,6 @@ class SubjectDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return _datesSubject(context);
-    // return Scaffold(
-    //   body: _datesSubject(context),
-    //   // ListView(
-    //   //   physics: const ClampingScrollPhysics(),
-    //   //   keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-    //   //   children: [
-    //   //   ],
-    //   // ),
-    // );
   }
 
   Widget _datesSubject(BuildContext context) {

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
+import 'package:agenda_app/src/models/subject.dart';
 import 'package:agenda_app/src/models/clase.dart';
 import 'package:agenda_app/src/models/user.dart';
 import 'package:agenda_app/src/providers/claseProvider.dart';
@@ -15,14 +16,16 @@ class ClaseUpdateController extends GetxController {
   }
 
   User userSession = User.fromJson(GetStorage().read('user') ?? {});
-
-  ClaseProvider claseProvider = ClaseProvider();
-
+  var idsubject = ''.obs;
   String? begineController;
   String? endController;
   String? daysController;
   TextEditingController clasroomController = TextEditingController();
   TextEditingController buildingController = TextEditingController();
+
+  ClaseProvider claseProvider = ClaseProvider();
+
+  RxList<Subject?> subjects = <Subject?>[].obs;
 
   var value = DateTime.now().toString().obs;
 
