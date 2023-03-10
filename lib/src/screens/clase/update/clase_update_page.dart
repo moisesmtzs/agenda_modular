@@ -48,8 +48,8 @@ class ClaseUpdatePage extends StatelessWidget {
                 claseUpdateController.updateClase(context);
               },
             ),
-            const SizedBox(height: 25),
-            _dropDownSubjects(),
+            // const SizedBox(height: 25),
+            // _dropDownSubjects(),
             const SizedBox(height: 20),
             _clasroom(),
             const SizedBox(height: 20),

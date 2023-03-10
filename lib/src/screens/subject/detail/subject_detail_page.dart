@@ -9,6 +9,8 @@ import 'package:agenda_app/src/screens/subject/update/subject_update_page.dart';
 import 'package:agenda_app/src/models/clase.dart';
 import 'package:agenda_app/src/screens/clase/detail/clase_detail_controller.dart';
 import 'package:agenda_app/src/screens/clase/update/clase_update_page.dart';
+import 'package:agenda_app/src/screens/clase/detail/clase_detail_page.dart';
+
 
 import 'package:agenda_app/src/ui/app_colors.dart';
 import 'package:agenda_app/src/widgets/no_subject_widget.dart';
@@ -150,18 +152,22 @@ class SubjectDetailPage extends StatelessWidget {
       ),
     );
   }
-
+//justoooo aquiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii
   Widget _claseCard(Clase? clase, BuildContext context) {
     return GestureDetector(
       onTap: () {
         Get.bottomSheet(
-          ClaseUpdatePage(clase: clase),
-          enableDrag: false,
+          ClaseDetailPage(clase: clase),
+          enableDrag: true,
+          isDismissible: true,
+          isScrollControlled: true,
+          ignoreSafeArea: true,
           backgroundColor: AppColors.colors.secondaryContainer,
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(10.0),
-                topRight: Radius.circular(10.0)),
+              topLeft: Radius.circular(10.0),
+              topRight: Radius.circular(10.0)
+            ),
           ),
         );
       },
@@ -199,64 +205,72 @@ class SubjectDetailPage extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              IconButton(
-                    icon: const Icon(Icons.edit_outlined, size: 30),
-                    color: AppColors.colors.primary,
-                    onPressed: () {
-                      Get.bottomSheet(
-                        ClaseUpdatePage(clase: clase),
-                        enableDrag: true,
-                        isDismissible: true,
-                        isScrollControlled: true,
-                        ignoreSafeArea: false,
-                        backgroundColor: AppColors.colors.secondaryContainer,
-                        barrierColor: Colors.black.withOpacity(0),
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(10.0),
-                              topRight: Radius.circular(10.0)),
-                        ),
-                      );
-                    },
-                  ),
-              IconButton(
-                icon: const Icon(Icons.delete_outline_rounded, size: 30),
-                color: AppColors.colors.primary,
-                onPressed: () {
-                  _claseDetailController.confirmationDialog(
-                      context, clase?.id ?? '0');
-                },
-              ),
-            ],
+            // children: [
+            //   IconButton(
+            //         icon: const Icon(Icons.edit_outlined, size: 30),
+            //         color: AppColors.colors.primary,
+            //         onPressed: () {
+            //           Get.bottomSheet(
+            //             ClaseUpdatePage(clase: clase),
+            //             enableDrag: true,
+            //             isDismissible: true,
+            //             isScrollControlled: true,
+            //             ignoreSafeArea: false,
+            //             backgroundColor: AppColors.colors.secondaryContainer,
+            //             barrierColor: Colors.black.withOpacity(0),
+            //             shape: const RoundedRectangleBorder(
+            //               borderRadius: BorderRadius.only(
+            //                   topLeft: Radius.circular(10.0),
+            //                   topRight: Radius.circular(10.0)),
+            //             ),
+            //           );
+            //         },
+            //       ),
+            //   IconButton(
+            //     icon: const Icon(Icons.delete_outline_rounded, size: 30),
+            //     color: AppColors.colors.primary,
+            //     onPressed: () {
+            //       _claseDetailController.confirmationDialog(
+            //           context, clase?.id ?? '0');
+            //     },
+            //   ),
+            // ],
           ),
               
           Column(
             children:[
               
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               Text(
                 (clase?.days != '')? 'Dia: $day' : '',
-                
               ),
-              const SizedBox(height: 20),
-              Text(
-                (clase?.begin_hour != '')? 'Horario: $beginHour' : '',
-                
+              Row(
+                children: [
+                  const SizedBox(height: 10),
+                  Text(
+                    (clase?.begin_hour != '')? 'Horario: $beginHour' : '',
+                    
+                  ),
+                  Text(
+                    (clase?.end_hour != '')? '- $endHour' : '',
+                    
+                  ),
+                ]
               ),
-              Text(
-                (clase?.end_hour != '')? '- $endHour' : '',
-                
-              ),
-              const SizedBox(height: 20),
-              Text(
-                (clase?.classroom != '')? 'Salon: $classroom' : '',
-                
-              ),
-              const SizedBox(height: 20),
-              Text(
-                (clase?.building != '')? '$building' : '',
-                
+
+              Row(
+                children: [
+                  const SizedBox(height: 10),
+                  Text(
+                    (clase?.classroom != '')? 'Salon: $building' : '',
+                    
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    (clase?.building != '')? '$classroom' : '',
+                    
+                  ),
+                ]
               ),
             ]
           ),

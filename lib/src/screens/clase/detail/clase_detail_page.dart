@@ -17,8 +17,14 @@ class ClaseDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    late var idClase = clase?.id ?? '';
+    late var begin = (clase?.begin_hour as String).substring(11, 16) ?? '';
+    late var end = (clase?.end_hour as String).substring(11, 16) ?? '';
+    late var day = clase?.days ?? '';
+    late var classroom = clase?.classroom ?? '';
+    late var building = clase?.building ?? '';
     return Container(
-      height: MediaQuery.of(context).size.height * 0.4,
+      height: MediaQuery.of(context).size.height * 0.6,
       margin: const EdgeInsets.only(top: 20, bottom: 40, left: 30, right: 30),
       child: ListView(physics: const ClampingScrollPhysics(), children: [
         Row(
@@ -56,15 +62,47 @@ class ClaseDetailPage extends StatelessWidget {
             ),
           ],
         ),
+
+        Text(
+            'Clase',
+            style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center,
+          ),
         const SizedBox(height: 10),
         Text(
-          clase?.begin_hour ?? '',
-          style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 40),
-        
+            (clase?.days != '')
+                ? 'Dia: $day'
+                : "Sin dia asignado",
+            style: const TextStyle(fontSize: 20),
+          ),
         const SizedBox(height: 10),
+        Text(
+            (clase?.begin_hour != '')
+                ? 'Inicio: $begin'
+                : "Sin hora de inicio asignada",
+            style: const TextStyle(fontSize: 20),
+          ),
+        const SizedBox(height: 10),
+        Text(
+            (clase?.end_hour != '')
+                ? 'Fin: $end'
+                : "Sin hora de fin asignada",
+            style: const TextStyle(fontSize: 20),
+          ),
+        const SizedBox(height: 10),
+        Text(
+          (clase?.building != '')
+              ? 'Edificio: $building'
+              : "Sin edificio asignado",
+          style: const TextStyle(fontSize: 20),
+        ),
+        const SizedBox(height: 10),
+        Text(
+            (clase?.classroom != '')
+                ? 'Salon: $classroom'
+                : "Sin csalon asignado",
+            style: const TextStyle(fontSize: 20),
+          ),
       ]),
     );
   }
