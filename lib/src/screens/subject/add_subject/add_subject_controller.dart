@@ -59,6 +59,7 @@ class AddSubjectController extends GetxController {
           name: name,
           subject_code: code,
           professor_name: profesor);
+
       if(isConnect == true)
       {
         ResponseApi? responseApi = await subjectProvider.create(subject);
@@ -79,8 +80,17 @@ class AddSubjectController extends GetxController {
       }
       else
       {
-        var ok = db.insertSubject(subject);  
-        Get.offNamed('/home');  
+        //PENDIENTE DE REVISIÓN//
+        Future<int?> ok = db.insertSubject(subject);  
+        if(ok==0)
+        {
+          Get.snackbar('Hubo un problema al registrar la Materia', 'Intenta más tarde');
+        }
+        else
+        {
+          Get.snackbar('Materia registrada', '');
+          Get.offNamed('/home'); 
+        }   
       }    
     }
   }

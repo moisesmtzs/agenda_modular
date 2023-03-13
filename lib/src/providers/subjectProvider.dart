@@ -22,36 +22,11 @@ class SubjectProvider extends GetConnect {
   String url = Environment.API_URL + "api/subject";
   User userSession = User.fromJson(GetStorage().read('user') ?? {});
 
-  SubjectProvider()
-  {
-    GetConnectivity();
-  }
-
-  //VERIFICAR CONEXION A INTERNET//
-  bool isConnect = false; 
-  void GetConnectivity() async
-  {
-    try { 
-      final result = await InternetAddress.lookup('google.com'); 
-      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) 
-      { 
-        print('CONECTADO'); 
-        isConnect = true;
-      }
-    } on SocketException catch (_) { 
-        print('SIN CONEXION'); 
-        isConnect = false;
-    }  
-  }
-
   Future<ResponseApi?> create(Subject subject) async {
-    if(isConnect==true)
-    {
       Response response = await post('$url/create', subject.toJson(),
         headers: {'Content-Type': 'application/json'});
       ResponseApi responseApi = ResponseApi.fromJson(response.body);
       return responseApi;
-    }
   }
 
   Future<List<Subject?>> findByUser(String idUser) async {

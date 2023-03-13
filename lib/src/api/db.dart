@@ -16,14 +16,14 @@ class db
       onCreate: (db, version)
       {
         return db.execute(
-          "CREATE TABLE subject (id INTEGER PRIMARY KEY,id_user INTEGER,name TEXT,subject_code TEXT,professor_name TEXT,created_at TEXT,updated_at TEXT)"
+          "CREATE TABLE subject (id INTEGER PRIMARY KEY,id_user INTEGER,name TEXT,subject_code TEXT,professor_name TEXT,created_at TEXT,updated_at TEXT)"    
         );
       }, version: 1);
   }
 
   //---------------------------------------------------- <MATERIA> ----------------------------------------------------//
   //INSERT//
-  static Future<void> insertSubject(Subject newSubject) async
+  static Future<int?> insertSubject(Subject newSubject) async
   {
     //NOS ASEGURAMOS QUE LA BD ESTE CREADA//
     Database database = await openDB();
@@ -33,6 +33,7 @@ class db
     var sql = "INSERT INTO subject(id_user, name, subject_code, professor_name, created_at, updated_at) VALUES ( ${newSubject.id_user}, '${newSubject.name}', '${newSubject.subject_code}', '${newSubject.professor_name}', '${today}', '${today}')";
     //EJECUTAMOS EL SQL//
     var result = await database.rawInsert(sql);
+    return result;
     //return database.insert('subject', newSubject.toLocalBD());
     //ALMACENAREMOS EL SQL EN UN ARCHIVO//
 
@@ -64,36 +65,4 @@ class db
   //----------------------------------------------------- <TAREA> -----------------------------------------------------//
   //-------------------------------------------------------------------------------------------------------------------//
 
-
-  //---------------------------------------------- <ESCRIBIR EN UN ARCHIVO> --------------------------------------------//
-  static Future<String> get _localPath async 
-  {
-    final directory = await getApplicationDocumentsDirectory();
-    return directory.path;
-  }
-
-  static Future<File> get _localFile async 
-  {
-    final path = await _localPath;
-    print("RUTA: "+path);
-    return File('$path/tot.txt');
-  }
-
-  static Future<File> writeCounter(String counter) async 
-  {
-    final file = await _localFile;
-    return file.writeAsString(counter);
-  }
-
-  static Future<String> readCounter() async {
-    try {
-      final file = await _localFile;
-      String contents = await file.readAsString();
-
-      return contents;
-    } catch (e) {
-      return "";
-    }
-  }
-  //-------------------------------------------------------------------------------------------------------------------//
 }
