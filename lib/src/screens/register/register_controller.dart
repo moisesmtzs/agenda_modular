@@ -59,6 +59,7 @@ class RegisterController extends GetxController {
           colorText: AppColors.colors.onErrorContainer
         );
         isEnable.value = true;
+        isEnable.refresh();
       }
 
     }

@@ -32,6 +32,8 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
+  internet_connection_checker: ^0.0.1+4
+  connectivity_plus: ^2.3.5
   flutter_svg: ^1.1.0
   flutter_zoom_drawer: ^3.0.3
   get: ^4.6.1
@@ -48,6 +50,8 @@ dependencies:
   highlight_text: ^1.6.0
   avatar_glow: ^2.0.2
   speech_to_text: ^6.1.1
+  sqflite: ^2.2.5
+  path_provider: ^2.0.13
 
 dev_dependencies:
   flutter_lints: ^1.0.0

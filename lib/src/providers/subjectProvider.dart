@@ -1,3 +1,6 @@
+import 'dart:ffi';
+import 'dart:io';
+
 import 'package:get/get.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -9,15 +12,46 @@ import 'package:agenda_app/src/models/subject.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:agenda_app/src/models/user.dart';
 
+//SQLITE//
+import 'package:sqflite/sqflite.dart';
+import 'package:agenda_app/src/api/db.dart';
+
 class SubjectProvider extends GetConnect {
+
+
   String url = Environment.API_URL + "api/subject";
   User userSession = User.fromJson(GetStorage().read('user') ?? {});
 
+  SubjectProvider()
+  {
+    GetConnectivity();
+  }
+
+  //VERIFICAR CONEXION A INTERNET//
+  bool isConnect = false; 
+  void GetConnectivity() async
+  {
+    try { 
+      final result = await InternetAddress.lookup('google.com'); 
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) 
+      { 
+        print('CONECTADO'); 
+        isConnect = true;
+      }
+    } on SocketException catch (_) { 
+        print('SIN CONEXION'); 
+        isConnect = false;
+    }  
+  }
+
   Future<ResponseApi?> create(Subject subject) async {
-    Response response = await post('$url/create', subject.toJson(),
+    if(isConnect==true)
+    {
+      Response response = await post('$url/create', subject.toJson(),
         headers: {'Content-Type': 'application/json'});
-    ResponseApi responseApi = ResponseApi.fromJson(response.body);
-    return responseApi;
+      ResponseApi responseApi = ResponseApi.fromJson(response.body);
+      return responseApi;
+    }
   }
 
   Future<List<Subject?>> findByUser(String idUser) async {
@@ -83,7 +117,6 @@ class SubjectProvider extends GetConnect {
 
    //OBTENER POR NOMBRE Y USUARIO//
   Future<List<Subject?>> getByUserNameIA( String idUser, String name ) async {
-
     try {
       Uri _url = Uri.http(Environment.API_URL_OLD, '/api/subject/findByNameIA/$name/$idUser');
       

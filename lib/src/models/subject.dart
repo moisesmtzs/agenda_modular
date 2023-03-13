@@ -36,6 +36,16 @@ class Subject {
         "professor_name": professor_name,
       };
 
+  Map<String, dynamic> toLocalBD() => {
+        "id": id,
+        "id_user": id_user,
+        "name": name,
+        "subject_code": subject_code,
+        "professor_name": professor_name,
+        "created_at" : DateTime.now().toString(),
+        "updated_at" : DateTime.now().toString(),
+      };
+
   Subject.fromJsonList(List<dynamic> jsonList) {
     //Contiene los datos que recuperamos del backend
     if (jsonList == null) return;
