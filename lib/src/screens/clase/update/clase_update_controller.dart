@@ -10,28 +10,38 @@ import 'package:agenda_app/src/models/user.dart';
 import 'package:agenda_app/src/providers/claseProvider.dart';
 
 class ClaseUpdateController extends GetxController {
+
   Clase clase = Clase();
   ClaseUpdateController(this.clase) {
     setClase();
   }
 
   User userSession = User.fromJson(GetStorage().read('user') ?? {});
+
   var idsubject = ''.obs;
+
   String? begineController;
   String? endController;
   String? daysController;
+
   TextEditingController clasroomController = TextEditingController();
   TextEditingController buildingController = TextEditingController();
 
   ClaseProvider claseProvider = ClaseProvider();
-
   RxList<Subject?> subjects = <Subject?>[].obs;
+
+  List<String> typeList = <String>[
+    '07:00','07:30','08:00','08:30','09:00','09:30','10:00','10:30','11:00','11:30','12:00','12:30','13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30','17:00','17:30','18:00','18:30','19:00','19:30','20:00','20:30','21:00','21:30','22:00'
+  ].obs;
+
+  var typeSelectedBegin = ''.obs;//hora de inicio
+  var typeSelectedEnd = ''.obs;//hora de fin
 
   var value = DateTime.now().toString().obs;
 
   void setClase() {
-    begineController = clase.begin_hour!;
-    endController = clase.end_hour!;
+    typeSelectedBegin.value = clase.begin_hour!;
+    typeSelectedEnd.value = clase.end_hour!;
     daysController = clase.days!;
     clasroomController.text = clase.classroom!;
     buildingController.text = clase.building!;
@@ -62,7 +72,8 @@ class ClaseUpdateController extends GetxController {
           Navigator.pop(context);
         });
       } else {
-        Get.snackbar(responseApi.message ?? '',
+        Get.snackbar(
+            responseApi.message ?? '',
             'Ha ocurrido un error al actualizar la clase',
             backgroundColor: AppColors.colors.errorContainer,
             colorText: AppColors.colors.onErrorContainer);
@@ -73,24 +84,47 @@ class ClaseUpdateController extends GetxController {
   bool isValidForms(String begin_hour, String end_hour, String days,
       String classroom, String building) {
     if (begin_hour.isEmpty) {
-      Get.snackbar("Datos no válidos", "Debes ingresar una hora de inicio");
+      Get.snackbar(
+        "Datos no válidos", 
+        "Debes ingresar una hora de inicio",
+        backgroundColor: AppColors.colors.errorContainer,
+        colorText: AppColors.colors.onErrorContainer
+      );
       return false;
     }
     if (end_hour.isEmpty) {
-      Get.snackbar("Datos no válidos", "Debes ingresar una hora de fin");
+      Get.snackbar(
+        "Datos no válidos", "Debes ingresar una hora de fin",
+        backgroundColor: AppColors.colors.errorContainer,
+        colorText: AppColors.colors.onErrorContainer
+      );
       return false;
     }
     if (days.isEmpty) {
-      Get.snackbar("Datos no válidos", "Debe seleccionar un dia");
+      Get.snackbar(
+        "Datos no válidos", 
+        "Debe seleccionar un dia",
+        backgroundColor: AppColors.colors.errorContainer,
+        colorText: AppColors.colors.onErrorContainer
+      );
       return false;
     }
     if (classroom.isEmpty) {
-      Get.snackbar("Datos no válidos", "Debes ingresar el numero de salon");
+      Get.snackbar(
+        "Datos no válidos", 
+        "Debes ingresar el numero de salon",
+        backgroundColor: AppColors.colors.errorContainer,
+        colorText: AppColors.colors.onErrorContainer
+      );
       return false;
     }
     if (building.isEmpty) {
       Get.snackbar(
-          "Datos no válidos", "Debes ingresar la letra o nombre del edificio");
+        "Datos no válidos", 
+        "Debes ingresar la letra o nombre del edificio",
+        backgroundColor: AppColors.colors.errorContainer,
+        colorText: AppColors.colors.onErrorContainer
+      );
       return false;
     }
     return true;
