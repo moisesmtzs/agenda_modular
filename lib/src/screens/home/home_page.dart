@@ -88,7 +88,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 tabBackgroundColor: Colors.indigo.shade100,
                 activeColor: Colors.indigo[300],
                 gap: 10,
-                duration: const Duration( milliseconds: 1500 ),
+                duration: const Duration( milliseconds: 800 ),
                 onTabChange: (index) {
                   navigationController.changeIndex(index);
                 },

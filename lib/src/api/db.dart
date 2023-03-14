@@ -1,23 +1,34 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:get_storage/get_storage.dart';
+import 'package:path_provider/path_provider.dart';
 //MODELOS//
 import 'package:agenda_app/src/models/subject.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:agenda_app/src/models/task.dart';
+import 'package:agenda_app/src/models/user.dart';
 //SQLITE//
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 class db
 {
+  
+  User userSession = User.fromJson(GetStorage().read('user') ?? {});
+
   //CONSTRUCTOR DE LA BASE DE DATOS//
   static Future<Database> openDB() async
   {
     return openDatabase(join(await getDatabasesPath(),'tot.db'),
-      onCreate: (db, version)
+      onCreate: (db, version) async
       {
-        return db.execute(
+        await db.execute(
           "CREATE TABLE subject (id INTEGER PRIMARY KEY,id_user INTEGER,name TEXT,subject_code TEXT,professor_name TEXT,created_at TEXT,updated_at TEXT)"    
         );
+
+        await db.execute(
+          "CREATE TABLE tasks (id INTEGER PRIMARY KEY, id_user INTEGER, name TEXT, description TEXT, delivery_date TEXT, subject TEXT, type TEXT, status TEXT, created_at TEXT, updated_at TEXT)"
+        );
+
       }, version: 1);
   }
 
@@ -55,6 +66,23 @@ class db
       professor_name: subjectList[i]['professor_name'],
     ));
   }
+
+  static Future<List<Subject?>> getSubjectsByUser() async {
+
+    Database database = await openDB();
+
+    final List<Map<String, dynamic>> subjectList = await database.query('tasks', where: 'id_user = ?', whereArgs: [db().userSession.id]);
+
+    return List.generate(subjectList.length, (i) => Subject(
+      id: subjectList[i]['id'].toString(),
+      id_user: subjectList[i]['id_user'].toString(),
+      name: subjectList[i]['name'],
+      subject_code: subjectList[i]['subject_code'],
+      professor_name: subjectList[i]['professor_name'],
+    ));
+
+  }
+
   //-------------------------------------------------------------------------------------------------------------------//
 
 
@@ -63,6 +91,81 @@ class db
 
 
   //----------------------------------------------------- <TAREA> -----------------------------------------------------//
+
+  static Future<List<Task?>> getTasks() async {
+
+    Database database = await openDB();
+
+    final List<Map<String, dynamic>> taskList = await database.query('tasks', where: 'id_user = ?', whereArgs: [db().userSession.id]);
+
+    return List.generate(taskList.length, (i) => Task(
+      id: taskList[i]['id'].toString(),
+      idUser: taskList[i]['id_user'].toString(),
+      name: taskList[i]['name'],
+      description: taskList[i]['description'],
+      deliveryDate: taskList[i]['delivery_date'],
+      subject: taskList[i]['subject'],
+      type: taskList[i]['type'],
+      status: taskList[i]['status'],
+    ));
+
+  }
+
+  static Future<int?> getTasksByStatus(String idUser, String status) async {
+
+    Database database = await openDB();
+
+    var sql = "SELECT id, id_user, name, description, delivery_date, subject, type, status "
+              "FROM tasks WHERE id_user = ${db().userSession.id} AND status = '$status'";
+
+    var result = await database.rawQuery(sql);
+
+    return result.length;
+
+  }
+
+  static Future<int?> insertTask(Task task) async {
+    
+    Database database = await openDB();
+    
+    var today = DateTime.now().toString();
+    
+    var sql = "INSERT INTO tasks(id_user, name, description, delivery_date, subject, type, status, created_at, updated_at) VALUES ( ${task.idUser}, '${task.name}', '${task.description}', '${task.deliveryDate}', '${task.subject}', '${task.type}', '${task.status}', '$today', '$today')";
+
+    var result = await database.rawInsert(sql);
+    
+    return result;
+
+  }
+
+  static Future<int?> updateTaskStatus(String idTask, String status) async {
+
+    Database database = await openDB();
+
+    var today = DateTime.now().toString();
+
+    var sql = "UPDATE tasks SET status = '$status', updated_at = '$today' WHERE id = $idTask";
+
+    var result = await database.rawUpdate(sql);
+
+    return result;
+
+  }
+
+  static Future<int?> deleteTask(String idTask) async {
+
+    Database database = await openDB();
+
+    var sql = "DELETE FROM tasks WHERE id = $idTask";
+
+    var result = await database.rawDelete(sql);
+
+    return result;
+
+  }
+
+
+
   //-------------------------------------------------------------------------------------------------------------------//
 
 }

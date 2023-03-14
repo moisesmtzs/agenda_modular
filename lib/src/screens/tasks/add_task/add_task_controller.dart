@@ -1,9 +1,10 @@
-import 'package:agenda_app/main.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 
+import 'package:agenda_app/src/api/db.dart';
+import 'package:agenda_app/src/models/connectivity.dart';
 import 'package:agenda_app/src/models/response_api.dart';
 import 'package:agenda_app/src/models/subject.dart';
 import 'package:agenda_app/src/models/task.dart';
@@ -17,7 +18,10 @@ class AddTaskController extends GetxController {
   AddTaskController() {
     getSubjects();
     data.refresh();
+    connectivity.getConnectivity();
   }
+  
+  Connect connectivity = Connect();
 
   User userSession = User.fromJson(GetStorage().read('user') ?? {});
 
@@ -38,7 +42,13 @@ class AddTaskController extends GetxController {
   var subjectSelected = ''.obs;
 
   Future<List<Subject?>> getSubjects() async {
-    subjectList = await subjectProvider.findByUser(userSession.id ?? '');
+
+    if ( connectivity.isConnected == true ) {
+      subjectList = await subjectProvider.findByUser(userSession.id ?? '');
+    } else {
+      subjectList = await db.getSubjectsByUser();
+    }
+
     for ( var s in subjectList ) {
       data.add(s);
     }
@@ -65,28 +75,57 @@ class AddTaskController extends GetxController {
         subject: subject,
         type: type
       );
-      
-      ResponseApi? responseApi = await tasksProvider.create(task);
 
-      if (responseApi?.success == true) {
-        Get.snackbar(
-          responseApi?.message ?? '', 
-          'La tarea ha sido creada satisfactoriamente',
-          backgroundColor: AppColors.colors.secondary,
-          colorText: AppColors.colors.onSecondary
-        );
-        Future.delayed(const Duration(milliseconds: 1000), () {
-          Get.offNamedUntil('/home', (route) => false);
-        });
+      if ( connectivity.isConnected == true ) {
+
+        ResponseApi? responseApi = await tasksProvider.create(task);
+
+        if (responseApi?.success == true) {
+          Get.snackbar(
+            responseApi?.message ?? '', 
+            'La tarea ha sido creada satisfactoriamente',
+            backgroundColor: AppColors.colors.secondary,
+            colorText: AppColors.colors.onSecondary
+          );
+          Future.delayed(const Duration(milliseconds: 1000), () {
+            Get.offNamedUntil('/home', (route) => false);
+          });
+        } else {
+          Get.snackbar(
+            'Datos no válidos',
+            responseApi?.message ?? '',
+            backgroundColor: AppColors.colors.errorContainer,
+            colorText: AppColors.colors.onErrorContainer
+          );
+          // isEnable.value = true;
+        }
+
       } else {
-        Get.snackbar(
-          'Datos no válidos',
-          responseApi?.message ?? '',
-          backgroundColor: AppColors.colors.errorContainer,
-          colorText: AppColors.colors.onErrorContainer
-        );
-        // isEnable.value = true;
+
+        int? responseStatus = await db.insertTask(task);
+
+        if ( responseStatus == 0 ) {
+          Get.snackbar(
+            'Datos no válidos',
+            'No se pudo crear la tarea',
+            backgroundColor: AppColors.colors.errorContainer,
+            colorText: AppColors.colors.onErrorContainer
+          );
+          // isEnable.value = true;
+        } else {
+          Get.snackbar(
+            'Tarea creada',
+            '',
+            backgroundColor: AppColors.colors.secondary,
+            colorText: AppColors.colors.onSecondary
+          );
+          Future.delayed(const Duration(milliseconds: 800), () {
+            Get.offNamedUntil('/home', (route) => false);
+          });
+        }
+
       }
+      
 
     }
 
