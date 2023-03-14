@@ -6,6 +6,7 @@ class Connect {
 
   Connect() {
     isConnected = false;
+    getConnectivity();
   }
 
   void getConnectivity() async {

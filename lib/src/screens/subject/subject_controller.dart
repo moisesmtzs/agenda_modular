@@ -10,32 +10,19 @@ import 'package:agenda_app/src/providers/subjectProvider.dart';
 //SQLITE//
 import 'package:agenda_app/src/api/db.dart';
 
+import '../../models/connectivity.dart';
+
 class SubjectController extends GetxController {
 
   User userSession = User.fromJson(GetStorage().read('user') ?? {});
 
   final SubjectProvider _subjectProvider = SubjectProvider();
-  
+
+  Connect connectivity = Connect();
+
   SubjectController()
   {
-    GetConnectivity();
-  }
-
-  //VERIFICAR CONEXION A INTERNET//
-  bool isConnect = false; 
-  void GetConnectivity() async
-  {
-    try { 
-      final result = await InternetAddress.lookup('google.com'); 
-      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) 
-      { 
-        print('CONECTADO'); 
-        isConnect = true;
-      }
-    } on SocketException catch (_) { 
-        print('SIN CONEXION'); 
-        isConnect = false;
-    }  
+    connectivity.getConnectivity();
   }
 
   void goToAddSubject() {
@@ -43,7 +30,7 @@ class SubjectController extends GetxController {
   }
 
   Future<List<Subject?>> getSubjects() async {
-    if(isConnect == true)
+    if(connectivity.isConnected == true)
     {
       return await _subjectProvider.findByUser(userSession.id ?? '0');
     }

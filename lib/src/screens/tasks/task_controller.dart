@@ -130,7 +130,7 @@ class TaskController extends GetxController {
     if ( connectivity.isConnected == true ) {
       return tasks = await _tasksProvider.getByUserAndStatus(userSession.id ?? '0', status);
     } else {
-      tasks = await db.getTasksByStatus(userSession.id ?? '0', status);
+      tasks = await db.getTasksByStatus(status);
     }
 
     if ( status == 'COMPLETADO' ) {
@@ -139,6 +139,7 @@ class TaskController extends GetxController {
       }
     }
     selectedTasks.refresh();
+    refresh2();
     return tasks;
   }
   

@@ -16,9 +16,9 @@ import 'package:agenda_app/src/ui/app_colors.dart';
 class AddTaskController extends GetxController {
 
   AddTaskController() {
+    connectivity.getConnectivity();
     getSubjects();
     data.refresh();
-    connectivity.getConnectivity();
   }
   
   Connect connectivity = Connect();
@@ -46,7 +46,7 @@ class AddTaskController extends GetxController {
     if ( connectivity.isConnected == true ) {
       subjectList = await subjectProvider.findByUser(userSession.id ?? '');
     } else {
-      subjectList = await db.getSubjectsByUser();
+      subjectList = await db.selectSubject();
     }
 
     for ( var s in subjectList ) {
@@ -101,6 +101,8 @@ class AddTaskController extends GetxController {
         }
 
       } else {
+
+        task.status = "PENDIENTE";
 
         int? responseStatus = await db.insertTask(task);
 
