@@ -111,16 +111,25 @@ class db
 
   }
 
-  static Future<int?> getTasksByStatus(String idUser, String status) async {
+  static Future<List<Task?>> getTasksByStatus(String idUser, String status) async {
 
     Database database = await openDB();
 
     var sql = "SELECT id, id_user, name, description, delivery_date, subject, type, status "
               "FROM tasks WHERE id_user = ${db().userSession.id} AND status = '$status'";
 
-    var result = await database.rawQuery(sql);
+    final List<Map<String, dynamic>> taskList = await database.rawQuery(sql);
 
-    return result.length;
+    return List.generate(taskList.length, (i) => Task(
+      id: taskList[i]['id'].toString(),
+      idUser: taskList[i]['id_user'].toString(),
+      name: taskList[i]['name'],
+      description: taskList[i]['description'],
+      deliveryDate: taskList[i]['delivery_date'],
+      subject: taskList[i]['subject'],
+      type: taskList[i]['type'],
+      status: taskList[i]['status'],
+    ));
 
   }
 

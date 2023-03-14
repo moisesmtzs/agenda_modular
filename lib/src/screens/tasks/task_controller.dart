@@ -126,9 +126,9 @@ class TaskController extends GetxController {
   
   Future<List<Task?>> getTasks(String status) async {
 
-    var tasks;
+    List<Task?> tasks = [];
     if ( connectivity.isConnected == true ) {
-      tasks = await _tasksProvider.getByUserAndStatus(userSession.id ?? '0', status);
+      return tasks = await _tasksProvider.getByUserAndStatus(userSession.id ?? '0', status);
     } else {
       tasks = await db.getTasksByStatus(userSession.id ?? '0', status);
     }
