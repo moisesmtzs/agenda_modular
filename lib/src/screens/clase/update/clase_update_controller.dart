@@ -30,31 +30,37 @@ class ClaseUpdateController extends GetxController {
   ClaseProvider claseProvider = ClaseProvider();
   RxList<Subject?> subjects = <Subject?>[].obs;
 
-  List<String> typeList = <String>[
+  List<String> daysList = <String>[
+    'lunes','martes','miercoles','jueves','viernes','sabado'
+  ].obs;
+
+  List<String> hoursList = <String>[
     '07:00','07:30','08:00','08:30','09:00','09:30','10:00','10:30','11:00','11:30','12:00','12:30','13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30','17:00','17:30','18:00','18:30','19:00','19:30','20:00','20:30','21:00','21:30','22:00'
   ].obs;
 
-  var typeSelectedBegin = ''.obs;//hora de inicio
-  var typeSelectedEnd = ''.obs;//hora de fin
+  var selectedBegin = ''.obs;//hora de inicio
+  var selectedEnd = ''.obs;//hora de fin
+  var selectedDay = ''.obs;//dia seleccionado
 
   var value = DateTime.now().toString().obs;
 
   void setClase() {
-    typeSelectedBegin.value = clase.begin_hour!;
-    typeSelectedEnd.value = clase.end_hour!;
-    daysController = clase.days!;
+
+    selectedBegin.value = clase.begin_hour!;
+    selectedEnd.value = clase.end_hour!;
+    selectedDay.value = clase.days!;
     clasroomController.text = clase.classroom!;
     buildingController.text = clase.building!;
   }
 
   void updateClase(BuildContext context) async {
-    String? begin_hour = begineController;
-    String? end_hour = endController;
-    String? days = daysController;
+    String? begin_hour = "0001-01-01 " + selectedBegin.value + ":00";
+    String? end_hour = "0001-01-01 " + selectedEnd.value + ":00";
+    String? days = selectedDay.value;
     String classroom = clasroomController.text;
     String building = buildingController.text;
 
-    if (isValidForms(begin_hour!, end_hour!, days!, classroom, building)) {
+    if (isValidForms(begin_hour, end_hour, days, classroom, building)) {
       clase.begin_hour = begin_hour;
       clase.end_hour = end_hour;
       clase.days = days;

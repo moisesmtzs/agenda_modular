@@ -40,61 +40,20 @@ class ClaseUpdatePage extends StatelessWidget {
                 claseUpdateController.updateClase(context);
               },
             ),
-            const SizedBox(height: 25),
-            //_dropDownSubjects(),
             const SizedBox(height: 20),
             _clasroom(),
             const SizedBox(height: 20),
             _building(),
             const SizedBox(height: 20),
             _begin(),
-
+            const SizedBox(height: 20),
+            _end(),
+            const SizedBox(height: 20),
+            _day(),
           ]
       ),
     );
   }
-
-  // List<DropdownMenuItem<String>> _dropDownItems() {
-  //   List<DropdownMenuItem<String>> list = [];
-  //   for (var subject in claseController.subjects) {
-  //     list.add(DropdownMenuItem(
-  //       child: Text(subject?.name ?? ''),
-  //       value: subject?.id,
-  //     ));
-  //   }
-  //   return list;
-  // }
-
-  // Widget _dropDownSubjects(){
-  //   return Container(
-  //     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-  //     margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-  //     decoration: BoxDecoration(
-  //       color: AppColors.colors.primaryContainer,
-  //       borderRadius: BorderRadius.circular(15)
-  //     ),
-  //     child: Obx( () => DropdownButton(
-  //       dropdownColor: AppColors.colors.onSecondary,
-  //       borderRadius: BorderRadius.circular(16),
-  //       underline: Container(
-  //         alignment: Alignment.centerRight,
-  //         child: const Icon(Icons.arrow_drop_down_circle)
-  //       ),
-  //       elevation: 3,
-  //       isExpanded: true,
-  //       hint: const Text(
-  //         'Seleccionar materia',
-  //         style: TextStyle(color: Colors.black, fontSize: 16),
-  //       ),
-  //       items: _dropDownItems(),
-  //       value: claseController.idsubject.value == '' ? null : claseController.idsubject.value,
-  //       onChanged: (option) {
-  //         claseController.idsubject.value = option.toString();
-  //       },
-  //     ),
-  //     ),
-  //   );
-  // }
 
   Widget _begin() {
     return Container(
@@ -110,19 +69,65 @@ class ClaseUpdatePage extends StatelessWidget {
         dropdownColor: AppColors.colors.primaryContainer,
         borderRadius: BorderRadius.circular(12),
         icon: const Icon(Icons.arrow_drop_down_circle_rounded),
-        //value: claseController.idsubject.value == '' ? null : claseController.idsubject.value,
-        value: claseUpdateController.typeSelectedBegin.value,
-        items: _dropDownItemsClase(claseUpdateController.typeList),
+        value: "07:00",
+        items: _dropDownItems(claseUpdateController.hoursList),
         onChanged: (String? value) {
-          claseUpdateController.typeSelectedBegin.value = value!;
+          claseUpdateController.selectedBegin.value = value!;
         },
       ),)
       
     );
   }
 
+  Widget _end() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 25),
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: AppColors.colors.inversePrimary,
+        borderRadius: BorderRadius.circular(15)
+      ),
+      child: Obx(() => DropdownButton(
+        hint: const Text('Hora Fin'),
+        isExpanded: true,
+        dropdownColor: AppColors.colors.primaryContainer,
+        borderRadius: BorderRadius.circular(12),
+        icon: const Icon(Icons.arrow_drop_down_circle_rounded),
+        value: "07:00",
+        items: _dropDownItems(claseUpdateController.hoursList),
+        onChanged: (String? value) {
+          claseUpdateController.selectedEnd.value = value!;
+        },
+      ),)
+      
+    );
+  }
 
-  List<DropdownMenuItem<String>> _dropDownItemsClase(List<String> types) {
+  Widget _day() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 25),
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: AppColors.colors.inversePrimary,
+        borderRadius: BorderRadius.circular(15)
+      ),
+      child: Obx(() => DropdownButton(
+        hint: const Text('Dia'),
+        isExpanded: true,
+        dropdownColor: AppColors.colors.primaryContainer,
+        borderRadius: BorderRadius.circular(12),
+        icon: const Icon(Icons.arrow_drop_down_circle_rounded),
+        //value: "Lunes",
+        items: _dropDownItems(claseUpdateController.daysList),
+        onChanged: (String? value) {
+          claseUpdateController.selectedDay.value = value!;
+        },
+      ),)
+      
+    );
+  }
+
+  List<DropdownMenuItem<String>> _dropDownItems(List<String> types) {//dropdown de las horas
     List<DropdownMenuItem<String>> list = [];
     for (var type in types) {
       list.add(DropdownMenuItem(
@@ -132,6 +137,7 @@ class ClaseUpdatePage extends StatelessWidget {
     }
     return list;
   }
+
 
 
 
@@ -174,7 +180,6 @@ class ClaseUpdatePage extends StatelessWidget {
   //           value: SingingCharacter.miercoles,
   //           groupValue: _character,
   //           onChanged: (SingingCharacter? value) {
-            
   //             setState(() {
   //               _character = value;
   //               claseUpdateController.daysController = 'miercoles';

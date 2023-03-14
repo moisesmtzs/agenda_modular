@@ -18,8 +18,8 @@ class ClaseDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     late var idClase = clase?.id ?? '';
-    late var begin = (clase?.begin_hour as String).substring(11, 16) ?? '';
-    late var end = (clase?.end_hour as String).substring(11, 16) ?? '';
+    late var begin = (clase?.begin_hour as String).substring(11, 16);
+    late var end = (clase?.end_hour as String).substring(11, 16);
     late var day = clase?.days ?? '';
     late var classroom = clase?.classroom ?? '';
     late var building = clase?.building ?? '';
