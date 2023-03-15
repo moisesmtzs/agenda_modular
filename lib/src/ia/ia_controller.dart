@@ -18,6 +18,7 @@ import 'package:agenda_app/src/ia/text_to_speech.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 import '../models/command.dart';
+import '../models/connectivity.dart';
 
 class IA_Controller
 {
@@ -62,8 +63,8 @@ class IA_Controller
   final TasksProvider task_provider =  Get.put(TasksProvider());
   final ClaseProvider clase_provider = Get.put(ClaseProvider());
 
-  //BANDERAS//
-
+  //CONEXION//
+  Connect connectivy = Connect();
   
   //ESTADOS//
   int actualType = 0, actualObj = 0, actualProcess = 0;
@@ -89,6 +90,7 @@ class IA_Controller
 
   //CONSTRUCTOR//
   IA_Controller() {
+    connectivy.getConnectivity();
     _speech = stt.SpeechToText();
     _voice = new VoiceRosalind();
   }
@@ -98,8 +100,14 @@ class IA_Controller
   //ANALIZAR SI EL COMANDO ES VALIDO//
   void isCommand(String textSpeak) async 
   {
+    connectivy.getConnectivity();
+    if(connectivy.isConnected == false)
+    {
+      _voice.speak("Necesitas estar conectado a Internet para utilizar la IA");
+      resetIA();
+    }
     //CANCELAR ACCION//
-    if(_text.toUpperCase() == "CANCELAR")
+    else if(_text.toUpperCase() == "CANCELAR")
     {
       _voice.speak("Cancelando...");
       resetIA();

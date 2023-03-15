@@ -14,6 +14,7 @@ class TaskController extends GetxController {
 
   TaskController() {
     connectivity.getConnectivity();
+    createReplica();
   }
 
   Connect connectivity = Connect();
