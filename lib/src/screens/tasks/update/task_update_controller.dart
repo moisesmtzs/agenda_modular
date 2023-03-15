@@ -1,3 +1,5 @@
+import 'package:agenda_app/src/api/db.dart';
+import 'package:agenda_app/src/models/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -13,13 +15,16 @@ import 'package:agenda_app/src/ui/app_colors.dart';
 
 class TaskUpdateController extends GetxController {
 
-  Task task = Task();
   TaskUpdateController(this.task) {
+    connectivity.getConnectivity();
     getSubjects();
     setTask();
     subjectSelected.refresh();
     data.refresh();
   }
+
+  Task task = Task();
+  Connect connectivity = Connect();
 
   User userSession = User.fromJson(GetStorage().read('user') ?? {});
 
@@ -40,7 +45,13 @@ class TaskUpdateController extends GetxController {
   DateTime _selectedDate = DateTime.now();
 
   Future<List<Subject?>> getSubjects() async {
-    subjectList = await subjectProvider.findByUser(userSession.id ?? '');
+
+    if ( connectivity.isConnected == true ) {
+      subjectList = await subjectProvider.findByUser(userSession.id ?? '');
+    } else {
+      subjectList = await db.selectSubject();
+    }
+
     for ( var s in subjectList ) {
       data.add(s);
     }
@@ -72,26 +83,50 @@ class TaskUpdateController extends GetxController {
       task.subject = subject;
       task.type = type;
 
-      ResponseApi? responseApi = await tasksProvider.updateTask(task);
-      if( responseApi!.success! ) {
-        Get.snackbar(
-          responseApi.message ?? '',
-          'La tarea ha sido actualizada satisfactoriamente',
-          backgroundColor: AppColors.colors.secondary,
-          colorText: AppColors.colors.onSecondary
-        );
-        Future.delayed(const Duration(milliseconds: 1000), () {
-          Navigator.pop(context);
-          Navigator.pop(context);
-        });
+      if ( connectivity.isConnected == true ) {
+        ResponseApi? responseApi = await tasksProvider.updateTask(task);
+        if( responseApi!.success! ) {
+          Get.snackbar(
+            responseApi.message ?? '',
+            'La tarea ha sido actualizada satisfactoriamente',
+            backgroundColor: AppColors.colors.secondary,
+            colorText: AppColors.colors.onSecondary
+          );
+          Future.delayed(const Duration(milliseconds: 1000), () {
+            Navigator.pop(context);
+            Navigator.pop(context);
+          });
+        } else {
+          Get.snackbar(
+            responseApi.message ?? '', 
+            'Ha ocurrido un error al actualizar la tarea',
+            backgroundColor: AppColors.colors.errorContainer,
+            colorText: AppColors.colors.onErrorContainer
+          );
+        }
       } else {
-        Get.snackbar(
-          responseApi.message ?? '', 
-          'Ha ocurrido un error al actualizar la tarea',
-          backgroundColor: AppColors.colors.errorContainer,
-          colorText: AppColors.colors.onErrorContainer
-        );
+        int? result = await db.updateTask(task);
+        if ( result == 0 ) {
+          Get.snackbar(
+            'Error', 
+            'Ha ocurrido un error al actualizar la tarea',
+            backgroundColor: AppColors.colors.errorContainer,
+            colorText: AppColors.colors.onErrorContainer
+          );
+        } else {
+          Get.snackbar(
+            'Tarea actualizada', 
+            'La tarea ha sido actualizada satisfactoriamente',
+            backgroundColor: AppColors.colors.secondary,
+            colorText: AppColors.colors.onSecondary
+          );
+          Future.delayed(const Duration(milliseconds: 1000), () {
+            Navigator.pop(context);
+            Navigator.pop(context);
+          });
+        }
       }
+
 
     }
 

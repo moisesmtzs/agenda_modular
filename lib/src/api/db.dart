@@ -196,6 +196,20 @@ class db
 
   }
 
+  static Future<int?> updateTask(Task task) async {
+
+    Database database = await openDB();
+
+    var today = DateTime.now().toString();
+
+    var sql = "UPDATE tasks SET name = '${task.name}', description = '${task.description}', delivery_date = '${task.deliveryDate}', subject = '${task.subject}', type = '${task.type}', status = '${task.status}', updated_at = '$today' WHERE id = ${task.id}";
+
+    var result = await database.rawUpdate(sql);
+
+    return result;
+
+  }
+
   //UPDATE//
   static Future<int?> updateTaskStatus(String idTask, String status) async {
 
