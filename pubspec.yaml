@@ -33,7 +33,6 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   internet_connection_checker: ^0.0.1+4
-  connectivity_plus: ^2.3.5
   flutter_svg: ^1.1.0
   flutter_zoom_drawer: ^3.0.3
   get: ^4.6.1
