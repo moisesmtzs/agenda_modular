@@ -18,7 +18,8 @@ class UsersProvider extends GetConnect {
 
   Future<ResponseApi?> create(User user) async {
     Response response = await post('$url/register', user.toJson(),
-        headers: {'Content-Type': 'application/json'});
+      headers: {'Content-Type': 'application/json'}
+    );
 
     ResponseApi responseApi = ResponseApi.fromJson(response.body);
     return responseApi;

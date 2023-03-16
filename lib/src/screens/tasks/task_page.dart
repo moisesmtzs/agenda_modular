@@ -277,7 +277,7 @@ class _TaskPageState extends State<TaskPage> {
                 icon: const Icon(Icons.delete_outline_rounded, size: 30),
                 color: AppColors.colors.primary,
                 onPressed: () {
-                  taskController.confirmationDialog(context, task?.id ?? '0');
+                  taskController.confirmationDialog(context, task);
                 },
               ),
             ],

@@ -1,19 +1,25 @@
-import 'package:agenda_app/src/models/response_api.dart';
-import 'package:agenda_app/src/ui/app_colors.dart';
+import 'package:agenda_app/src/api/db.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 
+import 'package:agenda_app/src/models/connectivity.dart';
+import 'package:agenda_app/src/models/response_api.dart';
 import 'package:agenda_app/src/models/subject.dart';
 import 'package:agenda_app/src/models/user.dart';
 import 'package:agenda_app/src/providers/subjectProvider.dart';
+import 'package:agenda_app/src/ui/app_colors.dart';
 
 class SubjectUpdateController extends GetxController {
-  Subject subject = Subject();
+
   SubjectUpdateController(this.subject) {
+    connectivity.getConnectivity();
     setSubject();
   }
+
+  Subject subject = Subject();
+  Connect connectivity = Connect();
 
   User userSession = User.fromJson(GetStorage().read('user') ?? {});
 
@@ -42,22 +48,51 @@ class SubjectUpdateController extends GetxController {
       subject.subject_code = subject_code;
       subject.professor_name = professor_name;
 
-      ResponseApi? responseApi = await subjectProvider.updateSubject(subject);
-      if (responseApi!.success!) {
-        Get.snackbar(responseApi.message ?? '',
+      if ( connectivity.isConnected == true ) {
+        ResponseApi? responseApi = await subjectProvider.updateSubject(subject);
+        if (responseApi!.success!) {
+          Get.snackbar(
+            responseApi.message ?? '',
             'La materia ha sido actualizada satisfactoriamente',
             backgroundColor: AppColors.colors.secondary,
-            colorText: AppColors.colors.onSecondary);
-        Future.delayed(const Duration(milliseconds: 1000), () {
-          Navigator.pop(context);
-          Navigator.pop(context);
-        });
-      } else {
-        Get.snackbar(responseApi.message ?? '',
+            colorText: AppColors.colors.onSecondary
+          );
+          Future.delayed(const Duration(milliseconds: 1000), () {
+            Navigator.pop(context);
+            Navigator.pop(context);
+          });
+        } else {
+          Get.snackbar(
+            responseApi.message ?? '',
             'Ha ocurrido un error al actualizar la materia',
             backgroundColor: AppColors.colors.errorContainer,
-            colorText: AppColors.colors.onErrorContainer);
+            colorText: AppColors.colors.onErrorContainer
+          );
+        }
+      } else {
+        int? result = await db.updateSubject(subject);
+        if ( result == 0 ) {
+          Get.snackbar(
+            'Error', 
+            'Ha ocurrido un error al actualizar la materia',
+            backgroundColor: AppColors.colors.errorContainer,
+            colorText: AppColors.colors.onErrorContainer
+          );
+        } else {
+          Get.snackbar(
+            'Materia actualizada', 
+            'La materia se actualizó',
+            backgroundColor: AppColors.colors.secondary,
+            colorText: AppColors.colors.onSecondary
+          );
+          Future.delayed(const Duration(milliseconds: 1000), () {
+            Navigator.pop(context);
+            Navigator.pop(context);
+          });
+        }
       }
+
+
     }
   }
 

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:agenda_app/src/models/query.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:path_provider/path_provider.dart';
 //MODELOS//
@@ -12,6 +13,7 @@ import 'package:path/path.dart';
 //PROVIDERS//
 import '../models/connectivity.dart';
 import '../providers/subjectProvider.dart';
+import '../providers/syncProvider.dart';
 import '../providers/tasksProvider.dart';
 
 class db
@@ -62,6 +64,19 @@ class db
     return result;
   }
 
+  static Future<int?> insertSubjectSync(Subject newSubject) async
+  {
+    //NOS ASEGURAMOS QUE LA BD ESTE CREADA//
+    Database database = await openDB();
+    //OBTENEMOS LA FECHA DE ACTUAL PARA LOS CAMPOS CREATED_AT Y UPDATED_AT//
+    var today = DateTime.now().toString();
+    //CONSTRUIMOS EL SQL//
+    var sql = "INSERT INTO subject(id_user, name, subject_code, professor_name, created_at, updated_at) VALUES ( ${newSubject.id_user}, '${newSubject.name}', '${newSubject.subject_code}', '${newSubject.professor_name}', '${today}', '${today}')";
+    //EJECUTAMOS EL SQL//
+    var result = await database.rawInsert(sql);
+    return result;
+  }
+
   //UPDATE//
   static Future<int?> updateSubject(Subject newSubject) async
   {
@@ -69,10 +84,19 @@ class db
     Database database = await openDB();
     //OBTENEMOS LA FECHA DE ACTUAL PARA LOS CAMPOS CREATED_AT Y UPDATED_AT//
     var today = DateTime.now().toString();
+    //OBTENER EL NOMBRE OLD//
+    var oldSubject = await database.query('subject', where: 'id = ?', whereArgs: [newSubject.id]);
+    String nameOld = "";
+    for(int i = 0; i<oldSubject.length; i++)
+    {
+      nameOld=oldSubject[i]['name'].toString();
+    }
     //CONSTRUIMOS EL SQL//
     var sql = "UPDATE subject SET name = '${newSubject.name}', subject_code = '${newSubject.subject_code}', professor_name = '${newSubject.professor_name}', updated_at = '${today}' WHERE id = ${newSubject.id}";
+    var sqlTask = "UPDATE tasks SET subject = '${newSubject.name}' WHERE subject = '$nameOld'";
     //EJECUTAMOS EL SQL//
     var result = await database.rawUpdate(sql);
+    var resultTrigger = await database.rawUpdate(sqlTask);
     //ALMACENAR LOS SQL//
     var sqTable = "INSERT INTO sql_commands values (\"${sql}\")";
     result = await database.rawInsert(sqTable);
@@ -118,10 +142,7 @@ class db
 
     Database database = await openDB();
 
-    var sql = "DELETE FROM subject";
-
-    var result = await database.rawDelete(sql);
-
+    var result = await database.delete("subject");
     return result;
 
   }
@@ -151,6 +172,17 @@ class db
       type: taskList[i]['type'],
       status: taskList[i]['status'],
     ));
+
+  }
+
+  static Future<String?> getOneTask(String? idTask) async {
+
+    Database database = await openDB();
+
+    final List<Map<String, dynamic>> taskList = await database.query('tasks', where: 'id = ?', whereArgs: [idTask]);
+    var created_at = taskList[0]['created_at'].toString();
+  
+    return created_at;
 
   }
   
@@ -185,12 +217,27 @@ class db
     var today = DateTime.now().toString();
     
     var sql = "INSERT INTO tasks(id_user, name, description, delivery_date, subject, type, status, created_at, updated_at) VALUES ( ${task.idUser}, '${task.name}', '${task.description}', '${task.deliveryDate}', '${task.subject}', '${task.type}', '${task.status}', '$today', '$today')";
-
+    print(sql);
     var result = await database.rawInsert(sql);
 
     //ALMACENAR LOS SQL//
     var sqTable = "INSERT INTO sql_commands values (\"${sql}\")";
     result = await database.rawInsert(sqTable);
+    
+    return result;
+
+  }
+
+  //INSERT//
+  static Future<int?> insertTaskSync(Task task) async {
+    
+    Database database = await openDB();
+    
+    var today = DateTime.now().toString();
+    
+    var sql = "INSERT INTO tasks(id, id_user, name, description, delivery_date, subject, type, status, created_at, updated_at) VALUES ( ${task.id}, ${task.idUser}, '${task.name}', '${task.description}', '${task.deliveryDate}', '${task.subject}', '${task.type}', '${task.status}', '$today', '$today')";
+    print(sql);
+    var result = await database.rawInsert(sql);
     
     return result;
 
@@ -202,9 +249,15 @@ class db
 
     var today = DateTime.now().toString();
 
-    var sql = "UPDATE tasks SET name = '${task.name}', description = '${task.description}', delivery_date = '${task.deliveryDate}', subject = '${task.subject}', type = '${task.type}', status = '${task.status}', updated_at = '$today' WHERE id = ${task.id}";
+    var sqlBase = "UPDATE tasks SET name = '${task.name}', description = '${task.description}', delivery_date = '${task.deliveryDate}', subject = '${task.subject}', type = '${task.type}', status = '${task.status}', updated_at = '$today' WHERE id_user = ${task.idUser}";
+
+    var sql = sqlBase + "and id = ${task.id} ";
 
     var result = await database.rawUpdate(sql);
+
+    var sqlSync = sqlBase + " and created_at = $today";
+    var sqlReplica = "INSERT INTO sql_commands values (\"${sqlSync}\")";
+    var resultSync = await database.rawInsert(sqlReplica);
 
     return result;
 
@@ -217,31 +270,40 @@ class db
 
     var today = DateTime.now().toString();
 
-    var sql = "UPDATE tasks SET status = '$status', updated_at = '$today' WHERE id = $idTask";
+    var sqlBase = "UPDATE tasks SET status = '$status', updated_at = '$today' WHERE id_user = ${db().userSession.id}";
+
+    var sql = sqlBase+" and id = $idTask";
 
     var result = await database.rawUpdate(sql);
 
     //ALMACENAR LOS SQL//
-    var sqTable = "INSERT INTO sql_commands values (\"${sql}\")";
-    result = await database.rawInsert(sqTable);
+    var sqlSync = sqlBase + " and updated_at = $today";
+    var sqlReplica = "INSERT INTO sql_commands values (\"${sqlSync}\")";
+    var resultSync = await database.rawInsert(sqlReplica);
 
     return result;
 
   }
 
   //DELETE//
-  static Future<int?> deleteTask(String idTask) async {
+  static Future<int?> deleteTask(Task? task) async {
 
     Database database = await openDB();
 
-    var sql = "DELETE FROM tasks WHERE id = $idTask";
+    var sqlBase = "DELETE FROM tasks WHERE id_user = ${task!.idUser}";
 
+    var sql = sqlBase + "and id = ${task.id} ";
+
+    Future<String?> oldTaskCreated = getOneTask(task.id);
+    
     var result = await database.rawDelete(sql);
+  
+    var sqlSync = sqlBase + " and created_at = $oldTaskCreated";
 
     //ALMACENAR LOS SQL//
-    var sqTable = "INSERT INTO sql_commands values (\"${sql}\")";
-    result = await database.rawInsert(sqTable);
-
+    var sqlReplica = "INSERT INTO sql_commands values (\"${sqlSync}\")";
+    var resultSync = await database.rawInsert(sqlReplica);
+    
     return result;
 
   }
@@ -250,10 +312,7 @@ class db
   static Future<int?> deleteAllTasks() async {
 
     Database database = await openDB();
-
-    var sql = "DELETE FROM tasks";
-
-    var result = await database.rawDelete(sql);
+    var result = await database.delete("tasks");
 
     return result;
 
@@ -268,19 +327,20 @@ class db
     deleteAllTasks();
     deleteAllSubjects();
     deleteCommands();
+
+    createReplica();
   }
 
   //OBTENER TODOS LOS COMANDOS//
-  static Future<List<String>> getAllCommands() async
+  static Future<List<Query>> getAllCommands() async
   {
     Database database = await openDB();
     List<String> sCommands = [];
     final List<Map<String, dynamic>> commandsList = await database.query('sql_commands');
-    for(int i = 0; i<commandsList.length; i++)
-    {
-      sCommands.add(commandsList[i]['command']);
-    }
-    return sCommands;
+
+    return List.generate(commandsList.length, (i) => Query(
+      command: commandsList[i]['command'],
+    ));
   }
 
   //LIMPIAR LISTA DE COMANDOS//
@@ -288,72 +348,79 @@ class db
 
     Database database = await openDB();
 
-    var sql = "DELETE FROM sql_commands";
-
-    var result = await database.rawDelete(sql);
+    var result = await database.delete("sql_commands");
 
     return result;
 
   }
   //-------------------------------------------------------------------------------------------------------------------//
 
-  //--------------------------------------------------- <REPLICA> -----------------------------------------------------//
   
-
-  //-------------------------------------------------------------------------------------------------------------------//
 }
-
+  //--------------------------------------------------- <REPLICA> -----------------------------------------------------//
   void createReplica() async
   {
-    Connect connectivity = Connect();
 
-    connectivity.getConnectivity();
+      print("Generando replica");
 
-    if(connectivity.isConnected == false)
-    {
-      print("No ha sido posible generar la replica ya que no se encuentra conectado a Internet");
-      return;
-    }
-    
-    print("Generando replica");
+      //PROVIDERS//
+      TasksProvider tasksProvider = TasksProvider();
+      SubjectProvider subjectProvider = SubjectProvider();
 
-    //PROVIDERS//
-    TasksProvider tasksProvider = TasksProvider();
-    SubjectProvider subjectProvider = SubjectProvider();
+      //USER SESSION//
+      User userSession = User.fromJson(GetStorage().read('user') ?? {});
 
-    //USER SESSION//
-    User userSession = User.fromJson(GetStorage().read('user') ?? {});
+      //RECUPERAMOS LOS OBJETOS DEL PROVIDER//
 
-    //VACIAMOS TODAS LAS TABLAS//
-    db.clearAll();
+      //TAREAS//
+      List<Task?> tasks = [];
+      tasks = await tasksProvider.getByUserAndStatus(userSession.id ?? '0', "COMPLETADO");
 
-    //RECUPERAMOS LOS OBJETOS DEL PROVIDER//
+      for(int i = 0; i < tasks.length; i++)
+      {
+        db.insertTaskSync(tasks[i]!);
+      }
 
-    //TAREAS//
-    List<Task?> tasks = [];
-    tasks = await tasksProvider.getByUserAndStatus(userSession.id ?? '0', "COMPLETADO");
+      tasks = await tasksProvider.getByUserAndStatus(userSession.id ?? '0', "PENDIENTE");
 
-    for(int i = 0; i < tasks.length; i++)
-    {
-      db.insertTask(tasks[i]!);
-    }
+      for(int i = 0; i < tasks.length; i++)
+      {
+        db.insertTaskSync(tasks[i]!);
+      }
 
-    tasks = await tasksProvider.getByUserAndStatus(userSession.id ?? '0', "PENDIENTE");
+      //MATERIAS//
+      List<Subject?> subjects = [];
+      subjects = await subjectProvider.findByUser(userSession.id ?? '0');
 
-    for(int i = 0; i < tasks.length; i++)
-    {
-      db.insertTask(tasks[i]!);
-    }
-
-    //MATERIAS//
-    List<Subject?> subjects = [];
-    subjects = await subjectProvider.findByUser(userSession.id ?? '0');
-
-    for(int i = 0; i < subjects.length; i++)
-    {
-      db.insertSubject(subjects[i]!);
-    }
+      for(int i = 0; i < subjects.length; i++)
+      {
+        db.insertSubjectSync(subjects[i]!);
+      }
 
     //CLASE//
-    
   }
+  //-------------------------------------------------------------------------------------------------------------------//
+
+  //------------------------------------------------ <SINCRONIZACION> -------------------------------------------------//
+  void createSync() async
+  {
+      print("Realizando Sincronización...");
+
+      //PROVIDERS//
+      SyncProvider syncProvider = SyncProvider();
+
+      //USER SESSION//
+      User userSession = User.fromJson(GetStorage().read('user') ?? {});
+
+      List<Query> command = await db.getAllCommands();
+
+      for(int i = 0; i<command.length; i++)
+      {
+        syncProvider.create(command[i]);
+      }
+
+      db.clearAll();
+      
+
+  }
+  //-------------------------------------------------------------------------------------------------------------------//

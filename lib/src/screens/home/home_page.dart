@@ -31,6 +31,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
 
   NavigationController navigationController = Get.put(NavigationController());
+
   IA_Controller _ia = IA_Controller();
 
   @override
@@ -371,7 +372,7 @@ class MenuPage extends GetView<MyDrawerController> {
                             fontSize: 14.0,
                             color: Colors.indigo[200],
                             fontWeight: FontWeight.bold),
-                        maxLines: 2,
+                        maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ],

@@ -14,7 +14,7 @@ class TaskController extends GetxController {
 
   TaskController() {
     connectivity.getConnectivity();
-    createReplica();
+    // createReplica();
   }
 
   Connect connectivity = Connect();
@@ -63,10 +63,10 @@ class TaskController extends GetxController {
     }
   }
 
-  void delete(String idTask) async {
+  void delete(Task? task) async {
 
     if ( connectivity.isConnected == true ) {
-      ResponseApi? responseApi = await _tasksProvider.deleteTask(idTask);
+      ResponseApi? responseApi = await _tasksProvider.deleteTask(task!.id);
       if ( responseApi?.success == true ) {
         Get.snackbar(
           responseApi?.message ?? '', 
@@ -83,12 +83,12 @@ class TaskController extends GetxController {
         );
       }
     } else {
-      await db.deleteTask(idTask);
+      await db.deleteTask(task);
     }
      
   }
 
-  void confirmationDialog(BuildContext context, String idTask) {
+  void confirmationDialog(BuildContext context, Task? task) {
     Widget cancelButton = TextButton(
       child: const Text('Cancelar'),
       onPressed: () {
@@ -99,7 +99,7 @@ class TaskController extends GetxController {
     Widget continueButton = TextButton(
       child: const Text('Confirmar'),
       onPressed: () {
-        delete(idTask);
+        delete(task);
         Get.back();
         Get.back();
         refresh2();
