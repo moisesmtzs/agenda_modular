@@ -13,11 +13,11 @@ import 'package:agenda_app/src/ui/app_colors.dart';
 class TaskController extends GetxController {
 
   TaskController() {
-    connectivity.getConnectivity();
+    connectivity.getConnectivity();//esto constructor
     // createReplica();
   }
 
-  Connect connectivity = Connect();
+  Connect connectivity = Connect();//esto, constructor
 
   User userSession = User.fromJson(GetStorage().read('user') ?? {});
 

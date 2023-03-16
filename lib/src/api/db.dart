@@ -7,6 +7,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:agenda_app/src/models/subject.dart';
 import 'package:agenda_app/src/models/task.dart';
 import 'package:agenda_app/src/models/user.dart';
+import 'package:agenda_app/src/models/clase.dart';
 //SQLITE//
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
@@ -15,12 +16,14 @@ import '../models/connectivity.dart';
 import '../providers/subjectProvider.dart';
 import '../providers/syncProvider.dart';
 import '../providers/tasksProvider.dart';
+import '../providers/claseProvider.dart';
 
 class db
 {
   //PROVIDERS//
   TasksProvider tasksProvider = TasksProvider();
   SubjectProvider subjectProvider = SubjectProvider();
+  ClaseProvider claseProvider = ClaseProvider();
 
   //USER SESSION//
   User userSession = User.fromJson(GetStorage().read('user') ?? {});
@@ -40,8 +43,14 @@ class db
         );
 
         await db.execute(
+          "CREATE TABLE clase (id INTEGER PRIMARY KEY, id_user INTEGER, id_subject INTEGER, begin_hour TEXT, end_hour TEXT, days TEXT, clasroom TEXT, building TEXT, created_at TEXT, updated_at TEXT)"
+        );
+
+        await db.execute(
           "CREATE TABLE sql_commands (command TEXT)"
         );
+
+        
 
       }, version: 1);
   }
@@ -151,6 +160,136 @@ class db
 
 
   //----------------------------------------------------- <CLASE> -----------------------------------------------------//
+  static Future<List<Clase?>> getClase() async {
+
+    Database database = await openDB();
+    final List<Map<String, dynamic>> claseList = await database.query('clase', where: 'id_user = ?', whereArgs: [db().userSession.id]);
+    return List.generate(claseList.length, (i) => Clase(
+      id: claseList[i]['id'].toString(),
+      id_user: claseList[i]['id_user'].toString(),
+      id_subject: claseList[i]['id_subject'],
+      begin_hour: claseList[i]['begin_hour'],
+      end_hour: claseList[i]['end_hour'],
+      days: claseList[i]['days'],
+      classroom: claseList[i]['classroom'],
+      building: claseList[i]['building'],
+    ));
+  }
+
+  static Future<String?> getOneClase(String? idClase) async {
+
+    Database database = await openDB();
+
+    final List<Map<String, dynamic>> claseList = await database.query('clase', where: 'id = ?', whereArgs: [idClase]);
+    var created_at = claseList[0]['created_at'].toString();
+  
+    return created_at;
+
+  }
+
+  static Future<List<Clase>> selectClase() async
+  {
+    //NOS ASEGURAMOS QUE LA BD ESTE CREADA//
+    Database database = await openDB();
+    //OBTENEMOS TODOS LOS ELEMENTOS DE LA TABLA INDICADA//
+    final List<Map<String, dynamic>> claseList  = await database.query('clase');
+    //RECORREMOS CADA ELEMENTO PARA CONSTRUIR EL OBJETO SUBJECT POR CADA UNO//
+    return List.generate(claseList.length, (i) => Clase(
+      id: claseList[i]['id'].toString(),
+      id_user: claseList[i]['id_user'].toString(),
+      id_subject: claseList[i]['id_subject'],
+      begin_hour: claseList[i]['begin_hour'],
+      end_hour: claseList[i]['end_hour'],
+      days: claseList[i]['days'],
+      classroom: claseList[i]['classroom'],
+      building: claseList[i]['building'],
+    ));
+  }
+
+  //INSERT CLASE
+  static Future<int?> insertClase(Clase newClase) async
+  {
+    //NOS ASEGURAMOS QUE LA BD ESTE CREADA//
+    Database database = await openDB();
+    //OBTENEMOS LA FECHA DE ACTUAL PARA LOS CAMPOS CREATED_AT Y UPDATED_AT//
+    var today = DateTime.now().toString();
+    //CONSTRUIMOS EL SQL//
+    var sql = "INSERT INTO clase(id_user, id_subject, begin_hour, end_hour, days, classroom, building, created_at, updated_at) VALUES ( ${newClase.id_user}, '${newClase.id_subject}', '${newClase.begin_hour}', '${newClase.end_hour}', '${newClase.days}', '${newClase.classroom}', '${newClase.building}','${today}', '${today}')";
+    //EJECUTAMOS EL SQL//
+    var result = await database.rawInsert(sql);
+    //ALMACENAR LOS SQL//
+    var sqTable = "INSERT INTO sql_commands values (\"${sql}\")";
+    result = await database.rawInsert(sqTable);
+    return result;
+  }
+
+  static Future<int?> insertClaseSync(Clase newClase) async
+  {
+    //NOS ASEGURAMOS QUE LA BD ESTE CREADA//
+    Database database = await openDB();
+    //OBTENEMOS LA FECHA DE ACTUAL PARA LOS CAMPOS CREATED_AT Y UPDATED_AT//
+    var today = DateTime.now().toString();
+    //CONSTRUIMOS EL SQL//
+    var sql = "INSERT INTO clase(id_user, id_subject, begin_hour, end_hour, days, classroom, building, created_at, updated_at) VALUES ( ${newClase.id_user}, '${newClase.id_subject}', '${newClase.begin_hour}', '${newClase.end_hour}', '${newClase.days}', '${newClase.classroom}', '${newClase.building}','${today}', '${today}')";
+    //EJECUTAMOS EL SQL//
+    var result = await database.rawInsert(sql);
+    return result;
+  }
+
+  //UPDATE//
+  static Future<int?> updateClase(Clase clase) async {
+
+    Database database = await openDB();
+
+    var today = DateTime.now().toString();
+
+    var sqlBase = "UPDATE clase SET begin_hour = '${clase.begin_hour}', end_hour = '${clase.end_hour}', days = '${clase.days}', classroom = '${clase.classroom}', building = '${clase.building}', updated_at = '$today' WHERE id_user = ${clase.id_user}";
+    var sql = sqlBase + "and id = ${clase.id} ";
+    var result = await database.rawUpdate(sql);
+
+    var sqlSync = sqlBase + " and created_at = $today";
+    var sqlReplica = "INSERT INTO sql_commands values (\"${sqlSync}\")";
+    var resultSync = await database.rawInsert(sqlReplica);
+    return result;
+
+  }
+
+  //DELETE//
+  static Future<int?> deleteClase(Clase? clase) async {
+
+    Database database = await openDB();
+
+    var sqlBase = "DELETE FROM clase WHERE id_user = ${clase!.id_user}";
+
+    var sql = sqlBase + "and id = ${clase.id} ";
+
+    Future<String?> oldClaseCreated = getOneClase(clase.id);
+    
+    var result = await database.rawDelete(sql);
+  
+    var sqlSync = sqlBase + " and created_at = $oldClaseCreated";
+
+    //ALMACENAR LOS SQL//
+    var sqlReplica = "INSERT INTO sql_commands values (\"${sqlSync}\")";
+    var resultSync = await database.rawInsert(sqlReplica);
+    
+    return result;
+
+  }
+
+  //delete all
+
+  //ELIMINAR TODOS//
+  static Future<int?> deleteAllClases() async {
+
+    Database database = await openDB();
+    var result = await database.delete("clase");
+
+    return result;
+
+  }
+
+  
   //-------------------------------------------------------------------------------------------------------------------//
 
 
@@ -255,7 +394,7 @@ class db
 
     var result = await database.rawUpdate(sql);
 
-    var sqlSync = sqlBase + " and created_at = $today";
+    var sqlSync = sqlBase + " and create_at = $today";//LINEA EDITADA POR FARFAN
     var sqlReplica = "INSERT INTO sql_commands values (\"${sqlSync}\")";
     var resultSync = await database.rawInsert(sqlReplica);
 
@@ -326,6 +465,7 @@ class db
     //VACIAR TODAS LAS TABLAS//
     deleteAllTasks();
     deleteAllSubjects();
+    deleteAllClases();
     deleteCommands();
 
     createReplica();
@@ -366,6 +506,7 @@ class db
       //PROVIDERS//
       TasksProvider tasksProvider = TasksProvider();
       SubjectProvider subjectProvider = SubjectProvider();
+      ClaseProvider claseProvider = ClaseProvider();
 
       //USER SESSION//
       User userSession = User.fromJson(GetStorage().read('user') ?? {});
@@ -398,6 +539,13 @@ class db
       }
 
     //CLASE//
+    List<Clase?> clases = [];
+      clases = await claseProvider.findByUser(userSession.id ?? '0');//aquiii
+
+      for(int i = 0; i < subjects.length; i++)
+      {
+        db.insertClaseSync(clases[i]!);
+      }
   }
   //-------------------------------------------------------------------------------------------------------------------//
 

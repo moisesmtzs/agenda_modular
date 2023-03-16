@@ -40,6 +40,27 @@ class ClaseProvider extends GetConnect {
     }
   }
 
+  Future<List<Clase?>> findByUser(String idUser) async {
+    //retorna una lista de tipo clase
+    try {
+      Uri _url =
+          Uri.http(Environment.API_URL_OLD, '/api/clase/findByUser/$idUser');
+
+      Map<String, String> headers = {
+        'Content-Type': 'application/json',
+        'Authorization': userSession.sessionToken ?? ''
+      };
+      final res = await http.get(_url, headers: headers);
+
+      final data = json.decode(res.body);
+      Clase clase = Clase.fromJsonList(data); //recuperamos los datos
+      return clase
+          .toList; //retornamos los datos y los regresamos como una lista
+    } catch (e) {
+      return [];
+    }
+  }
+
   // Future<List<Clase?>> getByIdUserAndIdSubject(
   //     String subjectt, String user) async {
   //   try {

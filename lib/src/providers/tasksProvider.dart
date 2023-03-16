@@ -16,7 +16,6 @@ class TasksProvider extends GetConnect {
   User userSession = User.fromJson(GetStorage().read('user') ?? {});
 
   Future<ResponseApi?> create(Task task) async {
-
     Response response = await post(
       '$url/create',
       task.toJson(),

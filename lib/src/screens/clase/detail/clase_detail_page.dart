@@ -56,7 +56,7 @@ class ClaseDetailPage extends StatelessWidget {
               color: AppColors.colors.primary,
               onPressed: () {
                 claseDetailController.confirmationDialog(
-                    context, clase?.id ?? '0');
+                    context, clase);
                 claseDetailController.refresh();
               },
             ),

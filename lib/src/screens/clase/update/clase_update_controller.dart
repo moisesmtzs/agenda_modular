@@ -1,20 +1,30 @@
-import 'package:agenda_app/src/models/response_api.dart';
 import 'package:agenda_app/src/ui/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
+import 'package:agenda_app/src/api/db.dart';
+import 'package:agenda_app/src/models/connectivity.dart';
+import 'package:agenda_app/src/models/response_api.dart';
 import 'package:agenda_app/src/models/subject.dart';
 import 'package:agenda_app/src/models/clase.dart';
 import 'package:agenda_app/src/models/user.dart';
+
 import 'package:agenda_app/src/providers/claseProvider.dart';
 
 class ClaseUpdateController extends GetxController {
 
-  Clase clase = Clase();
+  
   ClaseUpdateController(this.clase) {
+    connectivity.getConnectivity();
+    getClase();
     setClase();
+    // claseSelected.refresh();
+    // data.refresh();
   }
+
+  Clase clase = Clase();
+  Connect connectivity = Connect();
 
   User userSession = User.fromJson(GetStorage().read('user') ?? {});
 
@@ -44,8 +54,24 @@ class ClaseUpdateController extends GetxController {
 
   var value = DateTime.now().toString().obs;
 
-  void setClase() {
+  List<Clase?> claseList = <Clase?>[].obs;
+  RxList<Clase?> data = <Clase?>[].obs;
 
+  Future<List<Clase?>> getClase() async {
+
+    if ( connectivity.isConnected == true ) {
+      claseList = await claseProvider.findByUser(userSession.id ?? '');
+    } else {
+      claseList = await db.selectClase();
+    }
+
+    for ( var s in claseList ) {
+      data.add(s);
+    }
+    return claseList;
+  }
+
+  void setClase() {
     selectedBegin.value = clase.begin_hour!;
     selectedEnd.value = clase.end_hour!;
     selectedDay.value = clase.days!;

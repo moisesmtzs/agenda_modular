@@ -19,8 +19,7 @@ import 'package:agenda_app/src/api/db.dart';
 class AddSubjectController extends GetxController {
   //VERIFICAR CONEXION A INTERNET//
   bool isConnect = false; 
-  void GetConnectivity() async
-  {
+  void GetConnectivity() async{
     try { 
       final result = await InternetAddress.lookup('google.com'); 
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) 
