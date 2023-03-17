@@ -278,8 +278,6 @@ class db
 
   }
 
-  //delete all
-
   //ELIMINAR TODOS//
   static Future<int?> deleteAllClases() async {
 
@@ -290,7 +288,6 @@ class db
 
   }
 
-  
   //-------------------------------------------------------------------------------------------------------------------//
 
 
@@ -322,13 +319,8 @@ class db
     final List<Map<String, dynamic>> taskList = await database.query('tasks', where: 'id = ?', whereArgs: [idTask]);
     String? created_at = taskList[0]['created_at'];
 
-    print("hora recuperada: ");
-    print(created_at);
+    print("Fecha Recuperada: "+created_at!);
 
-    // final DateFormat displayFormater = DateFormat('yyyy-MM-dd HH:mm:ss');
-    // final DateTime displayDate = displayFormater.parse(created_at);
-    // final String formatted = displayFormater.format(displayDate);
-  
     return created_at;
 
   }
@@ -358,24 +350,26 @@ class db
   
   //INSERT//
   static Future<int?> insertTask(Task task) async {
-
+    //TRANSFORMARMOS LA FECHA DE HOY EN EL FORMATO CORRECTO//
     var today = DateTime.now().toString();
     final DateFormat displayFormater = DateFormat('yyyy-MM-dd HH:mm:ss');
     final DateTime displayDate = displayFormater.parse(today);
     final String formatted = displayFormater.format(displayDate);
-    
+
+    print("FEHCA INSERT SIN FORMATO: "+today);
+    print("FECHA INSERT CON FORMATO: "+formatted);
+
+    //INSERTAMOS EL REGISTRO EN LA BASE DE DATOS LOCAL//
     Database database = await openDB();
     
     var sql = "INSERT INTO tasks(id_user, name, description, delivery_date, subject, type, status, created_at, updated_at) VALUES ( ${task.idUser}, '${task.name}', '${task.description}', '${task.deliveryDate}', '${task.subject}', '${task.type}', '${task.status}', '$formatted', '$formatted')";
     var result = await database.rawInsert(sql);
 
-    //ALMACENAR LOS SQL//
+    //ALMACENAR EL COMANDO SQL//
     var sqTable = "INSERT INTO sql_commands values (\"${sql}\")";
-    print(sqTable);
     result = await database.rawInsert(sqTable);
     
     return result;
-
   }
 
   //INSERT//
