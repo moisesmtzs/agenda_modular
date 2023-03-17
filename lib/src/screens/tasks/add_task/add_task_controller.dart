@@ -1,3 +1,5 @@
+import 'package:agenda_app/src/screens/home/home_controller.dart';
+import 'package:agenda_app/src/screens/tasks/task_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -19,6 +21,8 @@ class AddTaskController extends GetxController {
     connectivity.getConnectivity();
     getSubjects();
     data.refresh();
+    Get.delete<TaskController>();
+    Get.delete<HomeController>();
   }
   
   Connect connectivity = Connect();
@@ -46,7 +50,7 @@ class AddTaskController extends GetxController {
     if ( connectivity.isConnected == true ) {
       subjectList = await subjectProvider.findByUser(userSession.id ?? '');
     } else {
-      subjectList = await db.selectSubject();
+      subjectList = await db.getSubjects();
     }
 
     for ( var s in subjectList ) {

@@ -72,6 +72,27 @@ class TasksProvider extends GetConnect {
 
   }
 
+  Future<Map<String, dynamic>?> getDatesById( String? idTask ) async {
+
+    try {
+      Uri _url = Uri.http(Environment.API_URL_OLD, '/api/tasks/findDates/$idTask');
+      
+      Map<String, String> headers = {
+        'Content-Type': 'application/json',
+        'Authorization': userSession.sessionToken ?? ''
+      };
+      final res = await http.get(_url, headers: headers);
+
+      final data = json.decode(res.body);
+      Map<String, dynamic> dates = data;
+      return dates;
+
+    } catch (e) {
+      return null;
+    }
+
+  }
+
 
   Future<ResponseApi?> updateTask(Task? task) async {
 

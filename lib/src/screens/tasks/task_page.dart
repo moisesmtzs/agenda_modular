@@ -103,7 +103,7 @@ class _TaskPageState extends State<TaskPage> {
             icon: const Icon(Icons.add),
             label: const Text('Agregar tarea'),
             onPressed: () {
-              taskController.goToAddTaskPage();
+              taskController.goToAddTaskPage(context);
             },
           ),
       

@@ -1,3 +1,4 @@
+import 'package:agenda_app/src/screens/screens.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -13,6 +14,7 @@ class HomeController extends GetxController {
   Connect connectivity = Connect();
 
   HomeController() {
+    print(userSession.toJson());
     connectivity.getConnectivityReplica();
   }
 
@@ -24,8 +26,10 @@ class HomeController extends GetxController {
     Get.offNamedUntil('/search', (route) => false);
   }
 
-  void goToTaskPage() {
-    Get.toNamed('/task');
+  void goToTaskPage(BuildContext context) {
+    final page = TaskPage();
+    Navigator.push(context, MaterialPageRoute(builder: (context) => page));
+    // Get.toNamed('/task');
   }
 
   void goToSchedulePage() {

@@ -389,7 +389,7 @@ class MenuPage extends GetView<MyDrawerController> {
             const SizedBox(height: 25),
             ListTile(
                 contentPadding: const EdgeInsets.symmetric(horizontal: 20),
-                onTap: () => homeController.goToTaskPage(),
+                onTap: () => homeController.goToTaskPage(context),
                 title: Text('Mis Tareas',
                     style: TextStyle(color: Colors.indigo[300], fontSize: 16)),
                 trailing:

@@ -11,7 +11,7 @@ class SyncProvider extends GetConnect {
 
   User userSession = User.fromJson(GetStorage().read('user') ?? {});
 
-  void create(Query command) async {
+  Future create(Query command) async {
     Response response = await post('$url/execute', command.toJson(),
       headers: {
         'Content-Type': 'application/json',

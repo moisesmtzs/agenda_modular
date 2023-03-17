@@ -1,4 +1,6 @@
 import 'package:agenda_app/src/api/db.dart';
+import 'package:agenda_app/src/screens/home/home_controller.dart';
+import 'package:agenda_app/src/screens/tasks/add_task/add_task_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -14,6 +16,7 @@ class TaskController extends GetxController {
 
   TaskController() {
     connectivity.getConnectivity();//esto constructor
+    Get.delete<HomeController>();
     // createReplica();
   }
 
@@ -33,8 +36,11 @@ class TaskController extends GetxController {
     this.refresh2 = refresh2;
   }
 
-  void goToAddTaskPage() {
-    Get.toNamed('/addTask');
+  void goToAddTaskPage(BuildContext context) {
+    final page = AddTaskPage();
+    Navigator.push(context, MaterialPageRoute(builder: (context) => page));
+    // Get.toNamed('/addTask');
+    // Get.delete<TaskController>();
   }
 
   void onTaskSelected(bool? checked, String idTask) {

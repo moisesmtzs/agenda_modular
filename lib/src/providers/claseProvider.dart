@@ -123,4 +123,26 @@ class ClaseProvider extends GetConnect {
     ResponseApi responseApi = ResponseApi.fromJson(response.body);
     return responseApi;
   }
+
+  Future<Map<String, dynamic>?> getDatesById( String? idClase ) async {
+
+    try {
+      Uri _url = Uri.http(Environment.API_URL_OLD, '/api/clase/findDates/$idClase');
+      
+      Map<String, String> headers = {
+        'Content-Type': 'application/json',
+        'Authorization': userSession.sessionToken ?? ''
+      };
+      final res = await http.get(_url, headers: headers);
+
+      final data = json.decode(res.body);
+      Map<String, dynamic> dates = data;
+      return dates;
+
+    } catch (e) {
+      return null;
+    }
+
+  }
+
 }

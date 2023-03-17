@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -36,7 +34,7 @@ class SubjectController extends GetxController {
     }
     else
     {
-      return await db.selectSubject();
+      return await db.getSubjects();
     }  
   }
 }

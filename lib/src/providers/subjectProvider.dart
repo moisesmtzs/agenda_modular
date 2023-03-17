@@ -110,4 +110,26 @@ class SubjectProvider extends GetConnect {
     }
 
   }
+
+  Future<Map<String, dynamic>?> getDatesById( String? idSubject ) async {
+
+    try {
+      Uri _url = Uri.http(Environment.API_URL_OLD, '/api/subject/findDates/$idSubject');
+      
+      Map<String, String> headers = {
+        'Content-Type': 'application/json',
+        'Authorization': userSession.sessionToken ?? ''
+      };
+      final res = await http.get(_url, headers: headers);
+
+      final data = json.decode(res.body);
+      Map<String, dynamic> dates = data;
+      return dates;
+
+    } catch (e) {
+      return null;
+    }
+
+  }
+
 }

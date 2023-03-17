@@ -49,7 +49,7 @@ class TaskUpdateController extends GetxController {
     if ( connectivity.isConnected == true ) {
       subjectList = await subjectProvider.findByUser(userSession.id ?? '');
     } else {
-      subjectList = await db.selectSubject();
+      subjectList = await db.getSubjects();
     }
 
     for ( var s in subjectList ) {
