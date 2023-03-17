@@ -50,9 +50,6 @@ class db
         await db.execute(
           "CREATE TABLE sql_commands (command TEXT)"
         );
-
-        
-
       }, version: 1);
   }
 
@@ -319,8 +316,6 @@ class db
     final List<Map<String, dynamic>> taskList = await database.query('tasks', where: 'id = ?', whereArgs: [idTask]);
     String? created_at = taskList[0]['created_at'];
 
-    print("Fecha Recuperada: "+created_at!);
-
     return created_at;
 
   }
@@ -375,6 +370,11 @@ class db
   //INSERT//
   static Future<int?> insertTaskSync(Task task) async {
     
+    /*
+      OBSERVACIONES:
+        - LA FECHA CON LA QUE SE GUARDA LA REPLICA DE LA INFORMACION DEBE SER LA ORIGINAL Y NO LA ACTUAL
+          * POSIBLE SOLUCION: CREAR METODO EN LA API PARA OBTENER CREATED_AT Y UPDATED_AT POR ID
+    */
     var today = DateTime.now().toString();
     final DateFormat displayFormater = DateFormat('yyyy-MM-dd HH:mm:ss');
     final DateTime displayDate = displayFormater.parse(today);
@@ -385,30 +385,37 @@ class db
     var sql = "INSERT INTO tasks(id, id_user, name, description, delivery_date, subject, type, status, created_at, updated_at) VALUES ( ${task.id}, ${task.idUser}, '${task.name}', '${task.description}', '${task.deliveryDate}', '${task.subject}', '${task.type}', '${task.status}', '$formatted', '$formatted')";
     
     var result = await database.rawInsert(sql);
+
+    print("REPLICA: "+sql);
     
     return result;
 
   }
 
   static Future<int?> updateTask(Task task) async {
-
+    /*
+      OBSERVACIONES:
+        - MANTENER PERSISTENCIA DE LA FECHA DE CREACION ENTRE LA BASE DE DATOS GLOBAL Y LA REPLICA
+    */
     var today = DateTime.now().toString();
-    print(today);
+
     final DateFormat displayFormater = DateFormat('yyyy-MM-dd HH:mm:ss');
     final DateTime displayDate = displayFormater.parse(today);
     final String formatted = displayFormater.format(displayDate);
+
+    print("FECHA DE ACTUALIZACION SIN FORMATO: "+today);
+    print("FECHA DE ACTUALIZACION CON FORMATO: "+formatted);
 
     Database database = await openDB();
 
     var sqlBase = "UPDATE tasks SET name = '${task.name}', description = '${task.description}', delivery_date = '${task.deliveryDate}', subject = '${task.subject}', type = '${task.type}', status = '${task.status}', updated_at = '$formatted' WHERE id_user = ${task.idUser}";
 
     var sql = sqlBase + " and id = ${task.id} ";
-
     var result = await database.rawUpdate(sql);
 
     String? createdAt = await getOneTask(task.id);
 
-    print(createdAt);
+    print("FECHA DE CREACION OBTENIDA: "+createdAt!);
 
     var sqlSync = sqlBase + " and created_at = $createdAt";
     var sqlReplica = "INSERT INTO sql_commands values (\"$sqlSync\")";
@@ -522,7 +529,7 @@ class db
   void createReplica() async
   {
 
-      print("Generando replica");
+      print("INICIANDO REPLICA");
 
       //PROVIDERS//
       TasksProvider tasksProvider = TasksProvider();
@@ -563,17 +570,19 @@ class db
     List<Clase?> clases = [];
       clases = await claseProvider.findByUser(userSession.id ?? '0');//aquiii
 
-      for(int i = 0; i < subjects.length; i++)
+      for(int i = 0; i < clases.length; i++)
       {
         db.insertClaseSync(clases[i]!);
       }
+
+    print("REPLICA FINALIZADA");
   }
   //-------------------------------------------------------------------------------------------------------------------//
 
   //------------------------------------------------ <SINCRONIZACION> -------------------------------------------------//
   void createSync() async
   {
-      print("Realizando Sincronización...");
+      print("INICIA LA SINCRONIZACION");
 
       //PROVIDERS//
       SyncProvider syncProvider = SyncProvider();
@@ -589,6 +598,8 @@ class db
       }
 
       db.clearAll();
+
+      print("SINCRONIZACION FINALIZADA");
       
 
   }
