@@ -54,8 +54,7 @@ class ClaseProvider extends GetConnect {
 
       final data = json.decode(res.body);
       Clase clase = Clase.fromJsonList(data); //recuperamos los datos
-      return clase
-          .toList; //retornamos los datos y los regresamos como una lista
+      return clase.toList; 
     } catch (e) {
       return [];
     }

@@ -190,14 +190,11 @@ class SubjectDetailPage extends StatelessWidget {
   }
 
   Widget _claseText(Clase? clase,BuildContext context) {
-    late var beginHour =
-        DateFormat("HH:mm").format(DateTime.parse(clase?.begin_hour ?? ''));
-    late var endHour =
-        DateFormat("HH:mm").format(DateTime.parse(clase?.end_hour ?? ''));
+    late var beginHour = DateFormat("HH:mm").format(DateTime.parse(clase?.begin_hour ?? ''));
+    late var endHour = DateFormat("HH:mm").format(DateTime.parse(clase?.end_hour ?? ''));
     late var day = clase?.days;
     late var classroom = clase?.classroom;
     late var building = clase?.building;
-
 
     return Column(
 

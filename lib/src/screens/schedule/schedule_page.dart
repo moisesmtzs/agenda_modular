@@ -3,39 +3,60 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:agenda_app/src/screens/schedule/schedule_controller.dart';
+import 'package:agenda_app/src/screens/clase/detail/clase_detail_controller.dart';
+
+import 'package:agenda_app/src/models/clase.dart';
 
 class SchedulePage extends StatelessWidget {
-  const SchedulePage({Key? key}) : super(key: key);
+  final ScheduleController _scheduleController =
+      Get.put(ScheduleController()); //para buscar las clases
+  var id = "6";
+
+  late Clase? id_subject; //para asignarlos a cada una de las horas del schedule
+  late Clase? begin_hour;
+  late Clase? end_hour;
+  late Clase? days;
+  late Clase? classroom;
+  late Clase? building;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Mi horario"),
-      ),
+        appBar: AppBar(
+          title: const Text("Mi horario"),
+        ),
         body: SfCalendar(
           view: CalendarView.week,
           dataSource: MeetingDataSource(_getDataSource()),
           monthViewSettings: const MonthViewSettings(
               appointmentDisplayMode: MonthAppointmentDisplayMode.appointment),
-        )
-    );
+        ));
   }
 
   List<Meeting> _getDataSource() {
+    Future<List<Clase?>> clases = _scheduleController.getClasesByUser(id); //aqui obtenemos la lista de los datos
+    print(clases);
+    // int size = clases.length;
+
+
     final List<Meeting> meetings = <Meeting>[];
     final DateTime today = DateTime.now();
     final DateTime startTime = DateTime(today.year, today.month, today.day, 9);
     final DateTime endTime = startTime.add(const Duration(hours: 2));
-    meetings.add(Meeting(
-        'Conference', startTime, endTime,AppColors.colors.inversePrimary, false));
-    return meetings;  // 01/01/01 07:00:00   -> 01/01/23  begin_hour + :00 
-                      // 01/01/01 07:00:00   -> 01/01/23  end_hour + :00 
+
+
+    // for (Clase clase in clases.){
+
+    // }
+
+    meetings.add(Meeting('Conference', startTime, endTime,
+        AppColors.colors.inversePrimary, false));
+    return meetings; // 01/01/01 07:00:00   -> 01/01/23  begin_hour + :00
+    // 01/01/01 07:00:00   -> 01/01/23  end_hour + :00
   }
 }
 
 class MeetingDataSource extends CalendarDataSource {
-
   MeetingDataSource(List<Meeting> source) {
     appointments = source;
   }
