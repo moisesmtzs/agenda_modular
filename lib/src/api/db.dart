@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:agenda_app/src/models/query.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 //MODELOS//
 import 'package:agenda_app/src/models/subject.dart';
@@ -319,7 +320,14 @@ class db
     Database database = await openDB();
 
     final List<Map<String, dynamic>> taskList = await database.query('tasks', where: 'id = ?', whereArgs: [idTask]);
-    var created_at = taskList[0]['created_at'].toString();
+    String? created_at = taskList[0]['created_at'];
+
+    print("hora recuperada: ");
+    print(created_at);
+
+    // final DateFormat displayFormater = DateFormat('yyyy-MM-dd HH:mm:ss');
+    // final DateTime displayDate = displayFormater.parse(created_at);
+    // final String formatted = displayFormater.format(displayDate);
   
     return created_at;
 
@@ -350,17 +358,20 @@ class db
   
   //INSERT//
   static Future<int?> insertTask(Task task) async {
+
+    var today = DateTime.now().toString();
+    final DateFormat displayFormater = DateFormat('yyyy-MM-dd HH:mm:ss');
+    final DateTime displayDate = displayFormater.parse(today);
+    final String formatted = displayFormater.format(displayDate);
     
     Database database = await openDB();
     
-    var today = DateTime.now().toString();
-    
-    var sql = "INSERT INTO tasks(id_user, name, description, delivery_date, subject, type, status, created_at, updated_at) VALUES ( ${task.idUser}, '${task.name}', '${task.description}', '${task.deliveryDate}', '${task.subject}', '${task.type}', '${task.status}', '$today', '$today')";
-    print(sql);
+    var sql = "INSERT INTO tasks(id_user, name, description, delivery_date, subject, type, status, created_at, updated_at) VALUES ( ${task.idUser}, '${task.name}', '${task.description}', '${task.deliveryDate}', '${task.subject}', '${task.type}', '${task.status}', '$formatted', '$formatted')";
     var result = await database.rawInsert(sql);
 
     //ALMACENAR LOS SQL//
     var sqTable = "INSERT INTO sql_commands values (\"${sql}\")";
+    print(sqTable);
     result = await database.rawInsert(sqTable);
     
     return result;
@@ -370,12 +381,15 @@ class db
   //INSERT//
   static Future<int?> insertTaskSync(Task task) async {
     
+    var today = DateTime.now().toString();
+    final DateFormat displayFormater = DateFormat('yyyy-MM-dd HH:mm:ss');
+    final DateTime displayDate = displayFormater.parse(today);
+    final String formatted = displayFormater.format(displayDate);
+
     Database database = await openDB();
     
-    var today = DateTime.now().toString();
+    var sql = "INSERT INTO tasks(id, id_user, name, description, delivery_date, subject, type, status, created_at, updated_at) VALUES ( ${task.id}, ${task.idUser}, '${task.name}', '${task.description}', '${task.deliveryDate}', '${task.subject}', '${task.type}', '${task.status}', '$formatted', '$formatted')";
     
-    var sql = "INSERT INTO tasks(id, id_user, name, description, delivery_date, subject, type, status, created_at, updated_at) VALUES ( ${task.id}, ${task.idUser}, '${task.name}', '${task.description}', '${task.deliveryDate}', '${task.subject}', '${task.type}', '${task.status}', '$today', '$today')";
-    print(sql);
     var result = await database.rawInsert(sql);
     
     return result;
@@ -384,41 +398,54 @@ class db
 
   static Future<int?> updateTask(Task task) async {
 
+    var today = DateTime.now().toString();
+    print(today);
+    final DateFormat displayFormater = DateFormat('yyyy-MM-dd HH:mm:ss');
+    final DateTime displayDate = displayFormater.parse(today);
+    final String formatted = displayFormater.format(displayDate);
+
     Database database = await openDB();
 
-    var today = DateTime.now().toString();
+    var sqlBase = "UPDATE tasks SET name = '${task.name}', description = '${task.description}', delivery_date = '${task.deliveryDate}', subject = '${task.subject}', type = '${task.type}', status = '${task.status}', updated_at = '$formatted' WHERE id_user = ${task.idUser}";
 
-    var sqlBase = "UPDATE tasks SET name = '${task.name}', description = '${task.description}', delivery_date = '${task.deliveryDate}', subject = '${task.subject}', type = '${task.type}', status = '${task.status}', updated_at = '$today' WHERE id_user = ${task.idUser}";
-
-    var sql = sqlBase + "and id = ${task.id} ";
+    var sql = sqlBase + " and id = ${task.id} ";
 
     var result = await database.rawUpdate(sql);
 
-    var sqlSync = sqlBase + " and create_at = $today";//LINEA EDITADA POR FARFAN
-    var sqlReplica = "INSERT INTO sql_commands values (\"${sqlSync}\")";
-    var resultSync = await database.rawInsert(sqlReplica);
+    String? createdAt = await getOneTask(task.id);
+
+    print(createdAt);
+
+    var sqlSync = sqlBase + " and created_at = $createdAt";
+    var sqlReplica = "INSERT INTO sql_commands values (\"$sqlSync\")";
+
+    await database.rawInsert(sqlReplica);
 
     return result;
 
   }
 
-  //UPDATE//
   static Future<int?> updateTaskStatus(String idTask, String status) async {
+
+    var today = DateTime.now().toString();
+    final DateFormat displayFormater = DateFormat('yyyy-MM-dd HH:mm:ss');
+    final DateTime displayDate = displayFormater.parse(today);
+    final String formatted = displayFormater.format(displayDate);
 
     Database database = await openDB();
 
-    var today = DateTime.now().toString();
+    var sqlBase = "UPDATE tasks SET status = '$status', updated_at = '$formatted' WHERE id_user = ${db().userSession.id}";
 
-    var sqlBase = "UPDATE tasks SET status = '$status', updated_at = '$today' WHERE id_user = ${db().userSession.id}";
-
-    var sql = sqlBase+" and id = $idTask";
+    var sql = sqlBase + " and id = $idTask";
 
     var result = await database.rawUpdate(sql);
 
-    //ALMACENAR LOS SQL//
-    var sqlSync = sqlBase + " and updated_at = $today";
-    var sqlReplica = "INSERT INTO sql_commands values (\"${sqlSync}\")";
-    var resultSync = await database.rawInsert(sqlReplica);
+    String? createdAt = await getOneTask(idTask);
+
+    var sqlSync = sqlBase + " and created_at = $createdAt";
+    var sqlReplica = "INSERT INTO sql_commands values (\"$sqlSync\")";
+    
+    await database.rawInsert(sqlReplica);
 
     return result;
 
@@ -431,9 +458,9 @@ class db
 
     var sqlBase = "DELETE FROM tasks WHERE id_user = ${task!.idUser}";
 
-    var sql = sqlBase + "and id = ${task.id} ";
+    var sql = sqlBase + " and id = ${task.id} ";
 
-    Future<String?> oldTaskCreated = getOneTask(task.id);
+    String? oldTaskCreated = await getOneTask(task.id);
     
     var result = await database.rawDelete(sql);
   
@@ -475,7 +502,7 @@ class db
   static Future<List<Query>> getAllCommands() async
   {
     Database database = await openDB();
-    List<String> sCommands = [];
+
     final List<Map<String, dynamic>> commandsList = await database.query('sql_commands');
 
     return List.generate(commandsList.length, (i) => Query(
