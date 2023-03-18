@@ -8,16 +8,7 @@ import 'package:agenda_app/src/screens/clase/detail/clase_detail_controller.dart
 import 'package:agenda_app/src/models/clase.dart';
 
 class SchedulePage extends StatelessWidget {
-  final ScheduleController _scheduleController =
-      Get.put(ScheduleController()); //para buscar las clases
-  var id = "6";
-
-  late Clase? id_subject; //para asignarlos a cada una de las horas del schedule
-  late Clase? begin_hour;
-  late Clase? end_hour;
-  late Clase? days;
-  late Clase? classroom;
-  late Clase? building;
+  final ScheduleController _scheduleController = Get.put(ScheduleController());
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +18,11 @@ class SchedulePage extends StatelessWidget {
         ),
         body: SfCalendar(
           view: CalendarView.week,
+          timeZone: 'Pacific Standard Time (Mexico)',
+          timeSlotViewSettings:
+              TimeSlotViewSettings(dateFormat: 'd', dayFormat: 'EEE'),
+          showWeekNumber: false,
+          selectionDecoration: BoxDecoration(color: Colors.transparent),
           dataSource: MeetingDataSource(_getDataSource()),
           monthViewSettings: const MonthViewSettings(
               appointmentDisplayMode: MonthAppointmentDisplayMode.appointment),
@@ -34,25 +30,23 @@ class SchedulePage extends StatelessWidget {
   }
 
   List<Meeting> _getDataSource() {
-    Future<List<Clase?>> clases = _scheduleController.getClasesByUser(id); //aqui obtenemos la lista de los datos
-    print(clases);
-    // int size = clases.length;
 
+    _scheduleController.main(); //en esta funcion pretendo regresar las clases
+    List<List<String>> lista = _scheduleController.clases;
+    Future<List<Clase?>> clases = _scheduleController.getClasesByUser('6');
 
-    final List<Meeting> meetings = <Meeting>[];
-    final DateTime today = DateTime.now();
-    final DateTime startTime = DateTime(today.year, today.month, today.day, 9);
-    final DateTime endTime = startTime.add(const Duration(hours: 2));
-
-
-    // for (Clase clase in clases.){
-
+    //print(lista);
+    // for (int i = 0; i < lista.length; i++) {
+    //   print("Clase: ${lista[i]}");
     // }
 
-    meetings.add(Meeting('Conference', startTime, endTime,
-        AppColors.colors.inversePrimary, false));
-    return meetings; // 01/01/01 07:00:00   -> 01/01/23  begin_hour + :00
-    // 01/01/01 07:00:00   -> 01/01/23  end_hour + :00
+    final List<Meeting> meetings = <Meeting>[];
+    final DateTime startTime = DateTime(DateTime.now().year, 01, 01, 9);
+    final DateTime endTime = startTime.add(const Duration(hours: 2));
+
+    meetings.add(Meeting('Matematicas',DateTime(DateTime.now().year, 01, 01, 9),endTime,AppColors.colors.inversePrimary,false,'FREQ=DAILY;INTERVAL=7;COUNT=52'));
+
+    return meetings;
   }
 }
 
@@ -74,6 +68,11 @@ class MeetingDataSource extends CalendarDataSource {
   @override
   String getSubject(int index) {
     return _getMeetingData(index).eventName;
+  }
+
+  @override
+  String? getRecurrenceRule(int index) {
+    return _getMeetingData(index).recurrenceRule;
   }
 
   @override
@@ -101,7 +100,8 @@ class MeetingDataSource extends CalendarDataSource {
 /// information about the event data which will be rendered in calendar.
 class Meeting {
   /// Creates a meeting class with required details.
-  Meeting(this.eventName, this.from, this.to, this.background, this.isAllDay);
+  Meeting(this.eventName, this.from, this.to, this.background, this.isAllDay,
+      this.recurrenceRule);
 
   /// Event name which is equivalent to subject property of [Appointment].
   String eventName;
@@ -117,4 +117,7 @@ class Meeting {
 
   /// IsAllDay which is equivalent to isAllDay property of [Appointment].
   bool isAllDay;
+
+  /// Para repetir todas las semanas la misma clase [Appointment].
+  String recurrenceRule;
 }

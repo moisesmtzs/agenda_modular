@@ -44,7 +44,7 @@ class db
         );
 
         await db.execute(
-          "CREATE TABLE clase (id INTEGER PRIMARY KEY, id_user INTEGER, id_subject INTEGER, begin_hour TEXT, end_hour TEXT, days TEXT, clasroom TEXT, building TEXT, created_at TEXT, updated_at TEXT)"
+          "CREATE TABLE clase (id INTEGER PRIMARY KEY, id_user INTEGER, id_subject INTEGER, begin_hour TEXT, end_hour TEXT, days TEXT, classroom TEXT, building TEXT, created_at TEXT, updated_at TEXT)"
         );
 
         await db.execute(
