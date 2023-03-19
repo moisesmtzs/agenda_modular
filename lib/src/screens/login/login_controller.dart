@@ -48,8 +48,7 @@ class LoginController extends GetxController {
 
       isEnable.value = false;
 
-      //GENERA REPLICA AL CREAR UN NUEVO REGISTRO//
-      connectivity.getConnectivityReplica();
+      await connectivity.getConnectivity();
 
       if(connectivity.isConnected == true)
       { 
@@ -58,6 +57,8 @@ class LoginController extends GetxController {
         if ( responseApi?.success == true ) {
 
           GetStorage().write('user', responseApi?.data);
+          //GENERA REPLICA AL CREAR UN NUEVO REGISTRO//
+          await connectivity.getConnectivityReplica();
           Get.offNamedUntil('/home', (route) => false);
 
         } else {
