@@ -26,9 +26,9 @@ class HomeController extends GetxController {
   }
 
   void goToTaskPage(BuildContext context) {
-    final page = TaskPage();
-    Navigator.push(context, MaterialPageRoute(builder: (context) => page));
-    // Get.toNamed('/task');
+    // final page = TaskPage();
+    // Navigator.push(context, MaterialPageRoute(builder: (context) => page));
+    Get.toNamed('/task');
   }
 
   void goToSchedulePage() {

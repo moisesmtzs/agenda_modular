@@ -333,7 +333,7 @@ class MenuPage extends GetView<MyDrawerController> {
                 children: [
                   Container(
                     alignment: Alignment.topLeft,
-                    height: 60,
+                    height: 50,
                     margin: const EdgeInsets.only(top: 10),
                     child: AspectRatio(
                       aspectRatio: 1 / 1,
@@ -352,30 +352,26 @@ class MenuPage extends GetView<MyDrawerController> {
                     )
                   ),
                   const SizedBox(height: 15),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        homeController.userSession.name ?? 'Moises',
-                        style: TextStyle(
-                          fontSize: 24.0,
-                          color: Colors.indigo[300],
-                          fontWeight: FontWeight.bold
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      // const SizedBox(height: 5),
-                      Text(
-                        homeController.userSession.email ?? 'Correo',
-                        style: TextStyle(
-                            fontSize: 14.0,
-                            color: Colors.indigo[200],
-                            fontWeight: FontWeight.bold),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
+                  Text(
+                    homeController.userSession.name ?? 'Moises',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 24.0,
+                      color: Colors.indigo[300],
+                      fontWeight: FontWeight.bold
+                    ),
+                  ),
+                  // const SizedBox(height: 5),
+                  Text(
+                    homeController.userSession.email ?? 'Correo',
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    style: TextStyle(
+                      fontSize: 14.0,
+                      color: Colors.indigo[200],
+                      fontWeight: FontWeight.bold
+                    ),
                   ),
                 ],
               )

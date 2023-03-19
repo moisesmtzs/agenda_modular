@@ -35,8 +35,8 @@ class AddTaskController extends GetxController {
   TasksProvider tasksProvider = TasksProvider();
   SubjectProvider subjectProvider = SubjectProvider();
 
-  TextEditingController nameController = TextEditingController();
-  TextEditingController descriptionController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
 
   var value = DateTime.now().toString().obs;
   DateTime _selectedDate = DateTime.now();

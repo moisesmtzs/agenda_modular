@@ -41,10 +41,10 @@ class TaskController extends GetxController {
   }
 
   void goToAddTaskPage(BuildContext context) {
-    final page = AddTaskPage();
-    Navigator.push(context, MaterialPageRoute(builder: (context) => page));
-    // Get.toNamed('/addTask');
-    // Get.delete<TaskController>();
+    // final page = AddTaskPage();
+    // Navigator.push(context, MaterialPageRoute(builder: (context) => page));
+    Get.toNamed('/addTask');
+    Get.delete<TaskController>();
   }
 
   void onTaskSelected(bool? checked, String idTask) async {
@@ -138,7 +138,7 @@ class TaskController extends GetxController {
   
   Future<List<Task?>> getTasks(String status) async {
     List<Task?> tasks = [];
-    await validarInternet();
+    // await validarInternet();
     if ( connectivity.isConnected == true ) {
       return tasks = await _tasksProvider.getByUserAndStatus(userSession.id ?? '0', status);
     } else {
