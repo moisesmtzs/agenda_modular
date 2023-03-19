@@ -9,12 +9,6 @@ class AddTaskPage extends StatelessWidget{
   final AddTaskController _controller = Get.put(AddTaskController());
 
   @override
-  void dispose() {
-    _controller.nameController.dispose();
-    _controller.descriptionController.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Hero(
       tag: 'openAddTaskPage',

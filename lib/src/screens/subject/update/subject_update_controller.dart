@@ -18,6 +18,12 @@ class SubjectUpdateController extends GetxController {
     setSubject();
   }
 
+  //VALIDAR QUE EXISTE UNA CONEXION A INTERNET//
+  Future validarInternet() async
+  {
+    await connectivity.getConnectivity();
+  }
+
   Subject subject = Subject();
   Connect connectivity = Connect();
 
@@ -47,6 +53,9 @@ class SubjectUpdateController extends GetxController {
       subject.name = name;
       subject.subject_code = subject_code;
       subject.professor_name = professor_name;
+
+      //GENERA LA REPLICA AL ELIMINAR UN REGISTRO//
+      await connectivity.getConnectivityReplica();
 
       if ( connectivity.isConnected == true ) {
         ResponseApi? responseApi = await subjectProvider.updateSubject(subject);

@@ -15,7 +15,6 @@ class HomeController extends GetxController {
 
   HomeController() {
     print(userSession.toJson());
-    connectivity.getConnectivityReplica();
   }
 
   void goToUpdatePage() {

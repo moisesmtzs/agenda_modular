@@ -9,37 +9,24 @@ import 'package:agenda_app/src/providers/usersProvider.dart';
 import 'package:agenda_app/src/ui/app_colors.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
+import '../../models/connectivity.dart';
+
 class LoginController extends GetxController {
 
   LoginController()
   {
-    GetConnectivity();
+    connectivity.getConnectivity();
   }
 
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  Connect connectivity = Connect();
   
   UsersProvider usersProvider = UsersProvider();
 
   var isEnable = true.obs;
   var obscureText = true.obs;
   var isLoading = false.obs;
-
-  //VERIFICAR CONEXION A INTERNET//
-  void GetConnectivity() async
-  {
-    try { 
-      final result = await InternetAddress.lookup('google.com'); 
-      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) 
-      { 
-        print('CONECTADO'); 
-        Get.snackbar("CON CONEXION","CONECTADO A INTERNET");
-      }
-    } on SocketException catch (_) { 
-        print('SIN CONEXION'); 
-        Get.snackbar("SIN CONEXION","CONECTATE A INTERNET");
-    }  
-  }
 
   void goToRegisterPage() {
 
@@ -60,22 +47,32 @@ class LoginController extends GetxController {
     if (isValidForm(email, password) ) {
 
       isEnable.value = false;
-      
-      ResponseApi? responseApi = await usersProvider.login(email, password);
 
-      if ( responseApi?.success == true ) {
+      //GENERA REPLICA AL CREAR UN NUEVO REGISTRO//
+      connectivity.getConnectivityReplica();
 
-        GetStorage().write('user', responseApi?.data);
-        Get.offNamedUntil('/home', (route) => false);
+      if(connectivity.isConnected == true)
+      { 
+        ResponseApi? responseApi = await usersProvider.login(email, password);
 
-      } else {
-        isEnable.value = true;
-        Get.snackbar(
-          'Sesión fallida', 
-          responseApi?.message ?? '',
-          backgroundColor: AppColors.colors.errorContainer,
-          colorText: AppColors.colors.onErrorContainer
-        );
+        if ( responseApi?.success == true ) {
+
+          GetStorage().write('user', responseApi?.data);
+          Get.offNamedUntil('/home', (route) => false);
+
+        } else {
+          isEnable.value = true;
+          Get.snackbar(
+            'Sesión fallida', 
+            responseApi?.message ?? '',
+            backgroundColor: AppColors.colors.errorContainer,
+            colorText: AppColors.colors.onErrorContainer
+          );
+        }
+      }
+      else
+      {
+        Get.snackbar("No ha sido posible conectarse al Servidor", "Sin conexion a Internet");
       }
     }
   }

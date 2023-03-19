@@ -18,11 +18,14 @@ import 'package:agenda_app/src/ui/app_colors.dart';
 class AddTaskController extends GetxController {
 
   AddTaskController() {
-    connectivity.getConnectivity();
     getSubjects();
     data.refresh();
-    Get.delete<TaskController>();
-    Get.delete<HomeController>();
+  }
+
+  //VALIDAR QUE EXISTE UNA CONEXION A INTERNET//
+  Future validarInternet() async
+  {
+    await connectivity.getConnectivity();
   }
   
   Connect connectivity = Connect();
@@ -46,7 +49,7 @@ class AddTaskController extends GetxController {
   var subjectSelected = ''.obs;
 
   Future<List<Subject?>> getSubjects() async {
-
+    await validarInternet();
     if ( connectivity.isConnected == true ) {
       subjectList = await subjectProvider.findByUser(userSession.id ?? '');
     } else {
@@ -68,7 +71,7 @@ class AddTaskController extends GetxController {
     String type = typeSelected.string;
 
     if ( isValidForm(name, description, date, subject, type) ) {
-
+      
       // isEnable.value = false;
 
       Task task = Task(
@@ -79,6 +82,9 @@ class AddTaskController extends GetxController {
         subject: subject,
         type: type
       );
+
+      //GENERA REPLICA AL CREAR UN NUEVO REGISTRO//
+      connectivity.getConnectivityReplica();
 
       if ( connectivity.isConnected == true ) {
 

@@ -653,6 +653,8 @@ class db
         await syncProvider.create(command[i]);
       }
 
+      print(" <<<< SE SINCRONIZARON "+command.length.toString()+" COMANDOS. >>>>");
+
       db.clearAll();
 
       print("SINCRONIZACION FINALIZADA");

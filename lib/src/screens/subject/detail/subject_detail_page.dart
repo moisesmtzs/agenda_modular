@@ -76,7 +76,7 @@ class SubjectDetailPage extends StatelessWidget {
                 color: AppColors.colors.primary,
                 onPressed: () {
                   _subjectDetailController.confirmationDialog(
-                      context, subject?.id ?? '0');
+                      context, subject!);
                 },
               ),
             ],

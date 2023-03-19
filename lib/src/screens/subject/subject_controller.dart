@@ -23,13 +23,21 @@ class SubjectController extends GetxController {
     connectivity.getConnectivity();
   }
 
+  //VALIDAR QUE EXISTE UNA CONEXION A INTERNET//
+  Future validarInternet() async
+  {
+    await connectivity.getConnectivity();
+  }
+
   void goToAddSubject() {
     Get.toNamed('/addSubject');
   }
 
   Future<List<Subject?>> getSubjects() async {
+    await validarInternet();
     if(connectivity.isConnected == true)
     {
+      await connectivity.getConnectivityReplica();
       return await _subjectProvider.findByUser(userSession.id ?? '0');
     }
     else

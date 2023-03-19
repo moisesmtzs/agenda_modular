@@ -23,6 +23,12 @@ class TaskUpdateController extends GetxController {
     data.refresh();
   }
 
+  //VALIDAR QUE EXISTE UNA CONEXION A INTERNET//
+  Future validarInternet() async
+  {
+    await connectivity.getConnectivity();
+  }
+
   Task task = Task();
   Connect connectivity = Connect();
 
@@ -45,7 +51,7 @@ class TaskUpdateController extends GetxController {
   DateTime _selectedDate = DateTime.now();
 
   Future<List<Subject?>> getSubjects() async {
-
+    await validarInternet();
     if ( connectivity.isConnected == true ) {
       subjectList = await subjectProvider.findByUser(userSession.id ?? '');
     } else {
@@ -82,6 +88,9 @@ class TaskUpdateController extends GetxController {
       task.deliveryDate = date;
       task.subject = subject;
       task.type = type;
+
+      //GENERA LA REPLICA AL ACTUALIZAR UN REGISTRO//
+      await connectivity.getConnectivityReplica();
 
       if ( connectivity.isConnected == true ) {
         ResponseApi? responseApi = await tasksProvider.updateTask(task);

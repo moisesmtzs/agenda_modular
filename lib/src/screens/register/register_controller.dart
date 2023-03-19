@@ -7,6 +7,8 @@ import 'package:agenda_app/src/models/response_api.dart';
 import 'package:agenda_app/src/providers/usersProvider.dart';
 import 'package:agenda_app/src/ui/app_colors.dart';
 
+import '../../models/connectivity.dart';
+
 class RegisterController extends GetxController {
 
   TextEditingController nameController = TextEditingController();
@@ -17,6 +19,8 @@ class RegisterController extends GetxController {
   TextEditingController confirmPasswordController = TextEditingController();
 
   UsersProvider usersProvider = UsersProvider();
+
+  Connect connectivity = Connect();
 
   var isEnable = true.obs;
   var isLoading = false.obs;
@@ -34,6 +38,9 @@ class RegisterController extends GetxController {
 
     if ( isValidForm(name, lastName, phone, email, password, confirmPassword) ) {
 
+      //VERIFICAR CONEXION A INTERNET//
+      await connectivity.getConnectivity();
+
       isEnable.value = false;
 
       User user = User(
@@ -44,22 +51,29 @@ class RegisterController extends GetxController {
         password: password
       );
       
-      ResponseApi? responseApi = await usersProvider.create(user);
+      if(connectivity.isConnected==true)
+      {
+        ResponseApi? responseApi = await usersProvider.create(user);
 
-      if (responseApi?.success == true) {
-        Get.snackbar(responseApi?.message ?? '', 'Inicia sesión');
-        Future.delayed(const Duration(milliseconds: 1000), () {
-          Get.offNamed('/');
-        });
-      } else {
-        Get.snackbar(
-          'Datos no válidos',
-          responseApi?.message ?? '',
-          backgroundColor: AppColors.colors.errorContainer,
-          colorText: AppColors.colors.onErrorContainer
-        );
-        isEnable.value = true;
-        isEnable.refresh();
+        if (responseApi?.success == true) {
+          Get.snackbar(responseApi?.message ?? '', 'Inicia sesión');
+          Future.delayed(const Duration(milliseconds: 1000), () {
+            Get.offNamed('/');
+          });
+        } else {
+          Get.snackbar(
+            'Datos no válidos',
+            responseApi?.message ?? '',
+            backgroundColor: AppColors.colors.errorContainer,
+            colorText: AppColors.colors.onErrorContainer
+          );
+          isEnable.value = true;
+          isEnable.refresh();
+        }
+      }
+      else
+      {
+        Get.snackbar('No ha sido posible conectarse al Servidor', 'Sin conexion a Internet"');
       }
 
     }

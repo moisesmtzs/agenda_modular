@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
+import 'package:agenda_app/src/api/db.dart';
 import 'package:agenda_app/src/models/user.dart';
 import 'package:agenda_app/src/models/response_api.dart';
 import 'package:agenda_app/src/providers/subjectProvider.dart';
@@ -9,8 +10,12 @@ import 'package:agenda_app/src/providers/claseProvider.dart';
 import 'package:agenda_app/src/models/clase.dart';
 import 'package:agenda_app/src/ui/app_colors.dart';
 
+import '../../../models/connectivity.dart';
+import '../../../models/subject.dart';
+
 class SubjectDetailController extends GetxController {
   User userSession = User.fromJson(GetStorage().read('user') ?? {});
+  Connect connectivity = Connect();
 
   final SubjectProvider _subjectProvider = SubjectProvider();
 
@@ -18,20 +23,40 @@ class SubjectDetailController extends GetxController {
     Get.toNamed('/clase');
   }
 
-  void delete(String idSubject) async {
-    ResponseApi? responseApi = await _subjectProvider.deleteSubject(idSubject);
-    if (responseApi?.success == true) {
-      Get.snackbar(responseApi?.message ?? '', '',
-          backgroundColor: AppColors.colors.secondary,
-          colorText: AppColors.colors.onSecondary);
-    } else {
-      Get.snackbar('No se eliminó la materia', responseApi?.message ?? '',
-          backgroundColor: AppColors.colors.errorContainer,
-          colorText: AppColors.colors.onErrorContainer);
-    }
+  SubjectDetailController()
+  {
+    connectivity.getConnectivity();
   }
 
-  void confirmationDialog(BuildContext context, String idTask) {
+  //VALIDAR QUE EXISTE UNA CONEXION A INTERNET//
+  Future validarInternet() async
+  {
+    await connectivity.getConnectivity();
+  }
+
+  void delete(Subject subject) async {
+    //GENERA LA REPLICA AL ELIMINAR UN REGISTRO//
+    await connectivity.getConnectivityReplica();
+
+    if ( connectivity.isConnected == true ) {
+      ResponseApi? responseApi = await _subjectProvider.deleteSubject(subject.id);
+      if (responseApi?.success == true) {
+        Get.snackbar(responseApi?.message ?? '', '',
+            backgroundColor: AppColors.colors.secondary,
+            colorText: AppColors.colors.onSecondary);
+      } else {
+        Get.snackbar('No se eliminó la materia', responseApi?.message ?? '',
+            backgroundColor: AppColors.colors.errorContainer,
+            colorText: AppColors.colors.onErrorContainer);
+      }
+    }
+    else
+    {
+      await db.deleteSubject(subject);
+    } 
+  }
+
+  void confirmationDialog(BuildContext context, Subject task) {
     Widget cancelButton = TextButton(
       child: const Text('Cancelar'),
       onPressed: () {
@@ -42,7 +67,7 @@ class SubjectDetailController extends GetxController {
     Widget continueButton = TextButton(
       child: const Text('Confirmar'),
       onPressed: () {
-        delete(idTask);
+        delete(task);
         Get.back();
         Get.back();
       },
@@ -68,7 +93,18 @@ class SubjectDetailController extends GetxController {
   
 
   Future<List<Clase?>> getClasesBySubject(String idSubject) async {
-    return await _claseProvider.findByUserAndSubject(
-        userSession.id ?? '0', idSubject);
+    //GENERA LA REPLICA AL ELIMINAR UN REGISTRO//
+    await connectivity.getConnectivityReplica();
+    if(connectivity.isConnected == true)
+    {
+      return await _claseProvider.findByUserAndSubject(
+          userSession.id ?? '0', idSubject);
+    }
+    else
+    {
+      print("AQUI VAN LAS CLASES DESDE LA BD LOCAL");
+      return await _claseProvider.findByUserAndSubject(
+          userSession.id ?? '0', idSubject);
+    }
   }
 }

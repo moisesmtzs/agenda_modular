@@ -16,28 +16,22 @@ import 'package:get_storage/get_storage.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:agenda_app/src/api/db.dart';
 
+import '../../../models/connectivity.dart';
+
 class AddSubjectController extends GetxController {
-  //VERIFICAR CONEXION A INTERNET//
-  bool isConnect = false; 
-  void GetConnectivity() async{
-    try { 
-      final result = await InternetAddress.lookup('google.com'); 
-      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) 
-      { 
-        print('CONECTADO'); 
-        isConnect = true;
-      }
-    } on SocketException catch (_) { 
-        print('SIN CONEXION'); 
-        isConnect = false;
-    }  
-  }
 
   AddSubjectController()
   {
-    GetConnectivity();
+    connectivity.getConnectivity();
   }
 
+  //VALIDAR QUE EXISTE UNA CONEXION A INTERNET//
+  Future validarInternet() async
+  {
+    await connectivity.getConnectivity();
+  }
+
+  Connect connectivity = Connect();
   User userSession = User.fromJson(GetStorage().read('user') ?? {});
   TextEditingController nameClassController = TextEditingController();
   TextEditingController codeClassController = TextEditingController();
@@ -59,7 +53,10 @@ class AddSubjectController extends GetxController {
           subject_code: code,
           professor_name: profesor);
 
-      if(isConnect == true)
+      //GENERA REPLICA AL CREAR UN NUEVO REGISTRO//
+      connectivity.getConnectivityReplica();
+
+      if(connectivity.isConnected == true)
       {
         ResponseApi? responseApi = await subjectProvider.create(subject);
         if (responseApi?.success == true) {

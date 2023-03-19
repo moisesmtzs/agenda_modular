@@ -16,8 +16,12 @@ class TaskController extends GetxController {
 
   TaskController() {
     connectivity.getConnectivity();//esto constructor
-    Get.delete<HomeController>();
-    // createReplica();
+  }
+
+  //VALIDAR QUE EXISTE UNA CONEXION A INTERNET//
+  Future validarInternet() async
+  {
+    await connectivity.getConnectivity();
   }
 
   Connect connectivity = Connect();//esto, constructor
@@ -43,9 +47,9 @@ class TaskController extends GetxController {
     // Get.delete<TaskController>();
   }
 
-  void onTaskSelected(bool? checked, String idTask) {
+  void onTaskSelected(bool? checked, String idTask) async {
     if ( checked == true ) {
-
+      await validarInternet();
       if ( connectivity.isConnected == true ) {
         _tasksProvider.updateStatusTask(idTask, 'COMPLETADO');
       } else {
@@ -57,7 +61,7 @@ class TaskController extends GetxController {
 
     }
     if ( checked == false ) {
-      
+      await validarInternet();
       if ( connectivity.isConnected == true ) {
         _tasksProvider.updateStatusTask(idTask, 'PENDIENTE');
       } else {
@@ -70,7 +74,8 @@ class TaskController extends GetxController {
   }
 
   void delete(Task? task) async {
-
+    //GENERA LA REPLICA AL ELIMINAR UN REGISTRO//
+    await connectivity.getConnectivityReplica();
     if ( connectivity.isConnected == true ) {
       ResponseApi? responseApi = await _tasksProvider.deleteTask(task!.id);
       if ( responseApi?.success == true ) {
@@ -132,8 +137,8 @@ class TaskController extends GetxController {
   }
   
   Future<List<Task?>> getTasks(String status) async {
-
     List<Task?> tasks = [];
+    await validarInternet();
     if ( connectivity.isConnected == true ) {
       return tasks = await _tasksProvider.getByUserAndStatus(userSession.id ?? '0', status);
     } else {

@@ -10,7 +10,7 @@ class Connect {
     getConnectivity();
   }
 
-  void getConnectivity() async {
+  Future getConnectivity() async {
     try { 
       final result = await InternetAddress.lookup('google.com'); 
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) { 
@@ -25,7 +25,7 @@ class Connect {
     }  
   }
 
-  void getConnectivityReplica() async {
+  Future getConnectivityReplica() async {
     try { 
       final result = await InternetAddress.lookup('google.com'); 
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) { 
