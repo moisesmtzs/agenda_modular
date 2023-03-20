@@ -20,7 +20,7 @@ class SchedulePage extends StatelessWidget {
         {
           if (snapshot.hasData) {
             if ( snapshot.data!.isNotEmpty ) {
-              SfCalendar(
+              return SfCalendar(
                   view: CalendarView.week,
                   timeZone: 'Pacific Standard Time (Mexico)',
                   timeSlotViewSettings:

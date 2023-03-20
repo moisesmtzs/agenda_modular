@@ -41,23 +41,21 @@ class ScheduleController extends GetxController {
       print(end_hour.toString());
       //OBTENER DIA//
       String sDay = listaDeClases[i]!.days.toString();
-      int iDay = 0;
-      if(sDay.toLowerCase() == 'lunes') iDay = 1;
-      else if(sDay.toLowerCase() == 'martes') iDay = 2;
-      else if(sDay.toLowerCase() == 'miercoles') iDay = 3;
-      else if(sDay.toLowerCase() == 'jueves') iDay = 4;
-      else if(sDay.toLowerCase() == 'viernes') iDay = 5;
-      else if(sDay.toLowerCase() == 'sabado') iDay = 6;
-      else if(sDay.toLowerCase() == 'domingo') iDay = 7;
+      if(sDay.toLowerCase() == 'lunes') sDay = "MO";
+      else if(sDay.toLowerCase() == 'martes') sDay = "TU";
+      else if(sDay.toLowerCase() == 'miercoles') sDay = "WE";
+      else if(sDay.toLowerCase() == 'jueves') sDay = "TH";
+      else if(sDay.toLowerCase() == 'viernes') sDay = "FR";
+      else if(sDay.toLowerCase() == 'sabado') sDay = "SA";
+      else if(sDay.toLowerCase() == 'domingo') sDay = "SU";
       //GENERAR RECUADRO//
       Meeting claseView = Meeting('HOLA',
                                   DateTime(DateTime.now().year, 01, 01, begin_hour.hour),
                                   DateTime(DateTime.now().year, 01, 01, begin_hour.hour+2),
                                   AppColors.colors.inversePrimary,
                                   false,
-                                  'FREQ=DAILY;INTERVAL='+iDay.toString()+";COUNT=10");
+                                  'FREQ=WEEKLY;INTERVAL=1;BYDAY='+sDay+';COUNT=52');
       meetings.add(claseView);
-      clasesVista.add(claseView);
     }
     return meetings;
   }
