@@ -7,6 +7,7 @@ import 'package:agenda_app/src/screens/clase/detail/clase_detail_controller.dart
 
 import 'package:agenda_app/src/models/clase.dart';
 
+import '../../widgets/no_schedule_widget.dart';
 import '../../widgets/no_task_widget.dart';
 
 class SchedulePage extends StatelessWidget {
@@ -25,7 +26,6 @@ class SchedulePage extends StatelessWidget {
             if ( snapshot.data!.isNotEmpty ) {
               return SfCalendar(
                   view: CalendarView.week,
-                  timeZone: 'Pacific Standard Time (Mexico)',
                   timeSlotViewSettings: const TimeSlotViewSettings(dateFormat: 'd', dayFormat: 'EEE'),
                   showWeekNumber: false,
                   selectionDecoration: const BoxDecoration(color: Colors.transparent),
@@ -34,10 +34,10 @@ class SchedulePage extends StatelessWidget {
                     appointmentDisplayMode: MonthAppointmentDisplayMode.appointment),
               );
             } else {
-              return Center(child: NoTaskWidget(text: 'No hay horario'));
+              return Center(child: NoScheduleWidget(text: 'No hay horario'));
             }
           } else {
-            return Center(child: NoTaskWidget(text: 'No hay horario'));
+            return Center(child: NoScheduleWidget(text: 'Cargando horario'));
           }
         }
       ),

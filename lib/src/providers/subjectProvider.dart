@@ -50,6 +50,27 @@ class SubjectProvider extends GetConnect {
     }
   }
 
+  Future<Subject?> findById(String id) async {
+    //retorna una lista de tipo subject
+    try {
+      Uri _url =
+          Uri.http(Environment.API_URL_OLD, '/api/subject/findById/$id');
+
+      Map<String, String> headers = {
+        'Content-Type': 'application/json',
+        'Authorization': userSession.sessionToken ?? ''
+      };
+      final res = await http.get(_url, headers: headers);
+
+      final data = json.decode(res.body);
+      Subject subject = Subject.fromJson(data); //recuperamos los datos
+      return subject; //retornamos los datos y los regresamos como una lista
+    } catch (e) {
+      return null;
+    }
+  }
+
+
   Future<List<Subject?>> getByName(String name, String user) async {
     try {
       Uri _url = Uri.http(
@@ -90,7 +111,7 @@ class SubjectProvider extends GetConnect {
     return responseApi;
   }
 
-   //OBTENER POR NOMBRE Y USUARIO//
+  //OBTENER POR NOMBRE Y USUARIO//
   Future<List<Subject?>> getByUserNameIA( String idUser, String name ) async {
     try {
       Uri _url = Uri.http(Environment.API_URL_OLD, '/api/subject/findByNameIA/$name/$idUser');
@@ -108,7 +129,6 @@ class SubjectProvider extends GetConnect {
     } catch (e) {
       return [];
     }
-
   }
 
   Future<Map<String, dynamic>?> getDatesById( String? idSubject ) async {

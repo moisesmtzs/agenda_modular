@@ -20,6 +20,27 @@ class ClaseProvider extends GetConnect {
     return responseApi;
   }
 
+  //OBTENER POR NOMBRE Y USUARIO//
+  Future<Clase?> getByIdDaysHours( String idUser, Clase searchClase ) async {
+    try {
+      Uri _url = Uri.http(Environment.API_URL_OLD, '/api/subject/findIdClase/${searchClase.begin_hour}/${searchClase.end_hour}/${searchClase.days}/$idUser');
+      
+      Map<String, String> headers = {
+        'Content-Type': 'application/json',
+        'Authorization': userSession.sessionToken ?? ''
+      };
+      final res = await http.get(_url, headers: headers);
+
+      final data = json.decode(res.body);
+      Clase clase = Clase.fromJson(data);
+      return clase;
+
+    } catch (e) {
+      return null;
+    }
+  }
+
+
   Future<List<Clase?>> findByUserAndSubject(
       String idUser, String idSubject) async {
     try {

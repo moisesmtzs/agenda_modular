@@ -19,6 +19,7 @@ import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 import '../models/command.dart';
 import '../models/connectivity.dart';
+import '../models/response_api.dart';
 
 class IA_Controller
 {
@@ -1000,7 +1001,15 @@ class IA_Controller
         {
           NewTask.status="PENDIENTE";
           _voice.speak("Se guardó la tarea");
-          task_provider.create(NewTask);
+          ResponseApi? responseApi = await task_provider.create(NewTask);
+          if (responseApi?.success == true)
+          {
+            _voice.speak("Se guardó la Tarea");
+          }
+          else
+          {
+            _voice.speak("Hubo un problema al guardar la Tarea. Verifica los datos o tu conexion a Internet.");
+          }
           resetIA();
         }
         else if(_text.toUpperCase() == "CANCELAR")
@@ -1240,15 +1249,22 @@ class IA_Controller
       {
         if(_text.toUpperCase() == "GUARDAR")
         {
-          _voice.speak("Se modifico la Tarea");
           debugPrint(taskDb!.id);
           debugPrint(taskDb!.name);
-          task_provider.updateTask(taskDb!);
+          ResponseApi? responseApi = await task_provider.updateTask(taskDb!);
+          if (responseApi?.success == true)
+          {
+            _voice.speak("Se modifico la Tarea");
+          }
+          else
+          {
+            _voice.speak("Hubo un problema al modificar la Tarea. Verifica los datos o tu conexion a Internet.");
+          }
           resetIA();
         }
         else if(_text.toUpperCase() == "CANCELAR")
         {
-          _voice.speak("No se ha modifico la Tarea");
+          _voice.speak("No se ha modificado la Tarea");
           NewTask = new Task();
           resetIA();
         }
@@ -1289,8 +1305,15 @@ class IA_Controller
         {
           if(_text.toUpperCase() == "SÍ"||_text.toUpperCase() == "SI")
           {
-            task_provider.deleteTask(taskDb?.id);
-            _voice.speak("Tarea eliminada exitosamente");
+            ResponseApi? responseApi = await task_provider.deleteTask(taskDb?.id);
+            if (responseApi?.success == true)
+            {
+              _voice.speak("Tarea eliminada exitosamente");
+            }
+            else
+            {
+              _voice.speak("Hubo un problema al Eliminar la Tarea. Verifica los datos o tu conexion a Internet.");
+            }
             resetIA();
           }
           else if(_text.toUpperCase() == "NO")
@@ -1339,8 +1362,15 @@ class IA_Controller
       {
         if(_text.toUpperCase() == "GUARDAR")
         {
-          _voice.speak("Se guardó la Materia");
-          subject_provider.create(NewSubject);
+          ResponseApi? responseApi = await subject_provider.create(NewSubject);
+          if (responseApi?.success == true)
+          {
+            _voice.speak("Se guardó la Materia");
+          }
+          else
+          {
+            _voice.speak("Hubo un problema al Guardar la Materia. Verifica los datos o tu conexion a Internet.");
+          }
           resetIA();
         }
         else if(_text.toUpperCase() == "CANCELAR")
@@ -1453,10 +1483,17 @@ class IA_Controller
         {
           if(_text.toUpperCase() == "GUARDAR")
           {
-            _voice.speak("Se modifico la Materia");
             debugPrint(subjectDB!.id);
             debugPrint(subjectDB!.name);
-            subject_provider.updateSubject(subjectDB!);
+            ResponseApi? responseApi = await subject_provider.updateSubject(subjectDB!);
+            if (responseApi?.success == true)
+            {
+              _voice.speak("Se modifico la Materia");
+            }
+            else
+            {
+              _voice.speak("Hubo un problema al Modificar la Materia. Verifica los datos o tu conexion a Internet.");
+            }
             resetIA();
           }
           else if(_text.toUpperCase() == "CANCELAR")
@@ -1502,8 +1539,15 @@ class IA_Controller
         {
           if(_text.toUpperCase() == "SÍ" || _text.toUpperCase() == "SI")
           {
-            subject_provider.deleteSubject(subjectDB?.id);
-            _voice.speak("Materia eliminada exitosamente");
+            ResponseApi? responseApi = await subject_provider.deleteSubject(subjectDB?.id);
+            if (responseApi?.success == true)
+            {
+              _voice.speak("Materia eliminada exitosamente");
+            }
+            else
+            {
+              _voice.speak("Hubo un problema al Eliminar la Materia. Verifica los datos o tu conexion a Internet.");
+            }
             resetIA();
           }
           else if(_text.toUpperCase() == "NO")
@@ -1621,7 +1665,7 @@ class IA_Controller
         }
         else if(num > 59 || num < 0)
         {
-          _voice.speak("Lo siento, la hora no puede ser mayor a 59 ni menor a 0");
+          _voice.speak("Lo siento, los minutos no puede ser mayores a 59 ni menores a 0");
           _stext = "¿Con cuantos minutos la Hora de Inicio?";
           _text = "";
         }
@@ -1705,7 +1749,7 @@ class IA_Controller
         }
         else if(num > 59 || num < 0)
         {
-          _voice.speak("Lo siento, la hora no puede ser mayor a 59 ni menor a 0");
+          _voice.speak("Lo siento, los minutos no puede ser mayores a 59 ni menores a 0");
           _stext = "¿Con cuantos minutos la Hora de Fin?";
           _text = "";
         }
@@ -1715,7 +1759,6 @@ class IA_Controller
           DateTime endHour = DateTime(0001,1,1,int.parse(Hora),int.parse(Minutos));
           endHourString = endHour.hour.toString() + ":" + endHour.minute.toString();
           NewClase.end_hour = endHour.toString();
-          debugPrint(endHour.toString());
           _voice.speak("¿Qué día sera la Clase? Solo puedes mencionar un dia");
           _stext = "¿Qué día sera la Clase?";
           _text = "";
@@ -1775,8 +1818,16 @@ class IA_Controller
       {
         if(_text.toUpperCase() == "GUARDAR")
         {
-          _voice.speak("Se guardó la Clase");
-          clase_provider.create(NewClase);
+          
+          ResponseApi? responseApi = await clase_provider.create(NewClase);
+          if (responseApi?.success == true)
+          {
+            _voice.speak("Se guardó la Clase");
+          }
+          else
+          {
+            _voice.speak("Hubo un problema al guardar la Clase. Verifica los datos o tu conexion a Internet.");
+          }
           resetIA();
         }
         else if(_text.toUpperCase() == "CANCELAR")
@@ -1871,9 +1922,9 @@ class IA_Controller
         else
         {
           Minutos = _text;
-          debugPrint(Hora+":"+Minutos);
-          Hora = ""; Minutos="";
-          NewClase.begin_hour = Hora+Minutos;
+          DateTime beginHour = DateTime(0001,1,1,int.parse(Hora),int.parse(Minutos));
+          beginHourString = beginHour.hour.toString() + ":" + beginHour.minute.toString();
+          NewClase.begin_hour = beginHour.toString();
           _voice.speak("Te pedire hora y minutos por separado. ¿Cuál es la Hora de Fin en formato 24 horas?");
           _stext = "¿Cuál es la Hora de Fin?";
           _text = "";
@@ -1955,8 +2006,9 @@ class IA_Controller
         else
         {
           Minutos = _text;
-          debugPrint(Hora+":"+Minutos);
-          NewClase.end_hour = Hora+Minutos;
+          DateTime endHour = DateTime(0001,1,1,int.parse(Hora),int.parse(Minutos));
+          endHourString = endHour.hour.toString() + ":" + endHour.minute.toString();
+          NewClase.end_hour = endHour.toString();
           _voice.speak("¿Qué día sera la Clase? Solo puedes mencionar un dia");
           _stext = "¿Qué día sera la Clase?";
           _text = "";
@@ -1999,7 +2051,7 @@ class IA_Controller
         if(isDay)
         {
           NewClase.days=_text;
-          _voice.speak("A continuación, te muestro la información de la Clase, si es correcta di Guardar para registrarla o Cancelar para descartarla.");
+          _voice.speak("A continuación, te muestro la información de la Clase, si es correcta di Confirmar para eliminarla o Cancelar.");
           _stext = "La Materia es: "+NameMateria + "\nEl Dia es: "+NewClase.days.toString()+"\nLa Hora Inicio es: "+NewClase.begin_hour.toString()+"\nLa Hora Fin es: "+NewClase.end_hour.toString();
           _text = "";
           actualProcess++;
@@ -2008,6 +2060,45 @@ class IA_Controller
         {
           _voice.speak("¿Qué día sera la Clase? Solo puedes mencionar un dia");
           _stext = "¿Qué día sera la Clase?";
+          _text = "";
+        }
+      }
+      //CONFIRMAR//
+      else if(actualProcess == 6)
+      {
+        if(_text.toUpperCase() == "CONFIRMAR")
+        {
+          //MODIFICAR//
+          Clase? claseSearched = await clase_provider.getByIdDaysHours(userSession.id.toString(),NewClase);
+          if (claseSearched != null)
+          {
+            ResponseApi? responseApi  = await clase_provider.deleteClase(claseSearched.id);    
+            if (responseApi?.success == true)
+            {
+              _voice.speak("Clase eliminada exitosamente");
+            }
+            else
+            {
+              _voice.speak("Hubo un problema al Eliminar la Clase. Verifica los datos o tu conexion a Internet.");
+            }
+            resetIA();     
+          }
+          else
+          {
+            _voice.speak("No existe una Clase ese dia, a esas Horas y de esa Materia.");
+          }
+          resetIA();
+        }
+        else if(_text.toUpperCase() == "CANCELAR")
+        {
+          _voice.speak("Se ha descartado la Clase");
+          NewClase = new Clase();
+          resetIA();
+        }
+        else
+        {
+          _voice.speak("Solo son validas las opciones Guardar o Cancelar.");
+          _stext = "La Materia es: "+NameMateria + "\nEl Dia es: "+NewClase.days.toString()+"\nLa Hora Inicio es: "+beginHourString+"\nLa Hora Fin es: "+endHourString;
           _text = "";
         }
       }
