@@ -13,25 +13,23 @@ import 'package:agenda_app/src/providers/tasksProvider.dart';
 import 'package:agenda_app/src/ui/app_colors.dart';
 
 class TaskController extends GetxController {
-
   TaskController() {
-    connectivity.getConnectivity();//esto constructor
+    connectivity.getConnectivity(); //esto constructor
   }
 
   //VALIDAR QUE EXISTE UNA CONEXION A INTERNET//
-  Future validarInternet() async
-  {
+  Future validarInternet() async {
     await connectivity.getConnectivity();
   }
 
-  Connect connectivity = Connect();//esto, constructor
+  Connect connectivity = Connect(); //esto, constructor
 
   User userSession = User.fromJson(GetStorage().read('user') ?? {});
 
   final TasksProvider _tasksProvider = TasksProvider();
 
-  List<String> status = <String>['PENDIENTE', 'COMPLETADO'].obs;
-  
+  List<String> status = <String>["PENDIENTE", "COMPLETADO"].obs;
+
   var selectedTasks = [].obs;
 
   late Function refresh2;
@@ -44,13 +42,34 @@ class TaskController extends GetxController {
     // final page = AddTaskPage();
     // Navigator.push(context, MaterialPageRoute(builder: (context) => page));
     Get.toNamed('/addTask');
-    Get.delete<TaskController>();
+  }
+
+  Future<List<Task?>> getTasks(String status) async {
+
+    List<Task?> tasks = [];
+    await validarInternet();
+    if (connectivity.isConnected == true) {
+      tasks = await _tasksProvider.getByUserAndStatus(userSession.id ?? '0', status);
+    } else {
+      tasks = await db.getTasksByStatus(status);
+    }
+
+    if (status == 'COMPLETADO') {
+      for (int i = 0; i < tasks.length; i++) {
+        selectedTasks.add(tasks[i]!.id);
+      }
+    }
+    selectedTasks.refresh();
+    refresh2();
+
+    return tasks;
+
   }
 
   void onTaskSelected(bool? checked, String idTask) async {
-    if ( checked == true ) {
+    if (checked == true) {
       await validarInternet();
-      if ( connectivity.isConnected == true ) {
+      if (connectivity.isConnected == true) {
         _tasksProvider.updateStatusTask(idTask, 'COMPLETADO');
       } else {
         db.updateTaskStatus(idTask, 'COMPLETADO');
@@ -58,16 +77,15 @@ class TaskController extends GetxController {
 
       selectedTasks.add(idTask);
       selectedTasks.refresh();
-
     }
-    if ( checked == false ) {
+    if (checked == false) {
       await validarInternet();
-      if ( connectivity.isConnected == true ) {
+      if (connectivity.isConnected == true) {
         _tasksProvider.updateStatusTask(idTask, 'PENDIENTE');
       } else {
         db.updateTaskStatus(idTask, 'PENDIENTE');
       }
-      
+
       selectedTasks.remove(idTask);
       selectedTasks.refresh();
     }
@@ -76,19 +94,17 @@ class TaskController extends GetxController {
   void delete(Task? task) async {
     //GENERA LA REPLICA AL ELIMINAR UN REGISTRO//
     await connectivity.getConnectivityReplica();
-    if ( connectivity.isConnected == true ) {
+    if (connectivity.isConnected == true) {
       ResponseApi? responseApi = await _tasksProvider.deleteTask(task!.id);
-      if ( responseApi?.success == true ) {
+      if (responseApi?.success == true) {
         Get.snackbar(
-          responseApi?.message ?? '', 
-          '',
+          responseApi?.message ?? '', '',
           backgroundColor: AppColors.colors.secondary,
           colorText: AppColors.colors.onSecondary
         );
       } else {
         Get.snackbar(
-          'No se eliminó la tarea',
-          responseApi?.message ?? '',
+          'No se eliminó la tarea', responseApi?.message ?? '',
           backgroundColor: AppColors.colors.errorContainer,
           colorText: AppColors.colors.onErrorContainer
         );
@@ -96,7 +112,6 @@ class TaskController extends GetxController {
     } else {
       await db.deleteTask(task);
     }
-     
   }
 
   void confirmationDialog(BuildContext context, Task? task) {
@@ -106,7 +121,7 @@ class TaskController extends GetxController {
         Get.back();
       },
     );
-    
+
     Widget continueButton = TextButton(
       child: const Text('Confirmar'),
       onPressed: () {
@@ -116,49 +131,19 @@ class TaskController extends GetxController {
         refresh2();
       },
     );
-    
+
     AlertDialog alertDialog = AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       title: const Text('Borrar tarea'),
       content: const Text('¿Estás seguro de que quieres eliminar la tarea?'),
-      actions: [
-        cancelButton,
-        continueButton
-      ],
+      actions: [cancelButton, continueButton],
     );
 
     showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alertDialog;
-      }
-    );
-
+        context: context,
+        builder: (BuildContext context) {
+          return alertDialog;
+        });
   }
   
-  Future<List<Task?>> getTasks(String status) async {
-    List<Task?> tasks = [];
-    // await validarInternet();
-    if ( connectivity.isConnected == true ) {
-      return tasks = await _tasksProvider.getByUserAndStatus(userSession.id ?? '0', status);
-    } else {
-      tasks = await db.getTasksByStatus(status);
-    }
-
-    if ( status == 'COMPLETADO' ) {
-      for( int i = 0 ; i < tasks.length ; i++  ) {
-        selectedTasks.add(tasks[i]!.id);
-      }
-    }
-    selectedTasks.refresh();
-    refresh2();
-    return tasks;
-  }
-  
-  // getTasks(String status) async {
-  //     var tasks = await _tasksProvider.getByUserAndStatus(userSession.id ?? '0', status);
-  //     if ( tasks.isNotEmpty ) {
-  //       taskList.value = tasks;
-  //     }
-  // }
 }

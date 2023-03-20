@@ -1,11 +1,17 @@
+import 'package:agenda_app/src/screens/home/home_controller.dart';
 import 'package:agenda_app/src/ui/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:agenda_app/src/screens/tasks/add_task/add_task_controller.dart';
 
-class AddTaskPage extends StatelessWidget{
+class AddTaskPage extends StatefulWidget {
   
+  @override
+  State<AddTaskPage> createState() => _AddTaskPageState();
+}
+
+class _AddTaskPageState extends State<AddTaskPage> {
   final AddTaskController _controller = Get.put(AddTaskController());
 
   @override
@@ -23,10 +29,10 @@ class AddTaskPage extends StatelessWidget{
         ),
         body: ListView(
           physics: const ClampingScrollPhysics(),
-          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+          // keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           children: [
             const SizedBox(height: 20),
-            _taskName(),
+            _taskName(context),
             const SizedBox(height: 20),
             _taskDesc(),
             const SizedBox(height: 20),
@@ -43,7 +49,7 @@ class AddTaskPage extends StatelessWidget{
     );
   }
 
-  Widget _taskName() {
+  Widget _taskName(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 25),
       padding: const EdgeInsets.all(10),
@@ -51,30 +57,27 @@ class AddTaskPage extends StatelessWidget{
         color: AppColors.colors.primaryContainer,
         borderRadius: BorderRadius.circular(15)
       ),
-      child: Form(
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        child: Column(
-          children: [
-            TextFormField(
-              controller: _controller.nameController,
-              cursorRadius: const Radius.circular(8.0),
-              maxLength: 180,
-              decoration: const InputDecoration(
-                hintText: "Hacer maqueta",
-                labelText: "Nombre de la tarea",
-                suffixIcon: Icon(Icons.task_outlined)
-              ),
-              validator: ( value ){
-                String pattern = r"\b([a-zA-ZÀ-ÿ][-,a-z. ']+[ ]*)+";
-                RegExp nameregExp  = RegExp(pattern);
-                return nameregExp.hasMatch( value ?? '' ) 
-                  ? null 
-                  : 'Nombre no válido';
-              }
-            )
-          ]
+      child: TextFormField(
+        controller: _controller.nameController,
+        focusNode: _controller.nameFocus,
+        cursorRadius: const Radius.circular(8.0),
+        maxLength: 180,
+        onFieldSubmitted: (value) {
+          FocusScope.of(context).requestFocus(_controller.descriptionFocus);
+        },
+        decoration: const InputDecoration(
+          hintText: "Hacer maqueta",
+          labelText: "Nombre de la tarea",
+          suffixIcon: Icon(Icons.task_outlined)
         ),
-      ),
+        validator: ( value ){
+          String pattern = r"\b([a-zA-ZÀ-ÿ][-,a-z. ']+[ ]*)+";
+          RegExp nameregExp  = RegExp(pattern);
+          return nameregExp.hasMatch( value ?? '' ) 
+            ? null 
+            : 'Nombre no válido';
+        }
+      )
     );
     
   }
@@ -87,32 +90,36 @@ class AddTaskPage extends StatelessWidget{
         color: AppColors.colors.primaryContainer,
         borderRadius: BorderRadius.circular(15)
       ),
-      child: Form(
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        child: Column(
-          children: [
-            TextFormField(
-              controller: _controller.descriptionController,
-              maxLines: 3,
-              maxLength: 255,
-              textAlign: TextAlign.justify,
-              cursorRadius: const Radius.circular(8.0),
-              decoration: const InputDecoration(
-                hintText: "Maqueta de 25x25",
-                labelText: "Descripción de la tarea",
-                suffixIcon: Icon(Icons.description_outlined)
-              ),
-              validator: ( value ){
-                String pattern = r"\b([a-zA-ZÀ-ÿ][-,a-z. ']+[ ]*)+";
-                RegExp nameregExp  = RegExp(pattern);
-                return nameregExp.hasMatch( value ?? '' ) 
-                  ? null 
-                  : 'Descripción no válida';
-              }
-            )
-          ]
+      child: TextFormField(
+        controller: _controller.descriptionController,
+        focusNode: _controller.descriptionFocus,
+        maxLines: 3,
+        maxLength: 255,
+        textAlign: TextAlign.justify,
+        cursorRadius: const Radius.circular(8.0),
+        onTap: () {
+          // Get.delete<HomeController>();
+        },
+        onTapOutside: (event) {
+          // Get.delete<HomeController>();
+          FocusScope.of(Get.context!).unfocus();
+        },
+        onFieldSubmitted: (value) {
+          FocusScope.of(Get.context!).unfocus();
+        },
+        decoration: const InputDecoration(
+          hintText: "Maqueta de 25x25",
+          labelText: "Descripción de la tarea",
+          suffixIcon: Icon(Icons.description_outlined)
         ),
-      ),
+        validator: ( value ){
+          String pattern = r"\b([a-zA-ZÀ-ÿ][-,a-z. ']+[ ]*)+";
+          RegExp nameregExp  = RegExp(pattern);
+          return nameregExp.hasMatch( value ?? '' ) 
+            ? null 
+            : 'Descripción no válida';
+        }
+      )
     );
     
   }  
@@ -238,5 +245,4 @@ class AddTaskPage extends StatelessWidget{
     }
     return list;
   } 
-
 }

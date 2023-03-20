@@ -9,104 +9,111 @@ import 'package:agenda_app/src/ui/app_colors.dart';
 import 'package:agenda_app/src/widgets/no_task_widget.dart';
 
 class TaskPage extends StatefulWidget {
-
   @override
   State<TaskPage> createState() => _TaskPageState();
 }
 
 class _TaskPageState extends State<TaskPage> {
-  
   TaskController taskController = Get.put(TaskController());
+
+  List<Future<List<Task?>>> tasks = [];
 
   @override
   void initState() {
     super.initState();
     taskController.init(refresh);
+    
+    _refresh();
+  }
+
+  _refresh() {
+    setState(() {
+      tasks = taskController.status.map((e) => taskController.getTasks(e)).toList();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Obx( () => DefaultTabController(
-        length: taskController.status.length,
-        child: Scaffold(
-          appBar: PreferredSize(
+    return DefaultTabController(
+      length: taskController.status.length,
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: PreferredSize(
             preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * 0.15),
-            child: AppBar(
+            child: Obx( () => AppBar(
+              actions: [IconButton(onPressed:()=>_refresh() , icon: const Icon(Icons.refresh))],
               toolbarHeight: 120,
               title: const Text('Mis Tareas', style: TextStyle(fontSize: 24)),
               shape: ShapeBorder.lerp(
-                RoundedRectangleBorder( borderRadius: BorderRadius.circular(30) ),
-                null,
-                0
-              ),
+                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                  null,
+                  0
+                ),
               bottom: TabBar(
                 indicatorColor: AppColors.colors.inversePrimary,
                 labelColor: AppColors.colors.inversePrimary,
                 unselectedLabelColor: AppColors.colors.onSecondaryContainer,
                 isScrollable: true,
-                tabs: List<Widget>.generate(taskController.status.length, (index){
+                tabs: List<Widget>.generate(taskController.status.length,
+                    (index) {
                   return Tab(
                     child: Text(taskController.status[index]),
                   );
                 }),
               )
             ),
-          ),
-          body: TabBarView(
-            physics: const ClampingScrollPhysics(),
-            children: taskController.status.map((String status) {
-              // taskController.getTasks(status);
-              // return Obx(() {
-              //   if ( taskController.taskList!.isNotEmpty ) {
-              //     ListView.builder(
-              //       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-              //       physics: const ClampingScrollPhysics(),
-              //       itemCount: taskController.taskList?.length,
-              //       itemBuilder: (_, index) {
-              //         var task = taskController.taskList![index];
-              //         print(task.toString());
-              //         return _taskCard(task, context);
-              //       }
-              //     );
-              //   } else {
-              //     return NoTaskWidget(text: 'No hay tareas agregadas');
-              //   }
-              //   return const Center(child: CircularProgressIndicator());
-              // });
-              return FutureBuilder(
-                future: taskController.getTasks(status),
+        )
+      ),
+        body: TabBarView(
+            physics: const NeverScrollableScrollPhysics(),
+            children: tasks.map((_tasks) {
+              return FutureBuilder<List<Task?>>(
+                future: _tasks,
                 builder: (context, AsyncSnapshot<List<Task?>> snapshot) {
                   if (snapshot.hasData) {
-                    if ( snapshot.data!.isNotEmpty ) {
-                      return ListView.builder(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                        physics: const ClampingScrollPhysics(),
-                        itemCount: snapshot.data?.length ?? 0,
-                        itemBuilder: (_, index) {
-                          return _taskCard(snapshot.data![index]!, context);
-                        }
+                    if (snapshot.data!.isNotEmpty) {
+                      return RefreshIndicator(
+                        onRefresh: () async {
+                          _refresh();
+                        },
+                        child: ListView.builder(
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                          physics: const ClampingScrollPhysics(),
+                          itemCount: snapshot.data?.length ?? 0,
+                          itemBuilder: (_, index) {
+                            return _taskCard(snapshot.data![index]!, context);
+                          }
+                        ),
                       );
                     } else {
-                      return NoTaskWidget(text: 'No hay tareas agregadas');
+                      return RefreshIndicator(
+                        onRefresh: () async {
+                          _refresh();
+                        },
+                        child: NoTaskWidget(text: 'No hay tareas agregadas')
+                      );
                     }
                   } else {
-                    return NoTaskWidget(text: 'No hay tareas agregadas');
+                    return RefreshIndicator(
+                      onRefresh: () async {
+                        _refresh();
+                      },
+                      child: NoTaskWidget(text: 'No hay tareas agregadas')
+                    );
                   }
                 }
               );
-            }).toList()
-          ),
-          floatingActionButton: FloatingActionButton.extended(
-            heroTag: 'openAddTaskPage',
-            elevation: 15,
-            shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(16.0))),
-            icon: const Icon(Icons.add),
-            label: const Text('Agregar tarea'),
-            onPressed: () {
-              taskController.goToAddTaskPage(context);
-            },
-          ),
-      
+            }).toList()),
+        floatingActionButton: FloatingActionButton.extended(
+          heroTag: 'openAddTaskPage',
+          elevation: 15,
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(16.0))),
+          icon: const Icon(Icons.add),
+          label: const Text('Agregar tarea'),
+          onPressed: () {
+            taskController.goToAddTaskPage(context);
+          },
         ),
       ),
     );
@@ -114,52 +121,36 @@ class _TaskPageState extends State<TaskPage> {
 
   Widget _taskCard(Task? task, BuildContext context) {
 
-    late var datetime = DateFormat("yyyy-MM-dd").format(DateTime.parse(task?.deliveryDate ?? '') );
+    late var datetime = DateFormat("yyyy-MM-dd").format(DateTime.parse(task?.deliveryDate ?? ''));
 
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         Get.bottomSheet(
           taskDetailPage(task),
           enableDrag: false,
           backgroundColor: AppColors.colors.secondaryContainer,
           shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(topLeft: Radius.circular(10.0), topRight: Radius.circular(10.0)),
+            borderRadius: BorderRadius.only(topLeft: Radius.circular(10.0),topRight: Radius.circular(10.0)),
           ),
         );
       },
       child: Padding(
-        padding: const EdgeInsets.symmetric( horizontal: 20 ),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Container(
-          margin: const EdgeInsets.only( top: 10, bottom: 30 ),
+          margin: const EdgeInsets.only(top: 10, bottom: 30),
           width: double.infinity,
           height: 100,
           decoration: _cardBorders(),
           child: Stack(
-            alignment: Alignment.topLeft,
-            children: [
-              Positioned(
-                left: 15,
-                top: 40,
-                child: _taskText(task?.name ?? '')
-              ),
-              Positioned(
-                // left: 5,
-                // top: 0,
-                // bottom: 5,
-                child: _taskChecked(task?.id ?? '')
-              ),
-              Positioned(
-                top: 0,
-                right: 0,
-                child: _eventDate(datetime)
-              ),
+            alignment: Alignment.topLeft, children: [
+              Positioned(left: 15, top: 40, child: _taskText(task?.name ?? '')),
+              Positioned(child: _taskChecked(task?.id ?? '')),
+              Positioned(top: 0, right: 0, child: _eventDate(datetime)),
             ]
           )
         )
       )
-
     );
-
   }
 
   BoxDecoration _cardBorders() => BoxDecoration(
@@ -168,65 +159,56 @@ class _TaskPageState extends State<TaskPage> {
     boxShadow: const [
       BoxShadow(
         color: Colors.black12,
-        offset: Offset( 0, 6 ),
+        offset: Offset(0, 6),
         blurRadius: 10,
       )
     ]
   );
 
   Widget _taskText(String taskName) {
-
     return SizedBox(
       width: 350,
       child: Container(
         margin: const EdgeInsets.only(right: 25),
         child: Text(
-          (taskName != '') ? taskName : "Sin nombre a tarea asignado", 
-          maxLines: 3, 
+          (taskName != '') ? taskName : "Sin nombre a tarea asignado",
+          maxLines: 3,
           overflow: TextOverflow.ellipsis,
         )
       )
     );
-
   }
 
   Widget _taskChecked(String id) {
-
-    return Obx( () =>
-      Transform.scale(
-        scale: 1.2,
-        child: Checkbox(
-          overlayColor: MaterialStateProperty.all(AppColors.colors.tertiaryContainer),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5)
-          ),
-          side: MaterialStateBorderSide.resolveWith(
-            (states) => BorderSide(width: 1.5, color: AppColors.colors.onTertiaryContainer),
-          ),
-          activeColor: AppColors.colors.onTertiaryContainer,
-          checkColor: AppColors.colors.tertiaryContainer,
-          value: taskController.selectedTasks.contains(id),
-          onChanged: (value) {
-            setState(() {
-              taskController.onTaskSelected(value, id);
-            });
-          }
-          
+    return Obx( () => Transform.scale(
+      scale: 1.2,
+      child: Checkbox(
+        overlayColor: MaterialStateProperty.all(AppColors.colors.tertiaryContainer),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+        side: MaterialStateBorderSide.resolveWith(
+          (states) => BorderSide(width: 1.5, color: AppColors.colors.onTertiaryContainer),
         ),
+        activeColor: AppColors.colors.onTertiaryContainer,
+        checkColor: AppColors.colors.tertiaryContainer,
+        value: taskController.selectedTasks.contains(id),
+        onChanged: (value) {
+          setState(() {
+            taskController.onTaskSelected(value, id);
+            _refresh();
+          });
+        }
       ),
-    );
-
+    ),);
   }
 
   Widget _eventDate(String fecha) {
-
     return Container(
       child: FittedBox(
         fit: BoxFit.contain,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10.0),
           child: Text(
-            (fecha != '') ? fecha : "Sin fecha de entrega asignada", 
+            (fecha != '') ? fecha : "Sin fecha de entrega asignada",
             style: const TextStyle(color: Colors.white, fontSize: 13)
           ),
         ),
@@ -236,14 +218,17 @@ class _TaskPageState extends State<TaskPage> {
       alignment: Alignment.center,
       decoration: BoxDecoration(
         color: AppColors.colors.inversePrimary,
-        borderRadius: const BorderRadius.only( topRight: Radius.circular(25), bottomLeft: Radius.circular(25))
+        borderRadius: const BorderRadius.only(
+          topRight: Radius.circular(25),
+          bottomLeft: Radius.circular(25)
+        )
       )
     );
   }
 
   Widget taskDetailPage(Task? task) {
-      
-    late var datetime = DateFormat("yyyy-MM-dd").format(DateTime.parse(task?.deliveryDate ?? '') );
+
+    late var datetime = DateFormat("yyyy-MM-dd").format(DateTime.parse(task?.deliveryDate ?? ''));
 
     return Container(
       height: MediaQuery.of(context).size.height * 0.4,
@@ -268,7 +253,10 @@ class _TaskPageState extends State<TaskPage> {
                     backgroundColor: AppColors.colors.secondaryContainer,
                     barrierColor: Colors.black.withOpacity(0),
                     shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(topLeft: Radius.circular(10.0), topRight: Radius.circular(10.0)),
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(10.0),
+                        topRight: Radius.circular(10.0)
+                      ),
                     ),
                   );
                 },
@@ -284,19 +272,25 @@ class _TaskPageState extends State<TaskPage> {
           ),
           const SizedBox(height: 20),
           Text(
-            (task?.name != '') ? task?.name ?? '' : "Sin nombre a tarea asignado",
-            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)
-          ),
+              (task?.name != '')
+                  ? task?.name ?? ''
+                  : "Sin nombre a tarea asignado",
+              style:
+                  const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
           const SizedBox(height: 20),
           Text(
-            (task?.description != '') ? task?.description ?? '' : "Sin descripción a tarea asignada", 
-            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w400)
-          ),
+              (task?.description != '')
+                  ? task?.description ?? ''
+                  : "Sin descripción a tarea asignada",
+              style:
+                  const TextStyle(fontSize: 15, fontWeight: FontWeight.w400)),
           const SizedBox(height: 20),
           Text(
-            (task?.deliveryDate != '') ? 'Fecha de entrega: $datetime' : "Sin fecha de entrega asignada", 
-            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w400)
-          ),
+              (task?.deliveryDate != '')
+                  ? 'Fecha de entrega: $datetime'
+                  : "Sin fecha de entrega asignada",
+              style:
+                  const TextStyle(fontSize: 15, fontWeight: FontWeight.w400)),
         ],
       ),
     );
@@ -305,5 +299,4 @@ class _TaskPageState extends State<TaskPage> {
   void refresh() {
     setState(() {});
   }
-
 }

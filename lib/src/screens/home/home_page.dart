@@ -316,8 +316,8 @@ class HomePage extends GetView<MyDrawerController> {
 }
 
 class MenuPage extends GetView<MyDrawerController> {
-  HomeController homeController = Get.put(HomeController());
-
+  
+  var homeController = Get.find<HomeController>();
   @override
   Widget build(BuildContext context) {
     return Container(

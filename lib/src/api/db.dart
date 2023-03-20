@@ -79,9 +79,9 @@ class db
     Database database = await openDB();
 
     final List<Map<String, dynamic>> taskList = await database.query('tasks', where: 'id = ?', whereArgs: [idTask]);
-    String? created_at = taskList[0]['created_at'];
+    String? createdAt = taskList[0]['created_at'];
 
-    return created_at;
+    return createdAt;
 
   }
   
@@ -648,7 +648,7 @@ class db
 
       List<Query> command = await db.getAllCommands();
 
-      for(int i = 0; i<command.length; i++)
+      for( int i = 0 ; i < command.length ; i++ )
       {
         await syncProvider.create(command[i]);
       }
