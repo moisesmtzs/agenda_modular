@@ -14,6 +14,7 @@ class TaskPage extends StatefulWidget {
 }
 
 class _TaskPageState extends State<TaskPage> {
+  
   TaskController taskController = Get.put(TaskController());
 
   List<Future<List<Task?>>> tasks = [];
@@ -26,7 +27,7 @@ class _TaskPageState extends State<TaskPage> {
     _refresh();
   }
 
-  _refresh() {
+  Future<void> _refresh() async {
     setState(() {
       tasks = taskController.status.map((e) => taskController.getTasks(e)).toList();
     });
@@ -37,78 +38,72 @@ class _TaskPageState extends State<TaskPage> {
     return DefaultTabController(
       length: taskController.status.length,
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
         appBar: PreferredSize(
-            preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * 0.15),
-            child: Obx( () => AppBar(
-              actions: [IconButton(onPressed:()=>_refresh() , icon: const Icon(Icons.refresh))],
-              toolbarHeight: 120,
-              title: const Text('Mis Tareas', style: TextStyle(fontSize: 24)),
-              shape: ShapeBorder.lerp(
-                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                  null,
-                  0
-                ),
-              bottom: TabBar(
-                indicatorColor: AppColors.colors.inversePrimary,
-                labelColor: AppColors.colors.inversePrimary,
-                unselectedLabelColor: AppColors.colors.onSecondaryContainer,
-                isScrollable: true,
-                tabs: List<Widget>.generate(taskController.status.length,
-                    (index) {
-                  return Tab(
-                    child: Text(taskController.status[index]),
-                  );
-                }),
-              )
+          preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * 0.15),
+          child: Obx( () => AppBar(
+            // actions: [
+            //   IconButton(
+            //     onPressed:() => _refresh(),
+            //     icon: const Icon(Icons.refresh)
+            //   )
+            // ],
+            toolbarHeight: 120,
+            title: const Text('Mis Tareas', style: TextStyle(fontSize: 24)),
+            shape: ShapeBorder.lerp(
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+              null,
+              0
             ),
-        )
-      ),
+            bottom: TabBar(
+              indicatorColor: AppColors.colors.inversePrimary,
+              labelColor: AppColors.colors.inversePrimary,
+              unselectedLabelColor: AppColors.colors.onSecondaryContainer,
+              isScrollable: true,
+              tabs: List<Widget>.generate(taskController.status.length,
+                  (index) {
+                return Tab(
+                  child: Text(taskController.status[index]),
+                );
+              }),
+            )
+          ),)
+        ),
         body: TabBarView(
-            physics: const NeverScrollableScrollPhysics(),
-            children: tasks.map((_tasks) {
-              return FutureBuilder<List<Task?>>(
+          physics: const NeverScrollableScrollPhysics(),
+          children: tasks.map((_tasks) {
+            return RefreshIndicator(
+              onRefresh: _refresh,
+              child: FutureBuilder<List<Task?>>(
                 future: _tasks,
                 builder: (context, AsyncSnapshot<List<Task?>> snapshot) {
                   if (snapshot.hasData) {
                     if (snapshot.data!.isNotEmpty) {
-                      return RefreshIndicator(
-                        onRefresh: () async {
-                          _refresh();
-                        },
-                        child: ListView.builder(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                          physics: const ClampingScrollPhysics(),
-                          itemCount: snapshot.data?.length ?? 0,
-                          itemBuilder: (_, index) {
-                            return _taskCard(snapshot.data![index]!, context);
-                          }
-                        ),
+                      return ListView.builder(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        itemCount: snapshot.data?.length ?? 0,
+                        itemBuilder: (_, index) {
+                          return _taskCard(snapshot.data![index]!, context);
+                        }
+                        
                       );
                     } else {
-                      return RefreshIndicator(
-                        onRefresh: () async {
-                          _refresh();
-                        },
-                        child: NoTaskWidget(text: 'No hay tareas agregadas')
-                      );
+                      return NoTaskWidget(text: 'No hay tareas agregadas');
                     }
                   } else {
-                    return RefreshIndicator(
-                      onRefresh: () async {
-                        _refresh();
-                      },
-                      child: NoTaskWidget(text: 'No hay tareas agregadas')
-                    );
+                    return NoTaskWidget(text: 'No hay tareas agregadas');
                   }
                 }
-              );
-            }).toList()),
+              ),
+            );
+          }).toList()
+        ),
         floatingActionButton: FloatingActionButton.extended(
           heroTag: 'openAddTaskPage',
           elevation: 15,
           shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(16.0))),
+            borderRadius: BorderRadius.all(Radius.circular(16.0))
+          ),
           icon: const Icon(Icons.add),
           label: const Text('Agregar tarea'),
           onPressed: () {
