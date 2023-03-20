@@ -14,30 +14,33 @@ class SchedulePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Mi Horario'),
+      ),
+      body: FutureBuilder(
         future: _getDataSource(),
-        builder: (context, AsyncSnapshot<List<Meeting>> snapshot) 
-        {
+        builder: (context, AsyncSnapshot<List<Meeting>> snapshot) {
           if (snapshot.hasData) {
             if ( snapshot.data!.isNotEmpty ) {
               return SfCalendar(
                   view: CalendarView.week,
                   timeZone: 'Pacific Standard Time (Mexico)',
-                  timeSlotViewSettings:
-                    TimeSlotViewSettings(dateFormat: 'd', dayFormat: 'EEE'),
+                  timeSlotViewSettings: const TimeSlotViewSettings(dateFormat: 'd', dayFormat: 'EEE'),
                   showWeekNumber: false,
-                  selectionDecoration: BoxDecoration(color: Colors.transparent),
+                  selectionDecoration: const BoxDecoration(color: Colors.transparent),
                   dataSource: MeetingDataSource(snapshot.data),
                   monthViewSettings: const MonthViewSettings(
                     appointmentDisplayMode: MonthAppointmentDisplayMode.appointment),
               );
             } else {
-              return NoTaskWidget(text: 'No hay tareas agregadas');
+              return Center(child: NoTaskWidget(text: 'No hay horario'));
             }
           } else {
-            return NoTaskWidget(text: 'No hay tareas agregadas');
+            return Center(child: NoTaskWidget(text: 'No hay horario'));
           }
-      }
+        }
+      ),
     );
   }
 
