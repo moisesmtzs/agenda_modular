@@ -13,7 +13,37 @@ enum SingingCharacter { lunes, martes, miercoles, jueves, viernes, sabado }
 
 class _ClasePageState extends State<ClasePage> {
   List<String> items = <String>[
-    "07:00","07:30","08:00","08:30","09:00","09:30","10:00","10:30","11:00","11:30","12:00","12:30","13:00","13:30","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30","18:00","18:30","19:00","19:30","20:00","20:30","21:00","21:30","22:00"
+    "07:00",
+    "07:30",
+    "08:00",
+    "08:30",
+    "09:00",
+    "09:30",
+    "10:00",
+    "10:30",
+    "11:00",
+    "11:30",
+    "12:00",
+    "12:30",
+    "13:00",
+    "13:30",
+    "14:00",
+    "14:30",
+    "15:00",
+    "15:30",
+    "16:00",
+    "16:30",
+    "17:00",
+    "17:30",
+    "18:00",
+    "18:30",
+    "19:00",
+    "19:30",
+    "20:00",
+    "20:30",
+    "21:00",
+    "21:30",
+    "22:00"
   ];
 
   //Controladores
@@ -92,9 +122,8 @@ class _ClasePageState extends State<ClasePage> {
       margin: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
       padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 5),
       decoration: BoxDecoration(
-        color: AppColors.colors.primaryContainer,
-        borderRadius: BorderRadius.circular(15)
-      ),
+          color: AppColors.colors.primaryContainer,
+          borderRadius: BorderRadius.circular(15)),
       child: DropdownButton(
         dropdownColor: AppColors.colors.onSecondary,
         borderRadius: BorderRadius.circular(16),
@@ -102,15 +131,17 @@ class _ClasePageState extends State<ClasePage> {
         menuMaxHeight: 400,
         hint: const Text("Hora de Inicio"),
         value: claseController.begineController,
-        icon: const Visibility(visible: false, child: Icon(Icons.arrow_drop_down_circle)),
+        icon: const Visibility(
+            visible: false, child: Icon(Icons.arrow_drop_down_circle)),
         underline: Container(
-          alignment: Alignment.centerRight,
-          child: const Icon(Icons.arrow_drop_down_circle)
-        ),
-        items: items.map((String hora) => DropdownMenuItem<String>(
-          value: hora,
-          child: Text(hora),
-        )).toList(),
+            alignment: Alignment.centerRight,
+            child: const Icon(Icons.arrow_drop_down_circle)),
+        items: items
+            .map((String hora) => DropdownMenuItem<String>(
+                  value: hora,
+                  child: Text(hora),
+                ))
+            .toList(),
         onChanged: (option) {
           setState(() {
             claseController.begineController = option.toString();
@@ -125,22 +156,21 @@ class _ClasePageState extends State<ClasePage> {
       margin: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
       padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 5),
       decoration: BoxDecoration(
-        color: AppColors.colors.primaryContainer,
-        borderRadius: BorderRadius.circular(15)
-      ),
+          color: AppColors.colors.primaryContainer,
+          borderRadius: BorderRadius.circular(15)),
       child: DropdownButton(
         dropdownColor: AppColors.colors.onSecondary,
         borderRadius: BorderRadius.circular(16),
         alignment: Alignment.center,
         menuMaxHeight: 400,
-        icon: const Visibility(visible: false, child: Icon(Icons.arrow_drop_down_circle)),
+        icon: const Visibility(
+            visible: false, child: Icon(Icons.arrow_drop_down_circle)),
         iconSize: 30,
         hint: const Text("Hora de Fin"),
         value: claseController.endController,
         underline: Container(
-          alignment: Alignment.centerRight,
-          child: const Icon(Icons.arrow_drop_down_circle)
-        ),
+            alignment: Alignment.centerRight,
+            child: const Icon(Icons.arrow_drop_down_circle)),
         items: items
             .map((String hora) => DropdownMenuItem<String>(
                   value: hora,
@@ -313,11 +343,11 @@ class _ClasePageState extends State<ClasePage> {
       height: 50,
       margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
       child: MaterialButton(
-        shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(15) ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         disabledColor: Colors.grey,
         color: AppColors.colors.secondaryContainer,
         child: Container(
-          padding: const EdgeInsets.symmetric( horizontal: 30, vertical: 15 ),
+          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
           child: const Text(
             'Registrar Materia',
           ),

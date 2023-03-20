@@ -51,6 +51,10 @@ class IA_Controller
   //ESTADOS//
   int waitAnswer = -1;
   
+  //HORAS//
+  String beginHourString = "";
+  String endHourString = "";
+
   // ---------------------------------------------------------------------------------------- //
 
   // ---------------------------------ATRIBUTOS ACCION--------------------------------------- //
@@ -687,8 +691,8 @@ class IA_Controller
           //INSERTAR MATERIA - waitAnswer: 2//
           else if(posCommands[0]!.task!.obj == "2")
           {
-            _voice.speak("¿Quieres insertar una Tarea?");
-            _stext = "¿Quieres insertar una Tarea?";
+            _voice.speak("¿Quieres insertar una Materia?");
+            _stext = "¿Quieres insertar una Materia?";
             _text = "";
             waitAnswer = 2;
           }
@@ -743,8 +747,8 @@ class IA_Controller
           //ELIMINAR MATERIA - waitAnswer: 8//
           else if(posCommands[0]!.task!.obj == "2")
           {
-            _voice.speak("¿Quieres eliminar una Tarea?");
-            _stext = "¿Quieres eliminar una Tarea?";
+            _voice.speak("¿Quieres eliminar una Materia?");
+            _stext = "¿Quieres eliminar una Materia?";
             _text = "";
             waitAnswer = 8;
           }
@@ -1542,7 +1546,7 @@ class IA_Controller
         else
         {
           NameMateria = ActualSubject[0]!.name!;
-          NewClase.id_subject = validSubject;
+          NewClase.id_subject = ActualSubject[0]!.id;
           _voice.speak("Te pedire hora y minutos por separado. ¿Cuál es la Hora de Inicio en formato 24 horas?");
           _stext = "¿Cuál es la Hora de Inicio?";
           _text = "";
@@ -1552,6 +1556,16 @@ class IA_Controller
       //HORA DE INICIO//
       else if(actualProcess == 2)
       {
+        if(_text.toLowerCase() == "uno") _text = '01';
+        else if(_text.toLowerCase() == "dos") _text = '02';
+        else if(_text.toLowerCase() == "tres") _text = '03';
+        else if(_text.toLowerCase() == "cuatro") _text = '04';
+        else if(_text.toLowerCase() == "cinco") _text = '05';
+        else if(_text.toLowerCase() == "seis") _text = '06';
+        else if(_text.toLowerCase() == "siete") _text = '07';
+        else if(_text.toLowerCase() == "ocho") _text = '08';
+        else if(_text.toLowerCase() == "nueve") _text = '09';
+        else if(_text.toLowerCase() == "cero") _text = '00';
         var num = int.tryParse(_text);
         if(_text.length > 2)
         {
@@ -1582,6 +1596,16 @@ class IA_Controller
       }
       else if(actualProcess == 3)
       {
+        if(_text.toLowerCase() == "uno") _text = '01';
+        else if(_text.toLowerCase() == "dos") _text = '02';
+        else if(_text.toLowerCase() == "tres") _text = '03';
+        else if(_text.toLowerCase() == "cuatro") _text = '04';
+        else if(_text.toLowerCase() == "cinco") _text = '05';
+        else if(_text.toLowerCase() == "seis") _text = '06';
+        else if(_text.toLowerCase() == "siete") _text = '07';
+        else if(_text.toLowerCase() == "ocho") _text = '08';
+        else if(_text.toLowerCase() == "nueve") _text = '09';
+        else if(_text.toLowerCase() == "cero" || _text.toLowerCase() =="en punto") _text = '00';
         var num = int.tryParse(_text);
         if(_text.length > 2)
         {
@@ -1604,9 +1628,10 @@ class IA_Controller
         else
         {
           Minutos = _text;
-          debugPrint(Hora+":"+Minutos);
-          Hora = ""; Minutos="";
-          NewClase.begin_hour = Hora+Minutos;
+          DateTime beginHour = DateTime(0001,1,1,int.parse(Hora),int.parse(Minutos));
+          beginHourString = beginHour.hour.toString() + ":" + beginHour.minute.toString();
+          NewClase.begin_hour = beginHour.toString();
+          debugPrint(beginHour.toString());
           _voice.speak("Te pedire hora y minutos por separado. ¿Cuál es la Hora de Fin en formato 24 horas?");
           _stext = "¿Cuál es la Hora de Fin?";
           _text = "";
@@ -1616,6 +1641,15 @@ class IA_Controller
       //HORA DE FIN//
       else if(actualProcess == 4)
       {
+        if(_text.toLowerCase() == "uno") _text = '01';
+        else if(_text.toLowerCase() == "dos") _text = '02';
+        else if(_text.toLowerCase() == "tres") _text = '03';
+        else if(_text.toLowerCase() == "cuatro") _text = '04';
+        else if(_text.toLowerCase() == "cinco") _text = '05';
+        else if(_text.toLowerCase() == "seis") _text = '06';
+        else if(_text.toLowerCase() == "siete") _text = '07';
+        else if(_text.toLowerCase() == "ocho") _text = '08';
+        else if(_text.toLowerCase() == "nueve") _text = '09';
         var num = int.tryParse(_text);
         if(_text.length > 2)
         {
@@ -1646,6 +1680,16 @@ class IA_Controller
       }
       else if(actualProcess == 5)
       {
+        if(_text.toLowerCase() == "uno") _text = '01';
+        else if(_text.toLowerCase() == "dos") _text = '02';
+        else if(_text.toLowerCase() == "tres") _text = '03';
+        else if(_text.toLowerCase() == "cuatro") _text = '04';
+        else if(_text.toLowerCase() == "cinco") _text = '05';
+        else if(_text.toLowerCase() == "seis") _text = '06';
+        else if(_text.toLowerCase() == "siete") _text = '07';
+        else if(_text.toLowerCase() == "ocho") _text = '08';
+        else if(_text.toLowerCase() == "nueve") _text = '09';
+        else if(_text.toLowerCase() == "cero" || _text.toLowerCase() =="en punto") _text = '00';
         var num = int.tryParse(_text);
         if(_text.length > 2)
         {
@@ -1668,8 +1712,10 @@ class IA_Controller
         else
         {
           Minutos = _text;
-          debugPrint(Hora+":"+Minutos);
-          NewClase.end_hour = Hora+Minutos;
+          DateTime endHour = DateTime(0001,1,1,int.parse(Hora),int.parse(Minutos));
+          endHourString = endHour.hour.toString() + ":" + endHour.minute.toString();
+          NewClase.end_hour = endHour.toString();
+          debugPrint(endHour.toString());
           _voice.speak("¿Qué día sera la Clase? Solo puedes mencionar un dia");
           _stext = "¿Qué día sera la Clase?";
           _text = "";
@@ -1713,7 +1759,7 @@ class IA_Controller
         {
           NewClase.days=_text;
           _voice.speak("A continuación, te muestro la información de la Clase, si es correcta di Guardar para registrarla o Cancelar para descartarla.");
-          _stext = "La Materia es: "+NameMateria + "\nEl Dia es: "+NewClase.days.toString()+"\nLa Hora Inicio es: "+NewClase.begin_hour.toString()+"\nLa Hora Fin es: "+NewClase.end_hour.toString();
+          _stext = "La Materia es: "+NameMateria + "\nEl Dia es: "+NewClase.days.toString()+"\nLa Hora Inicio es: "+beginHourString+"\nLa Hora Fin es: "+endHourString;
           _text = "";
           actualProcess++;
         }
@@ -1729,20 +1775,20 @@ class IA_Controller
       {
         if(_text.toUpperCase() == "GUARDAR")
         {
-          _voice.speak("Se guardó la Materia");
+          _voice.speak("Se guardó la Clase");
           clase_provider.create(NewClase);
           resetIA();
         }
         else if(_text.toUpperCase() == "CANCELAR")
         {
-          _voice.speak("Se ha descartado la tarea");
+          _voice.speak("Se ha descartado la Clase");
           NewClase = new Clase();
           resetIA();
         }
         else
         {
           _voice.speak("Solo son validas las opciones Guardar o Cancelar.");
-        _stext = "La Materia es: "+NameMateria + "\nEl Dia es: "+NewClase.days.toString()+"\nLa Hora Inicio es: "+NewClase.begin_hour.toString()+"\nLa Hora Fin es: "+NewClase.end_hour.toString();
+          _stext = "La Materia es: "+NameMateria + "\nEl Dia es: "+NewClase.days.toString()+"\nLa Hora Inicio es: "+beginHourString+"\nLa Hora Fin es: "+endHourString;
           _text = "";
         }
       }
@@ -1753,6 +1799,16 @@ class IA_Controller
       //HORA DE INICIO//
       if(actualProcess == 1)
       {
+        if(_text.toLowerCase() == "uno") _text = '01';
+        else if(_text.toLowerCase() == "dos") _text = '02';
+        else if(_text.toLowerCase() == "tres") _text = '03';
+        else if(_text.toLowerCase() == "cuatro") _text = '04';
+        else if(_text.toLowerCase() == "cinco") _text = '05';
+        else if(_text.toLowerCase() == "seis") _text = '06';
+        else if(_text.toLowerCase() == "siete") _text = '07';
+        else if(_text.toLowerCase() == "ocho") _text = '08';
+        else if(_text.toLowerCase() == "nueve") _text = '09';
+        else if(_text.toLowerCase() == "cero") _text = '00';
         var num = int.tryParse(_text);
         if(_text.length > 2)
         {
@@ -1783,6 +1839,16 @@ class IA_Controller
       }
       else if(actualProcess == 2)
       {
+        if(_text.toLowerCase() == "uno") _text = '01';
+        else if(_text.toLowerCase() == "dos") _text = '02';
+        else if(_text.toLowerCase() == "tres") _text = '03';
+        else if(_text.toLowerCase() == "cuatro") _text = '04';
+        else if(_text.toLowerCase() == "cinco") _text = '05';
+        else if(_text.toLowerCase() == "seis") _text = '06';
+        else if(_text.toLowerCase() == "siete") _text = '07';
+        else if(_text.toLowerCase() == "ocho") _text = '08';
+        else if(_text.toLowerCase() == "nueve") _text = '09';
+        else if(_text.toLowerCase() == "cero" || _text.toLowerCase() =="en punto") _text = '00';
         var num = int.tryParse(_text);
         if(_text.length > 2)
         {
@@ -1817,6 +1883,16 @@ class IA_Controller
       //HORA DE FIN//
       else if(actualProcess == 3)
       {
+        if(_text.toLowerCase() == "uno") _text = '01';
+        else if(_text.toLowerCase() == "dos") _text = '02';
+        else if(_text.toLowerCase() == "tres") _text = '03';
+        else if(_text.toLowerCase() == "cuatro") _text = '04';
+        else if(_text.toLowerCase() == "cinco") _text = '05';
+        else if(_text.toLowerCase() == "seis") _text = '06';
+        else if(_text.toLowerCase() == "siete") _text = '07';
+        else if(_text.toLowerCase() == "ocho") _text = '08';
+        else if(_text.toLowerCase() == "nueve") _text = '09';
+        else if(_text.toLowerCase() == "cero") _text = '00';
         var num = int.tryParse(_text);
         if(_text.length > 2)
         {
@@ -1847,6 +1923,16 @@ class IA_Controller
       }
       else if(actualProcess == 4)
       {
+        if(_text.toLowerCase() == "uno") _text = '01';
+        else if(_text.toLowerCase() == "dos") _text = '02';
+        else if(_text.toLowerCase() == "tres") _text = '03';
+        else if(_text.toLowerCase() == "cuatro") _text = '04';
+        else if(_text.toLowerCase() == "cinco") _text = '05';
+        else if(_text.toLowerCase() == "seis") _text = '06';
+        else if(_text.toLowerCase() == "siete") _text = '07';
+        else if(_text.toLowerCase() == "ocho") _text = '08';
+        else if(_text.toLowerCase() == "nueve") _text = '09';
+        else if(_text.toLowerCase() == "cero" || _text.toLowerCase() =="en punto") _text = '00';
         var num = int.tryParse(_text);
         if(_text.length > 2)
         {

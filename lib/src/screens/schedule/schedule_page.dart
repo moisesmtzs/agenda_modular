@@ -7,51 +7,52 @@ import 'package:agenda_app/src/screens/clase/detail/clase_detail_controller.dart
 
 import 'package:agenda_app/src/models/clase.dart';
 
+import '../../widgets/no_task_widget.dart';
+
 class SchedulePage extends StatelessWidget {
   final ScheduleController _scheduleController = Get.put(ScheduleController());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text("Mi horario"),
-        ),
-        body: SfCalendar(
-          view: CalendarView.week,
-          timeZone: 'Pacific Standard Time (Mexico)',
-          timeSlotViewSettings:
-              TimeSlotViewSettings(dateFormat: 'd', dayFormat: 'EEE'),
-          showWeekNumber: false,
-          selectionDecoration: BoxDecoration(color: Colors.transparent),
-          dataSource: MeetingDataSource(_getDataSource()),
-          monthViewSettings: const MonthViewSettings(
-              appointmentDisplayMode: MonthAppointmentDisplayMode.appointment),
-        ));
+      appBar: AppBar(
+        title: const Text('Mi Horario'),
+      ),
+      body: FutureBuilder(
+        future: _getDataSource(),
+        builder: (context, AsyncSnapshot<List<Meeting>> snapshot) {
+          if (snapshot.hasData) {
+            if ( snapshot.data!.isNotEmpty ) {
+              return SfCalendar(
+                  view: CalendarView.week,
+                  timeZone: 'Pacific Standard Time (Mexico)',
+                  timeSlotViewSettings: const TimeSlotViewSettings(dateFormat: 'd', dayFormat: 'EEE'),
+                  showWeekNumber: false,
+                  selectionDecoration: const BoxDecoration(color: Colors.transparent),
+                  dataSource: MeetingDataSource(snapshot.data),
+                  monthViewSettings: const MonthViewSettings(
+                    appointmentDisplayMode: MonthAppointmentDisplayMode.appointment),
+              );
+            } else {
+              return Center(child: NoTaskWidget(text: 'No hay horario'));
+            }
+          } else {
+            return Center(child: NoTaskWidget(text: 'No hay horario'));
+          }
+        }
+      ),
+    );
   }
 
-  List<Meeting> _getDataSource() {
+  Future<List<Meeting>> _getDataSource() async {
 
-    _scheduleController.main(); //en esta funcion pretendo regresar las clases
-    List<List<String>> lista = _scheduleController.clases;
-    Future<List<Clase?>> clases = _scheduleController.getClasesByUser('6');
-
-    //print(lista);
-    // for (int i = 0; i < lista.length; i++) {
-    //   print("Clase: ${lista[i]}");
-    // }
-
-    final List<Meeting> meetings = <Meeting>[];
-    final DateTime startTime = DateTime(DateTime.now().year, 01, 01, 9);
-    final DateTime endTime = startTime.add(const Duration(hours: 2));
-
-    meetings.add(Meeting('Matematicas',DateTime(DateTime.now().year, 01, 01, 9),endTime,AppColors.colors.inversePrimary,false,'FREQ=DAILY;INTERVAL=7;COUNT=52'));
-
+    List<Meeting> meetings = await _scheduleController.main(); 
     return meetings;
   }
 }
 
 class MeetingDataSource extends CalendarDataSource {
-  MeetingDataSource(List<Meeting> source) {
+  MeetingDataSource(List<Meeting>? source) {
     appointments = source;
   }
 
