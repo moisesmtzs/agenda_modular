@@ -14,6 +14,8 @@ import 'package:agenda_app/src/screens/schedule/schedule_page.dart';
 import '../../models/subject.dart';
 import '../../ui/app_colors.dart';
 
+//http://192.168.31.247:3000/api/clase/findByIdDayBegine/6/martes/0001-01-01 08:00:00
+
 class ScheduleController extends GetxController {
   User userSession = User.fromJson(GetStorage().read('user') ?? {});
   final ClaseProvider _claseProvider = ClaseProvider();
@@ -22,11 +24,34 @@ class ScheduleController extends GetxController {
   List<List<String>> clases = [];
   List<Meeting> clasesVista = [];
 
+
+  Clase? claseCalendario = Clase();
+  DateTime? dia = DateTime(0001, 01, 01);
+  DateTime fecha = DateTime(0001, 01, 01);
+
   Future<List<Clase?>> getClasesByUser(String idSubject) async {
     return await _claseProvider.findByUser(userSession.id ?? '0');
   }
 
+  Future getClasesByIdDaysBegin() async {//retornamos una clase
+
+    List<String> dias = <String>[
+      "lunes",//1
+      "martes",
+      "miercoles",
+      "jueves",
+      "viernes",
+      "sabado",
+      "domingo"
+    ];
+
+    claseCalendario = await _claseProvider.findByIdDayBegin(userSession.id ?? '0', dias[dia!.weekday-1], fecha.toString());
+    
+    return claseCalendario;
+  }
+
   Future<List<Meeting>> main() async {
+    //List<Clase?> clase = await _claseProvider.findByIdDayBegin(userSession.id ?? '0');
     //OBTENER COLOR//
     final Random random = Random();
     List<Color> colors = getColors();
@@ -34,6 +59,7 @@ class ScheduleController extends GetxController {
     List<Meeting> meetings = [];
     //RECUPERA LAS CLASES//
     List<Clase?> listaDeClases = await _claseProvider.findByUser(userSession.id ?? '0');
+
     for (int i = 0; i < listaDeClases.length; i++) {
       //GUARDAMOS LA CLASE//
       clases.add([

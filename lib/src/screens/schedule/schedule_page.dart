@@ -1,9 +1,14 @@
+import 'dart:math';
+
+import 'package:agenda_app/main.dart';
+import 'package:agenda_app/src/screens/clase/detail/clase_detail_page.dart';
 import 'package:agenda_app/src/ui/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:agenda_app/src/screens/schedule/schedule_controller.dart';
 import 'package:agenda_app/src/screens/clase/detail/clase_detail_controller.dart';
+
 
 import 'package:agenda_app/src/models/clase.dart';
 
@@ -20,33 +25,61 @@ class SchedulePage extends StatelessWidget {
         title: const Text('Mi Horario'),
       ),
       body: FutureBuilder(
-        future: _getDataSource(),
-        builder: (context, AsyncSnapshot<List<Meeting>> snapshot) {
-          if (snapshot.hasData) {
-            if ( snapshot.data!.isNotEmpty ) {
-              return SfCalendar(
+          future: _getDataSource(),
+          builder: (context, AsyncSnapshot<List<Meeting>> snapshot) {
+            if (snapshot.hasData) {
+              if (snapshot.data!.isNotEmpty) {
+                return SfCalendar(
                   view: CalendarView.week,
-                  timeSlotViewSettings: const TimeSlotViewSettings(dateFormat: 'd', dayFormat: 'EEE'),
+                  onTap: (CalendarTapDetails details) {
+                    //ocupo recuperar el id usuario, dia y hora inicio para encontrar el objeto clase
+                    _scheduleController.dia = details.date;
+                    _scheduleController.fecha = DateTime(0001, 01, 01, _scheduleController.dia!.hour, _scheduleController.dia!.minute);
+                    // print(dia!.weekday);
+                    // DateTime fecha = DateTime(0001, 01, 01, dia.hour, dia.minute);
+                    // print(fecha);
+                    // Future<Clase?> clase = _scheduleController.getClasesByIdDaysBegin(
+                    //     dia.weekday, fecha.toString());
+                    // print(clase);
+                    // 12345, 0001-01-01 8:30:00
+                    Get.bottomSheet(
+                      ClaseDetailPage(clase: _scheduleController.claseCalendario),
+                      enableDrag: true,
+                      isDismissible: true,
+                      isScrollControlled: true,
+                      ignoreSafeArea: true,
+                      backgroundColor: AppColors.colors.secondaryContainer,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(10.0),
+                          topRight: Radius.circular(10.0)
+                        ),
+                      ),
+                    );
+                    //aqui llamare al widget de clase detail
+                  },
+                  timeSlotViewSettings: const TimeSlotViewSettings(
+                      dateFormat: 'd', dayFormat: 'EEE'),
                   showWeekNumber: false,
-                  selectionDecoration: const BoxDecoration(color: Colors.transparent),
+                  selectionDecoration:
+                      const BoxDecoration(color: Colors.transparent),
                   dataSource: MeetingDataSource(snapshot.data),
                   monthViewSettings: const MonthViewSettings(
-                    appointmentDisplayMode: MonthAppointmentDisplayMode.appointment),
-              );
+                      appointmentDisplayMode:
+                          MonthAppointmentDisplayMode.appointment),
+                );
+              } else {
+                return Center(child: NoScheduleWidget(text: 'No hay horario'));
+              }
             } else {
-              return Center(child: NoScheduleWidget(text: 'No hay horario'));
+              return Center(child: NoScheduleWidget(text: 'Cargando horario'));
             }
-          } else {
-            return Center(child: NoScheduleWidget(text: 'Cargando horario'));
-          }
-        }
-      ),
+          }),
     );
   }
 
   Future<List<Meeting>> _getDataSource() async {
-
-    List<Meeting> meetings = await _scheduleController.main(); 
+    List<Meeting> meetings = await _scheduleController.main();
     return meetings;
   }
 }
@@ -97,28 +130,25 @@ class MeetingDataSource extends CalendarDataSource {
   }
 }
 
-/// Custom business object class which contains properties to hold the detailed
-/// information about the event data which will be rendered in calendar.
 class Meeting {
-  /// Creates a meeting class with required details.
-  Meeting(this.eventName, this.from, this.to, this.background, this.isAllDay,
-      this.recurrenceRule);
+  Meeting(
+    this.eventName, 
+    this.from, 
+    this.to, 
+    this.background, 
+    this.isAllDay,
+    this.recurrenceRule
+  );
 
-  /// Event name which is equivalent to subject property of [Appointment].
   String eventName;
 
-  /// From which is equivalent to start time property of [Appointment].
   DateTime from;
 
-  /// To which is equivalent to end time property of [Appointment].
   DateTime to;
 
-  /// Background which is equivalent to color property of [Appointment].
   Color background;
 
-  /// IsAllDay which is equivalent to isAllDay property of [Appointment].
   bool isAllDay;
 
-  /// Para repetir todas las semanas la misma clase [Appointment].
   String recurrenceRule;
 }

@@ -199,40 +199,6 @@ class SubjectDetailPage extends StatelessWidget {
     return Column(
 
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            mainAxisAlignment: MainAxisAlignment.end,
-            // children: [
-            //   IconButton(
-            //         icon: const Icon(Icons.edit_outlined, size: 30),
-            //         color: AppColors.colors.primary,
-            //         onPressed: () {
-            //           Get.bottomSheet(
-            //             ClaseUpdatePage(clase: clase),
-            //             enableDrag: true,
-            //             isDismissible: true,
-            //             isScrollControlled: true,
-            //             ignoreSafeArea: false,
-            //             backgroundColor: AppColors.colors.secondaryContainer,
-            //             barrierColor: Colors.black.withOpacity(0),
-            //             shape: const RoundedRectangleBorder(
-            //               borderRadius: BorderRadius.only(
-            //                   topLeft: Radius.circular(10.0),
-            //                   topRight: Radius.circular(10.0)),
-            //             ),
-            //           );
-            //         },
-            //       ),
-            //   IconButton(
-            //     icon: const Icon(Icons.delete_outline_rounded, size: 30),
-            //     color: AppColors.colors.primary,
-            //     onPressed: () {
-            //       _claseDetailController.confirmationDialog(
-            //           context, clase?.id ?? '0');
-            //     },
-            //   ),
-            // ],
-          ),
               
           Column(
             children:[
@@ -241,6 +207,7 @@ class SubjectDetailPage extends StatelessWidget {
               Text(
                 (clase?.days != '')? 'Dia: $day' : '',
               ),
+              
               Row(
                 children: [
                   const SizedBox(height: 10),
