@@ -31,19 +31,12 @@ class SchedulePage extends StatelessWidget {
               if (snapshot.data!.isNotEmpty) {
                 return SfCalendar(
                   view: CalendarView.week,
-                  onTap: (CalendarTapDetails details) {
-                    //ocupo recuperar el id usuario, dia y hora inicio para encontrar el objeto clase
+                  onTap: (CalendarTapDetails details) async {
                     _scheduleController.dia = details.date;
                     _scheduleController.fecha = DateTime(0001, 01, 01, _scheduleController.dia!.hour, _scheduleController.dia!.minute);
-                    // print(dia!.weekday);
-                    // DateTime fecha = DateTime(0001, 01, 01, dia.hour, dia.minute);
-                    // print(fecha);
-                    // Future<Clase?> clase = _scheduleController.getClasesByIdDaysBegin(
-                    //     dia.weekday, fecha.toString());
-                    // print(clase);
-                    // 12345, 0001-01-01 8:30:00
+                    Clase? clasePrueba = await _scheduleController.getClasesByIdDaysBegin();
                     Get.bottomSheet(
-                      ClaseDetailPage(clase: _scheduleController.claseCalendario),
+                      ClaseDetailPage(clase: clasePrueba),
                       enableDrag: true,
                       isDismissible: true,
                       isScrollControlled: true,
@@ -56,17 +49,14 @@ class SchedulePage extends StatelessWidget {
                         ),
                       ),
                     );
-                    //aqui llamare al widget de clase detail
                   },
-                  timeSlotViewSettings: const TimeSlotViewSettings(
-                      dateFormat: 'd', dayFormat: 'EEE'),
+                  timeSlotViewSettings: const TimeSlotViewSettings(dateFormat: 'd', dayFormat: 'EEE'),
                   showWeekNumber: false,
-                  selectionDecoration:
-                      const BoxDecoration(color: Colors.transparent),
+                  selectionDecoration: const BoxDecoration(color: Colors.transparent),
                   dataSource: MeetingDataSource(snapshot.data),
                   monthViewSettings: const MonthViewSettings(
-                      appointmentDisplayMode:
-                          MonthAppointmentDisplayMode.appointment),
+                    appointmentDisplayMode: MonthAppointmentDisplayMode.appointment
+                  ),
                 );
               } else {
                 return Center(child: NoScheduleWidget(text: 'No hay horario'));

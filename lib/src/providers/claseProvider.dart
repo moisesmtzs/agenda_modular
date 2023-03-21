@@ -82,8 +82,7 @@ class ClaseProvider extends GetConnect {
   }
 
   Future<Clase?> findByIdDayBegin(String idUser, String days, String begin) async {
-    Uri _url =
-        Uri.http(Environment.API_URL_OLD, '/api/clase/findByIdDayBegine/$idUser/$days/$begin');
+    Uri _url = Uri.http(Environment.API_URL_OLD, '/api/clase/findByIdDayBegine/$idUser/$days/$begin');
 
     Map<String, String> headers = {
       'Content-Type': 'application/json',
@@ -92,7 +91,8 @@ class ClaseProvider extends GetConnect {
     final res = await http.get(_url, headers: headers);
 
     final data = json.decode(res.body);
-    Clase clase = Clase.fromJsonList(data); //recuperamos los datos
+    print(data);
+    Clase clase = Clase.fromJson(data); //recuperamos los datos
     return clase; 
   }
 

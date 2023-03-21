@@ -17,12 +17,12 @@ class ClaseDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    late var idClase = clase?.id ?? '';
-    late var begin = (clase?.begin_hour as String).substring(11, 16);
-    late var end = (clase?.end_hour as String).substring(11, 16);
-    late var day = clase?.days ?? '';
-    late var classroom = clase?.classroom ?? '';
-    late var building = clase?.building ?? '';
+    String? idClase = clase?.id ?? '';
+    String? begin = (clase?.begin_hour)!.substring(11, 16);
+    String? end = (clase?.end_hour)!.substring(11, 16);
+    String? day = clase?.days ?? '';
+    String? classroom = clase?.classroom ?? '';
+    String? building = clase?.building ?? '';
     return Container(
       height: MediaQuery.of(context).size.height * 0.6,
       margin: const EdgeInsets.only(top: 20, bottom: 40, left: 30, right: 30),
