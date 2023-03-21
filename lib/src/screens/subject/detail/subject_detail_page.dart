@@ -197,59 +197,59 @@ class SubjectDetailPage extends StatelessWidget {
     late var building = clase?.building;
 
     return Column(
-
-        children: [
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 10),
+        Row(
+          children: [
+            const Text(
+              'Dia: '
+            ),
+            Text(
+              ( clase?.days != '' ) ? '$day' : 'Sin día asignado',
+            ),
+          ],
+        ),
+        Row(
+          children: [
+            // const SizedBox(height: 10),
+            Text(
+              (clase?.begin_hour != '')? 'Horario: $beginHour' : '',
               
-          Column(
-            children:[
+            ),
+            Text(
+              (clase?.end_hour != '')? ' - $endHour' : '',
               
-              const SizedBox(height: 10),
-              Text(
-                (clase?.days != '')? 'Dia: $day' : '',
-              ),
+            ),
+          ]
+        ),
+        Row(
+          children: [
+            // const SizedBox(height: 10),
+            Text(
+              (clase?.classroom != '')? 'Salon: $building' : '',
               
-              Row(
-                children: [
-                  const SizedBox(height: 10),
-                  Text(
-                    (clase?.begin_hour != '')? 'Horario: $beginHour' : '',
-                    
-                  ),
-                  Text(
-                    (clase?.end_hour != '')? '- $endHour' : '',
-                    
-                  ),
-                ]
-              ),
-
-              Row(
-                children: [
-                  const SizedBox(height: 10),
-                  Text(
-                    (clase?.classroom != '')? 'Salon: $building' : '',
-                    
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    (clase?.building != '')? '$classroom' : '',
-                    
-                  ),
-                ]
-              ),
-            ]
-          ),
-        ],
+            ),
+            // const SizedBox(height: 10),
+            Text(
+              (clase?.building != '')? '$classroom' : '',
+              
+            ),
+          ]
+        ),
+      ],
     );
   }
 
   BoxDecoration _cardBorders() => BoxDecoration(
-          color: AppColors.colors.surface,
-          borderRadius: BorderRadius.circular(25),
-          boxShadow: const [
-            BoxShadow(
-              color: Colors.black12,
-              offset: Offset(0, 6),
-              blurRadius: 10,
-            )
-          ]);
+    color: AppColors.colors.surface,
+    borderRadius: BorderRadius.circular(25),
+    boxShadow: const [
+      BoxShadow(
+        color: Colors.black12,
+        offset: Offset(0, 6),
+        blurRadius: 10,
+      )
+    ]
+  );
 }

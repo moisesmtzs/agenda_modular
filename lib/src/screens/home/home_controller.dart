@@ -1,4 +1,3 @@
-import 'package:agenda_app/src/screens/screens.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
