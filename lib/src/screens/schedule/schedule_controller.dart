@@ -11,11 +11,11 @@ import 'package:agenda_app/src/providers/claseProvider.dart';
 import 'package:agenda_app/src/models/clase.dart';
 import 'package:agenda_app/src/screens/schedule/schedule_page.dart';
 
+import '../../models/connectivity.dart';
 import '../../models/subject.dart';
-import '../../ui/app_colors.dart';
+import 'package:agenda_app/src/api/db.dart';
 
 //http://192.168.31.247:3000/api/clase/findByIdDayBegine/6/martes/0001-01-01 08:00:00
-
 class ScheduleController extends GetxController {
   User userSession = User.fromJson(GetStorage().read('user') ?? {});
   final ClaseProvider _claseProvider = ClaseProvider();
@@ -24,13 +24,30 @@ class ScheduleController extends GetxController {
   List<List<String>> clases = [];
   List<Meeting> clasesVista = [];
 
+  Connect connectivity = Connect();
 
   Clase? claseCalendario = Clase();
   DateTime? dia = DateTime(0001, 01, 01);
   DateTime fecha = DateTime(0001, 01, 01);
 
   Future<List<Clase?>> getClasesByUser(String idSubject) async {
-    return await _claseProvider.findByUser(userSession.id ?? '0');
+    //GENERA REPLICA AL CREAR UN NUEVO REGISTRO//
+    await connectivity.getConnectivityReplica();
+    if(connectivity.isConnected == true)
+    {
+      return await _claseProvider.findByUser(userSession.id ?? '0');
+    }
+    else
+    {
+      return await db.getClases();
+    }
+    
+  }
+
+  //VALIDAR QUE EXISTE UNA CONEXION A INTERNET//
+  Future validarInternet() async
+  {
+    await connectivity.getConnectivity();
   }
 
   Future getClasesByIdDaysBegin() async {//retornamos una clase

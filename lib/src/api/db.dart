@@ -412,10 +412,13 @@ class db
 
 
   //----------------------------------------------------- <CLASE> -----------------------------------------------------//
-  static Future<List<Clase?>> getClase() async {
-
+  static Future<List<Clase?>> getClases() async 
+  {
+    //NOS ASEGURAMOS QUE LA BD ESTE CREADA//
     Database database = await openDB();
-    final List<Map<String, dynamic>> claseList = await database.query('clase', where: 'id_user = ?', whereArgs: [db().userSession.id]);
+    //OBTENEMOS TODOS LOS ELEMENTOS DE LA TABLA INDICADA//
+    final List<Map<String, dynamic>> claseList  = await database.query('clase');
+    //RECORREMOS CADA ELEMENTO PARA CONSTRUIR EL OBJETO SUBJECT POR CADA UNO//
     return List.generate(claseList.length, (i) => Clase(
       id: claseList[i]['id'].toString(),
       id_user: claseList[i]['id_user'].toString(),

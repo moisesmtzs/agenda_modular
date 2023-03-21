@@ -11,8 +11,12 @@ import 'package:agenda_app/src/ui/app_colors.dart';
 import 'package:agenda_app/src/models/user.dart';
 import 'package:get_storage/get_storage.dart';
 
+import '../../../models/connectivity.dart';
+import 'package:agenda_app/src/api/db.dart';
+
 class ClaseController extends GetxController {
   User userSession = User.fromJson(GetStorage().read('user') ?? {});
+  Connect connectivity = Connect();
   var idsubject = ''.obs;
   String? begineController;
   String? endController;
@@ -21,20 +25,41 @@ class ClaseController extends GetxController {
   TextEditingController buildingController = TextEditingController();
   SubjectProvider subjectProvider = SubjectProvider();
 
+  //VALIDAR QUE EXISTE UNA CONEXION A INTERNET//
+  Future validarInternet() async
+  {
+    await connectivity.getConnectivity();
+  }
+
   //dropdown
   RxList<Subject?> subjects = <Subject?>[].obs;
 
   ClaseController() {
+    connectivity.getConnectivity();
     getSubjects();
     subjects.refresh();
     daysController = "lunes";
   }
 
   void getSubjects() async {
-    var result = await subjectProvider.findByUser(userSession.id as String);
-    subjects.clear();
-    for (var s in result) {
-      subjects.add(s!);
+    //GENERA REPLICA AL CREAR UN NUEVO REGISTRO//
+    await connectivity.getConnectivityReplica();
+
+    if(connectivity.isConnected == true)
+    {
+      var result = await subjectProvider.findByUser(userSession.id as String);
+      subjects.clear();
+      for (var s in result) {
+        subjects.add(s!);
+      }
+    }
+    else
+    {
+      List<Subject?> result = await db.getSubjects();
+      subjects.clear();
+      for (var s in result) {
+        subjects.add(s!);
+      }
     }
   }
 

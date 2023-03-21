@@ -34,6 +34,7 @@ class SchedulePage extends StatelessWidget {
                   onTap: (CalendarTapDetails details) async {
                     _scheduleController.dia = details.date;
                     _scheduleController.fecha = DateTime(0001, 01, 01, _scheduleController.dia!.hour, _scheduleController.dia!.minute);
+                    print(_scheduleController.fecha.toString());
                     Clase? clasePrueba = await _scheduleController.getClasesByIdDaysBegin();
                     Get.bottomSheet(
                       ClaseDetailPage(clase: clasePrueba),
