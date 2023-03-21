@@ -197,81 +197,47 @@ class SubjectDetailPage extends StatelessWidget {
     late var building = clase?.building;
 
     return Column(
-
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            mainAxisAlignment: MainAxisAlignment.end,
-            // children: [
-            //   IconButton(
-            //         icon: const Icon(Icons.edit_outlined, size: 30),
-            //         color: AppColors.colors.primary,
-            //         onPressed: () {
-            //           Get.bottomSheet(
-            //             ClaseUpdatePage(clase: clase),
-            //             enableDrag: true,
-            //             isDismissible: true,
-            //             isScrollControlled: true,
-            //             ignoreSafeArea: false,
-            //             backgroundColor: AppColors.colors.secondaryContainer,
-            //             barrierColor: Colors.black.withOpacity(0),
-            //             shape: const RoundedRectangleBorder(
-            //               borderRadius: BorderRadius.only(
-            //                   topLeft: Radius.circular(10.0),
-            //                   topRight: Radius.circular(10.0)),
-            //             ),
-            //           );
-            //         },
-            //       ),
-            //   IconButton(
-            //     icon: const Icon(Icons.delete_outline_rounded, size: 30),
-            //     color: AppColors.colors.primary,
-            //     onPressed: () {
-            //       _claseDetailController.confirmationDialog(
-            //           context, clase?.id ?? '0');
-            //     },
-            //   ),
-            // ],
-          ),
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 10),
+        Row(
+          children: [
+            const Text(
+              'Dia: '
+            ),
+            Text(
+              ( clase?.days != '' ) ? '$day' : 'Sin día asignado',
+            ),
+          ],
+        ),
+        Row(
+          children: [
+            // const SizedBox(height: 10),
+            Text(
+              (clase?.begin_hour != '')? 'Horario: $beginHour' : '',
               
-          Column(
-            children:[
+            ),
+            Text(
+              (clase?.end_hour != '')? ' - $endHour' : '',
               
-              const SizedBox(height: 10),
-              Text(
-                (clase?.days != '')? 'Dia: $day' : '',
-              ),
-              Row(
-                children: [
-                  const SizedBox(height: 10),
-                  Text(
-                    (clase?.begin_hour != '')? 'Horario: $beginHour' : '',
-                    
-                  ),
-                  Text(
-                    (clase?.end_hour != '')? '- $endHour' : '',
-                    
-                  ),
-                ]
-              ),
-
-              Row(
-                children: [
-                  const SizedBox(height: 10),
-                  Text(
-                    (clase?.classroom != '')? 'Salon: $building' : '',
-                    
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    (clase?.building != '')? '$classroom' : '',
-                    
-                  ),
-                ]
-              ),
-            ]
-          ),
-        ],
+            ),
+          ]
+        ),
+        Row(
+          children: [
+            // const SizedBox(height: 10),
+            Text(
+              (clase?.classroom != '')? 'Salon: $building' : '',
+              
+            ),
+            // const SizedBox(height: 10),
+            Text(
+              (clase?.building != '')? '$classroom' : '',
+              
+            ),
+          ]
+        ),
+      ],
     );
   }
 

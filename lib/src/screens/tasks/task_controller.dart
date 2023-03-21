@@ -14,15 +14,14 @@ import 'package:agenda_app/src/ui/app_colors.dart';
 
 class TaskController extends GetxController {
   TaskController() {
-    connectivity.getConnectivity(); //esto constructor
+    connectivity.getConnectivity();
   }
 
-  //VALIDAR QUE EXISTE UNA CONEXION A INTERNET//
   Future validarInternet() async {
     await connectivity.getConnectivity();
   }
 
-  Connect connectivity = Connect(); //esto, constructor
+  Connect connectivity = Connect();
 
   User userSession = User.fromJson(GetStorage().read('user') ?? {});
 
@@ -39,8 +38,6 @@ class TaskController extends GetxController {
   }
 
   void goToAddTaskPage(BuildContext context) {
-    // final page = AddTaskPage();
-    // Navigator.push(context, MaterialPageRoute(builder: (context) => page));
     Get.toNamed('/addTask');
   }
 
@@ -56,7 +53,9 @@ class TaskController extends GetxController {
 
     if (status == 'COMPLETADO') {
       for (int i = 0; i < tasks.length; i++) {
-        selectedTasks.add(tasks[i]!.id);
+        if ( !selectedTasks.contains(tasks[i]!.id) ) {
+          selectedTasks.add(tasks[i]!.id);
+        }
       }
     }
     selectedTasks.refresh();
@@ -92,7 +91,6 @@ class TaskController extends GetxController {
   }
 
   void delete(Task? task) async {
-    //GENERA LA REPLICA AL ELIMINAR UN REGISTRO//
     await connectivity.getConnectivityReplica();
     if (connectivity.isConnected == true) {
       ResponseApi? responseApi = await _tasksProvider.deleteTask(task!.id);
@@ -140,10 +138,11 @@ class TaskController extends GetxController {
     );
 
     showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return alertDialog;
-        });
+      context: context,
+      builder: (BuildContext context) {
+        return alertDialog;
+      }
+    );
   }
   
 }

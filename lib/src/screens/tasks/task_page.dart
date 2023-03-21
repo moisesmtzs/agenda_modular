@@ -69,10 +69,12 @@ class _TaskPageState extends State<TaskPage> {
           ),)
         ),
         body: TabBarView(
-          physics: const NeverScrollableScrollPhysics(),
+          physics: const ClampingScrollPhysics(),
           children: tasks.map((_tasks) {
             return RefreshIndicator(
               onRefresh: _refresh,
+              semanticsLabel: 'Actualizar tareas',
+              semanticsValue: 'Actualizar tareas',
               child: FutureBuilder<List<Task?>>(
                 future: _tasks,
                 builder: (context, AsyncSnapshot<List<Task?>> snapshot) {
@@ -85,10 +87,13 @@ class _TaskPageState extends State<TaskPage> {
                         itemBuilder: (_, index) {
                           return _taskCard(snapshot.data![index]!, context);
                         }
-                        
                       );
                     } else {
-                      return NoTaskWidget(text: 'No hay tareas agregadas');
+                      return SingleChildScrollView(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        padding: const EdgeInsets.symmetric(vertical: 100),
+                        child: NoTaskWidget(text: 'No hay tareas agregadas')
+                      );
                     }
                   } else {
                     return NoTaskWidget(text: 'No hay tareas agregadas');
