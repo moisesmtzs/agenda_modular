@@ -54,6 +54,7 @@ class ClaseDetailController extends GetxController {
         delete(clase);
         Get.back();
         Get.back();
+        Get.back();
       },
     );
 

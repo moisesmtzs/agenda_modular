@@ -69,6 +69,12 @@ class ClaseUpdatePage extends StatelessWidget {
         dropdownColor: AppColors.colors.primaryContainer,
         borderRadius: BorderRadius.circular(12),
         icon: const Icon(Icons.arrow_drop_down_circle_rounded),
+        // //value: claseUpdateController.selectedBegin.value.substring(11,16).toString(),
+
+        // items: _dropDownItems(claseUpdateController.hoursList),
+        // onChanged: (String? value) {
+        //   claseUpdateController.selectedBegin.value = value!;
+        // },
         value: "07:00",
         items: _dropDownItems(claseUpdateController.hoursList),
         onChanged: (String? value) {

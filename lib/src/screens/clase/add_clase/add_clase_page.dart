@@ -78,28 +78,29 @@ class _ClasePageState extends State<ClasePage> {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
       decoration: BoxDecoration(
-        color: AppColors.colors.primaryContainer,
-        borderRadius: BorderRadius.circular(15)
-      ),
-      child: Obx( () => DropdownButton(
-        dropdownColor: AppColors.colors.onSecondary,
-        borderRadius: BorderRadius.circular(16),
-        underline: Container(
-          alignment: Alignment.centerRight,
-          child: const Icon(Icons.arrow_drop_down_circle)
+          color: AppColors.colors.primaryContainer,
+          borderRadius: BorderRadius.circular(15)),
+      child: Obx(
+        () => DropdownButton(
+          dropdownColor: AppColors.colors.onSecondary,
+          borderRadius: BorderRadius.circular(16),
+          underline: Container(
+              alignment: Alignment.centerRight,
+              child: const Icon(Icons.arrow_drop_down_circle)),
+          elevation: 3,
+          isExpanded: true,
+          hint: const Text(
+            'Seleccionar materia',
+            style: TextStyle(color: Colors.black, fontSize: 16),
+          ),
+          items: _dropDownItems(),
+          value: claseController.idsubject.value == ''
+              ? null
+              : claseController.idsubject.value,
+          onChanged: (option) {
+            claseController.idsubject.value = option.toString();
+          },
         ),
-        elevation: 3,
-        isExpanded: true,
-        hint: const Text(
-          'Seleccionar materia',
-          style: TextStyle(color: Colors.black, fontSize: 16),
-        ),
-        items: _dropDownItems(),
-        value: claseController.idsubject.value == '' ? null : claseController.idsubject.value,
-        onChanged: (option) {
-          claseController.idsubject.value = option.toString();
-        },
-      ),
       ),
     );
   }
@@ -338,6 +339,7 @@ class _ClasePageState extends State<ClasePage> {
 
   //-------------------------------------------------------------------------------
   Widget _registerButton() {
+    print("Se presiono el boton");
     return Container(
       width: double.infinity,
       height: 50,

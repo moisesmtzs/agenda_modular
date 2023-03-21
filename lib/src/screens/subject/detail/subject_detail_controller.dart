@@ -44,6 +44,9 @@ class SubjectDetailController extends GetxController {
         Get.snackbar(responseApi?.message ?? '', '',
             backgroundColor: AppColors.colors.secondary,
             colorText: AppColors.colors.onSecondary);
+        Future.delayed(const Duration(milliseconds: 1000), () {//Funciona pero se puede mejorar RETORNA AL MAIN, CUANDO SE ELIMINA UNA MATERIA
+        Get.offNamed('/home');
+        });
       } else {
         Get.snackbar('No se eliminó la materia', responseApi?.message ?? '',
             backgroundColor: AppColors.colors.errorContainer,

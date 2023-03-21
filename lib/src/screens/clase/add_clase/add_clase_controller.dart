@@ -27,12 +27,13 @@ class ClaseController extends GetxController {
   ClaseController() {
     getSubjects();
     subjects.refresh();
+    daysController = "lunes";
   }
 
   void getSubjects() async {
     var result = await subjectProvider.findByUser(userSession.id as String);
     subjects.clear();
-    for ( var s in result ) {
+    for (var s in result) {
       subjects.add(s!);
     }
   }
@@ -49,7 +50,6 @@ class ClaseController extends GetxController {
     String building = buildingController.text;
 
     if (isValidForms(idSubject, inicio, fin, days!)) {
-
       Clase clase = Clase(
         id_user: idUser,
         id_subject: idSubject,
@@ -62,12 +62,9 @@ class ClaseController extends GetxController {
 
       ResponseApi? responseApi = await claseProvider.create(clase);
       if (responseApi?.success == true) {
-        Get.snackbar(
-          responseApi?.message ?? '', 
-          'Clase creada correctamente',
-          backgroundColor: AppColors.colors.secondary,
-          colorText: AppColors.colors.onSecondary
-        );
+        Get.snackbar(responseApi?.message ?? '', 'Clase creada correctamente',
+            backgroundColor: AppColors.colors.secondary,
+            colorText: AppColors.colors.onSecondary);
         Future.delayed(const Duration(milliseconds: 1000), () {
           Get.offNamed('/home');
         });
