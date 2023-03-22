@@ -15,7 +15,6 @@ import '../../models/connectivity.dart';
 import '../../models/subject.dart';
 import 'package:agenda_app/src/api/db.dart';
 
-//http://192.168.31.247:3000/api/clase/findByIdDayBegine/6/martes/0001-01-01 08:00:00
 class ScheduleController extends GetxController {
   User userSession = User.fromJson(GetStorage().read('user') ?? {});
   final ClaseProvider _claseProvider = ClaseProvider();
@@ -30,9 +29,16 @@ class ScheduleController extends GetxController {
   DateTime? dia = DateTime(0001, 01, 01);
   DateTime fecha = DateTime(0001, 01, 01);
 
+  //VALIDAR QUE EXISTE UNA CONEXION A INTERNET//
+  Future validarInternet() async
+  {
+    await connectivity.getConnectivity();
+  }
+
   Future<List<Clase?>> getClasesByUser(String idSubject) async {
-    //GENERA REPLICA AL CREAR UN NUEVO REGISTRO//
-    await connectivity.getConnectivityReplica();
+
+    await validarInternet();
+
     if(connectivity.isConnected == true)
     {
       return await _claseProvider.findByUser(userSession.id ?? '0');
@@ -41,13 +47,6 @@ class ScheduleController extends GetxController {
     {
       return await db.getClases();
     }
-    
-  }
-
-  //VALIDAR QUE EXISTE UNA CONEXION A INTERNET//
-  Future validarInternet() async
-  {
-    await connectivity.getConnectivity();
   }
 
   Future getClasesByIdDaysBegin() async {//retornamos una clase
@@ -62,20 +61,40 @@ class ScheduleController extends GetxController {
       "domingo"
     ];
 
-    claseCalendario = await _claseProvider.findByIdDayBegin(userSession.id ?? '0', dias[dia!.weekday-1], fecha.toString());
-    
+    await validarInternet();
+
+    if(connectivity.isConnected == true)
+    {
+      claseCalendario = await _claseProvider.findByIdDayBegin(userSession.id ?? '0', dias[dia!.weekday-1], fecha.toString());
+    }
+    else
+    {
+      claseCalendario = await db.getByIdDayBegin(dias[dia!.weekday-1], fecha.toString());
+    }
     return claseCalendario;
   }
 
   Future<List<Meeting>> main() async {
-    //List<Clase?> clase = await _claseProvider.findByIdDayBegin(userSession.id ?? '0');
     //OBTENER COLOR//
     final Random random = Random();
     List<Color> colors = getColors();
+    Subject? subj = new Subject();
+
     //LISTA DE CLASES A MOSTRAR//
     List<Meeting> meetings = [];
+    List<Clase?> listaDeClases = [];
+
     //RECUPERA LAS CLASES//
-    List<Clase?> listaDeClases = await _claseProvider.findByUser(userSession.id ?? '0');
+    await validarInternet();
+
+    if(connectivity.isConnected == true)
+    {
+      listaDeClases = await _claseProvider.findByUser(userSession.id ?? '0');
+    }
+    else
+    {
+      listaDeClases = await db.getClases();
+    }
 
     for (int i = 0; i < listaDeClases.length; i++) {
       //GUARDAMOS LA CLASE//
@@ -101,7 +120,16 @@ class ScheduleController extends GetxController {
       int difMin = end_hour.minute-begin_hour.minute;
 
       //RECUPERAR NOMBRE//
-      Subject? subj = await _subjectProvider.findById(idSub);
+      await validarInternet();
+
+      if(connectivity.isConnected == true)
+      {
+        subj = await _subjectProvider.findById(idSub);
+      }
+      else
+      {
+        subj = await db.getOneSubjectAll(idSub);
+      }
 
       //VALIDAR SI YA HAY UNA CLASE DE ESA MATERIA PARA PINTARLAS DEL MISMO COLOR//
       Color backgroundColor = Colors.white;
@@ -128,6 +156,7 @@ class ScheduleController extends GetxController {
     }
     return meetings;
   }
+  
   List<Color> getColors()
   {
     final List<Color> colors = <Color>[];

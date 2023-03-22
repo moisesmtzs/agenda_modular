@@ -17,11 +17,16 @@ class ClaseUpdateController extends GetxController {
     connectivity.getConnectivity();
     getClase();
     setClase();
-    //begin.refresh();
   }
 
   Clase clase = Clase();
   Connect connectivity = Connect();
+
+  //VALIDAR QUE EXISTE UNA CONEXION A INTERNET//
+  Future validarInternet() async
+  {
+    await connectivity.getConnectivity();
+  }
 
   User userSession = User.fromJson(GetStorage().read('user') ?? {});
 
@@ -92,15 +97,21 @@ class ClaseUpdateController extends GetxController {
   RxList<Clase?> data = <Clase?>[].obs;
 
   Future<List<Clase?>> getClase() async {
+
+    await validarInternet();
+
     if (connectivity.isConnected == true) {
       claseList = await claseProvider.findByUser(userSession.id ?? '');
+      //GENERA REPLICA AL CREAR UN NUEVO REGISTRO//
+      await connectivity.getConnectivityReplica();
     } else {
-      claseList = await db.selectClase();
+      claseList = await db.getClases();
     }
 
     for (var s in claseList) {
       data.add(s);
     }
+    
     return claseList;
   }
 
@@ -126,22 +137,33 @@ class ClaseUpdateController extends GetxController {
       clase.classroom = classroom;
       clase.building = building;
 
-      ResponseApi? responseApi = await claseProvider.updateClase(clase);
-      if (responseApi!.success!) {
-        Get.snackbar(responseApi.message ?? '',
-            'La clase ha sido actualizada satisfactoriamente',
-            backgroundColor: AppColors.colors.secondary,
-            colorText: AppColors.colors.onSecondary);
-        Future.delayed(const Duration(milliseconds: 1000), () {
-          Navigator.pop(context);
-          Navigator.pop(context);
-        });
-        Get.offNamed('/subject');
-      } else {
-        Get.snackbar(responseApi.message ?? '',
-            'Ha ocurrido un error al actualizar la clase',
-            backgroundColor: AppColors.colors.errorContainer,
-            colorText: AppColors.colors.onErrorContainer);
+      await validarInternet();
+
+      if(connectivity.isConnected == true)
+      {
+        ResponseApi? responseApi = await claseProvider.updateClase(clase);
+        //GENERA REPLICA AL CREAR UN NUEVO REGISTRO//
+        await connectivity.getConnectivityReplica();
+        if (responseApi!.success!) {
+          Get.snackbar(responseApi.message ?? '',
+              'La clase ha sido actualizada satisfactoriamente',
+              backgroundColor: AppColors.colors.secondary,
+              colorText: AppColors.colors.onSecondary);
+          Future.delayed(const Duration(milliseconds: 1000), () {
+            Navigator.pop(context);
+            Navigator.pop(context);
+          });
+          Get.offNamed('/subject');
+        } else {
+          Get.snackbar(responseApi.message ?? '',
+              'Ha ocurrido un error al actualizar la clase',
+              backgroundColor: AppColors.colors.errorContainer,
+              colorText: AppColors.colors.onErrorContainer);
+        }
+      }
+      else
+      {
+        await db.updateClase(clase);
       }
     }
   }

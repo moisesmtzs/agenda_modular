@@ -55,6 +55,8 @@ class AddTaskController extends GetxController {
     await validarInternet();
     if ( connectivity.isConnected == true ) {
       subjectList = await subjectProvider.findByUser(userSession.id ?? '');
+      //GENERA REPLICA AL CREAR UN NUEVO REGISTRO//
+      await connectivity.getConnectivityReplica();
     } else {
       subjectList = await db.getSubjects();
     }
@@ -65,8 +67,8 @@ class AddTaskController extends GetxController {
     return subjectList;
   }
 
-  void register( BuildContext context ) async {
 
+  void register( BuildContext context ) async {
     String name = nameController.text;
     String description = descriptionController.text;
     String date = _selectedDate.toString();
@@ -74,9 +76,6 @@ class AddTaskController extends GetxController {
     String type = typeSelected.string;
 
     if ( isValidForm(name, description, date, subject, type) ) {
-      
-      // isEnable.value = false;
-
       Task task = Task(
         idUser: userSession.id,
         name: name,
@@ -86,13 +85,12 @@ class AddTaskController extends GetxController {
         type: type
       );
 
-      //GENERA REPLICA AL CREAR UN NUEVO REGISTRO//
-      connectivity.getConnectivityReplica();
+      await validarInternet();
 
       if ( connectivity.isConnected == true ) {
-
         ResponseApi? responseApi = await tasksProvider.create(task);
-
+        //GENERA REPLICA AL CREAR UN NUEVO REGISTRO//
+        await connectivity.getConnectivityReplica();
         if (responseApi?.success == true) {
           Get.snackbar(
             responseApi?.message ?? '', 
@@ -110,13 +108,10 @@ class AddTaskController extends GetxController {
             backgroundColor: AppColors.colors.errorContainer,
             colorText: AppColors.colors.onErrorContainer
           );
-          // isEnable.value = true;
         }
 
       } else {
-
         task.status = "PENDIENTE";
-
         int? responseStatus = await db.insertTask(task);
 
         if ( responseStatus == 0 ) {
@@ -138,16 +133,11 @@ class AddTaskController extends GetxController {
             Get.offNamedUntil('/home', (route) => false);
           });
         }
-
       }
-      
-
     }
-
   }
 
   bool isValidForm( String name, String description, String date, String subject, String type ) {
-
     if ( name.isEmpty ) {
       Get.snackbar(
         "Datos no válidos", 
@@ -193,9 +183,7 @@ class AddTaskController extends GetxController {
       );
       return false;
     }
-
     return true;
-
   }
 
   void showDatePick(BuildContext context) async {

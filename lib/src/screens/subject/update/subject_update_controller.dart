@@ -54,11 +54,12 @@ class SubjectUpdateController extends GetxController {
       subject.subject_code = subject_code;
       subject.professor_name = professor_name;
 
-      //GENERA LA REPLICA AL ELIMINAR UN REGISTRO//
-      await connectivity.getConnectivityReplica();
+      await validarInternet();
 
       if ( connectivity.isConnected == true ) {
         ResponseApi? responseApi = await subjectProvider.updateSubject(subject);
+        //GENERA REPLICA AL CREAR UN NUEVO REGISTRO//
+        await connectivity.getConnectivityReplica();
         if (responseApi!.success!) {
           Get.snackbar(
             responseApi.message ?? '',
@@ -100,8 +101,6 @@ class SubjectUpdateController extends GetxController {
           });
         }
       }
-
-
     }
   }
 

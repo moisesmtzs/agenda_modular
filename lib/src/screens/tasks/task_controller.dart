@@ -42,7 +42,6 @@ class TaskController extends GetxController {
   }
 
   Future<List<Task?>> getTasks(String status) async {
-
     List<Task?> tasks = [];
     await validarInternet();
     if (connectivity.isConnected == true) {
@@ -70,10 +69,11 @@ class TaskController extends GetxController {
       await validarInternet();
       if (connectivity.isConnected == true) {
         _tasksProvider.updateStatusTask(idTask, 'COMPLETADO');
+        //GENERA REPLICA AL CREAR UN NUEVO REGISTRO//
+        await connectivity.getConnectivityReplica();
       } else {
         db.updateTaskStatus(idTask, 'COMPLETADO');
       }
-
       selectedTasks.add(idTask);
       selectedTasks.refresh();
     }
@@ -81,6 +81,8 @@ class TaskController extends GetxController {
       await validarInternet();
       if (connectivity.isConnected == true) {
         _tasksProvider.updateStatusTask(idTask, 'PENDIENTE');
+        //GENERA REPLICA AL CREAR UN NUEVO REGISTRO//
+        await connectivity.getConnectivityReplica();
       } else {
         db.updateTaskStatus(idTask, 'PENDIENTE');
       }
@@ -91,9 +93,11 @@ class TaskController extends GetxController {
   }
 
   void delete(Task? task) async {
-    await connectivity.getConnectivityReplica();
+    await validarInternet();
     if (connectivity.isConnected == true) {
       ResponseApi? responseApi = await _tasksProvider.deleteTask(task!.id);
+      //GENERA REPLICA AL CREAR UN NUEVO REGISTRO//
+        await connectivity.getConnectivityReplica();
       if (responseApi?.success == true) {
         Get.snackbar(
           responseApi?.message ?? '', '',

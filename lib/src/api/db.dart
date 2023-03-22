@@ -280,6 +280,22 @@ class db
 
   }
 
+  static Future<Subject> getOneSubjectAll(String? idSubject) async
+  {
+    //NOS ASEGURAMOS QUE LA BD ESTE CREADA//
+    Database database = await openDB();
+    //OBTENEMOS TODOS LOS ELEMENTOS DE LA TABLA INDICADA//
+    final List<Map<String, dynamic>> subjectList  = await database.query('subject', where: 'id = ?', whereArgs: [idSubject]);
+    //RECORREMOS CADA ELEMENTO PARA CONSTRUIR EL OBJETO SUBJECT POR CADA UNO//
+    return Subject(
+      id: subjectList[0]['id'].toString(),
+      id_user: subjectList[0]['id_user'].toString(),
+      name: subjectList[0]['name'],
+      subject_code: subjectList[0]['subject_code'],
+      professor_name: subjectList[0]['professor_name'],
+    );
+  }
+
   //INSERT//
   static Future<int?> insertSubject(Subject newSubject) async
   {
@@ -412,6 +428,7 @@ class db
 
 
   //----------------------------------------------------- <CLASE> -----------------------------------------------------//
+  //OBTENER TODAS//
   static Future<List<Clase?>> getClases() async 
   {
     //NOS ASEGURAMOS QUE LA BD ESTE CREADA//
@@ -431,6 +448,7 @@ class db
     ));
   }
 
+  //OBTENER UNO CREATED//
   static Future<String?> getOneClase(String? idClase) async {
 
     Database database = await openDB();
@@ -439,37 +457,60 @@ class db
     var created_at = claseList[0]['created_at'].toString();
   
     return created_at;
-
   }
 
-  static Future<List<Clase>> selectClase() async
+  //OBTENER UNO//
+  static Future<Clase?> getOneClaseAll(String? idClase) async 
   {
     //NOS ASEGURAMOS QUE LA BD ESTE CREADA//
     Database database = await openDB();
     //OBTENEMOS TODOS LOS ELEMENTOS DE LA TABLA INDICADA//
-    final List<Map<String, dynamic>> claseList  = await database.query('clase');
+    final List<Map<String, dynamic>> claseList  = await database.query('clase', where: 'id = ?', whereArgs: [idClase]);
     //RECORREMOS CADA ELEMENTO PARA CONSTRUIR EL OBJETO SUBJECT POR CADA UNO//
-    return List.generate(claseList.length, (i) => Clase(
-      id: claseList[i]['id'].toString(),
-      id_user: claseList[i]['id_user'].toString(),
-      id_subject: claseList[i]['id_subject'],
-      begin_hour: claseList[i]['begin_hour'],
-      end_hour: claseList[i]['end_hour'],
-      days: claseList[i]['days'],
-      classroom: claseList[i]['classroom'],
-      building: claseList[i]['building'],
-    ));
+    return Clase(
+      id: claseList[0]['id'].toString(),
+      id_user: claseList[0]['id_user'].toString(),
+      id_subject: claseList[0]['id_subject'],
+      begin_hour: claseList[0]['begin_hour'],
+      end_hour: claseList[0]['end_hour'],
+      days: claseList[0]['days'],
+      classroom: claseList[0]['classroom'],
+      building: claseList[0]['building'],
+    );
   }
 
-  //INSERT CLASE
+  //OBTENER UNO//
+  static Future<Clase?> getByIdDayBegin(String? beginhour, String? daysP) async 
+  {
+    //NOS ASEGURAMOS QUE LA BD ESTE CREADA//
+    Database database = await openDB();
+    //OBTENEMOS TODOS LOS ELEMENTOS DE LA TABLA INDICADA//
+    final List<Map<String, dynamic>> claseList  = await database.query('clase', where: 'begin_hour = ? and days = ?', whereArgs: [beginhour, daysP]);
+    //RECORREMOS CADA ELEMENTO PARA CONSTRUIR EL OBJETO SUBJECT POR CADA UNO//
+    return Clase(
+      id: claseList[0]['id'].toString(),
+      id_user: claseList[0]['id_user'].toString(),
+      id_subject: claseList[0]['id_subject'],
+      begin_hour: claseList[0]['begin_hour'],
+      end_hour: claseList[0]['end_hour'],
+      days: claseList[0]['days'],
+      classroom: claseList[0]['classroom'],
+      building: claseList[0]['building'],
+    );
+  }
+
+  //INSERTAR//
   static Future<int?> insertClase(Clase newClase) async
   {
     //NOS ASEGURAMOS QUE LA BD ESTE CREADA//
     Database database = await openDB();
-    //OBTENEMOS LA FECHA DE ACTUAL PARA LOS CAMPOS CREATED_AT Y UPDATED_AT//
+    //TRANSFORMARMOS LA FECHA DE HOY EN EL FORMATO CORRECTO//
     var today = DateTime.now().toString();
+    final DateFormat displayFormater = DateFormat('yyyy-MM-dd HH:mm:ss');
+    final DateTime displayDate = displayFormater.parse(today);
+    final String formatted = displayFormater.format(displayDate);
     //CONSTRUIMOS EL SQL//
-    var sql = "INSERT INTO clase(id_user, id_subject, begin_hour, end_hour, days, classroom, building, created_at, updated_at) VALUES ( ${newClase.id_user}, '${newClase.id_subject}', '${newClase.begin_hour}', '${newClase.end_hour}', '${newClase.days}', '${newClase.classroom}', '${newClase.building}','${today}', '${today}')";
+    var sql = "INSERT INTO clase(id_user, id_subject, begin_hour, end_hour, days, classroom, building, created_at, updated_at) VALUES ( ${newClase.id_user}, '${newClase.id_subject}', '${newClase.begin_hour}', '${newClase.end_hour}', '${newClase.days}', '${newClase.classroom}', '${newClase.building}','${formatted}', '${formatted}')";
     //EJECUTAMOS EL SQL//
     var result = await database.rawInsert(sql);
     //ALMACENAR LOS SQL//
@@ -478,58 +519,80 @@ class db
     return result;
   }
 
+  //INSERTAR SYNC//
   static Future<int?> insertClaseSync(Clase newClase) async
   {
     //NOS ASEGURAMOS QUE LA BD ESTE CREADA//
     Database database = await openDB();
+
     //OBTENEMOS LA FECHA DE ACTUAL PARA LOS CAMPOS CREATED_AT Y UPDATED_AT//
-    var today = DateTime.now().toString();
+    Map<String, dynamic>? today = await db.findDatesClase(newClase);
+    String createdAt = today!['created_at'];
+    String updatedAt = today!['updated_at'];
+
     //CONSTRUIMOS EL SQL//
     var sql = "INSERT INTO clase(id_user, id_subject, begin_hour, end_hour, days, classroom, building, created_at, updated_at) VALUES ( ${newClase.id_user}, '${newClase.id_subject}', '${newClase.begin_hour}', '${newClase.end_hour}', '${newClase.days}', '${newClase.classroom}', '${newClase.building}','${today}', '${today}')";
+    
     //EJECUTAMOS EL SQL//
     var result = await database.rawInsert(sql);
+
     return result;
+  }
+
+  static Future<Map<String, dynamic>?> findDatesClase(Clase newClase) async{
+    ClaseProvider claseProvider = ClaseProvider();
+    Map<String, dynamic>? dates = await claseProvider.getDatesById(newClase.id);
+    return dates;
   }
 
   //UPDATE//
   static Future<int?> updateClase(Clase clase) async {
+    //OBTENEMOS LA FECHA DE ACTUAL PARA LOS CAMPOS CREATED_AT Y UPDATED_AT//
+    var today = DateTime.now().toString();
+    final DateFormat displayFormater = DateFormat('yyyy-MM-dd HH:mm:ss');
+    final DateTime displayDate = displayFormater.parse(today);
+    final String formatted = displayFormater.format(displayDate);
 
+    //NOS ASEGURAMOS QUE LA BD ESTE CREADA//
     Database database = await openDB();
 
-    var today = DateTime.now().toString();
-
+    //CONSTRUIMOS EL SQL//
     var sqlBase = "UPDATE clase SET begin_hour = '${clase.begin_hour}', end_hour = '${clase.end_hour}', days = '${clase.days}', classroom = '${clase.classroom}', building = '${clase.building}', updated_at = '$today' WHERE id_user = ${clase.id_user}";
     var sql = sqlBase + "and id = ${clase.id} ";
+
+    //EJECUTAMOS EL SQL//
     var result = await database.rawUpdate(sql);
 
-    var sqlSync = sqlBase + " and created_at = $today";
+    //ALMACENAR LOS SQL//
+    String? createdAt = await getOneSubject(clase.id);
+    var sqlSync = sqlBase + " and created_at = '$createdAt'";
     var sqlReplica = "INSERT INTO sql_commands values (\"${sqlSync}\")";
-    var resultSync = await database.rawInsert(sqlReplica);
-    return result;
+    await database.rawInsert(sqlReplica); 
 
+    return result;
   }
 
   //DELETE//
   static Future<int?> deleteClase(Clase? clase) async {
-
+    //NOS ASEGURAMOS QUE LA BD ESTE CREADA//
     Database database = await openDB();
 
+    //CONSTRUIMOS EL SQL//
     var sqlBase = "DELETE FROM clase WHERE id_user = ${clase!.id_user}";
+    var sql = sqlBase + " and id = ${clase.id} ";
 
-    var sql = sqlBase + "and id = ${clase.id} ";
+    //OBTENEMOS LA FECHA DE CREACION ORIGINAL//
+    String? oldClaseCreated = await getOneClase(clase.id);
 
-    Future<String?> oldClaseCreated = getOneClase(clase.id);
-    
+    //EJECUTAMOS EL SQL//
     var result = await database.rawDelete(sql);
-  
-    var sqlSync = sqlBase + " and created_at = $oldClaseCreated";
 
     //ALMACENAR LOS SQL//
+    var sqlSync = sqlBase + " and created_at = $oldClaseCreated";
     var sqlReplica = "INSERT INTO sql_commands values (\"${sqlSync}\")";
     var resultSync = await database.rawInsert(sqlReplica);
     
     return result;
-
   }
 
   //ELIMINAR TODOS//

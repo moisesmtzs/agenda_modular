@@ -53,12 +53,13 @@ class AddSubjectController extends GetxController {
           subject_code: code,
           professor_name: profesor);
 
-      //GENERA REPLICA AL CREAR UN NUEVO REGISTRO//
-      connectivity.getConnectivityReplica();
+      await validarInternet();
 
       if(connectivity.isConnected == true)
       {
         ResponseApi? responseApi = await subjectProvider.create(subject);
+        //GENERA REPLICA AL CREAR UN NUEVO REGISTRO//
+       await connectivity.getConnectivityReplica();
         if (responseApi?.success == true) {
           Get.snackbar(
             responseApi?.message ?? '', 
@@ -77,7 +78,7 @@ class AddSubjectController extends GetxController {
       else
       {
         //PENDIENTE DE REVISIÓN//
-        Future<int?> ok = db.insertSubject(subject);  
+        int? ok = await db.insertSubject(subject);  
         if(ok==0)
         {
           Get.snackbar('Hubo un problema al registrar la Materia', 'Intenta más tarde');
@@ -104,7 +105,6 @@ class AddSubjectController extends GetxController {
       Get.snackbar("Datos no válidos", "Debes ingresar un nombre de profesor");
       return false;
     }
-
     return true;
   }
 }

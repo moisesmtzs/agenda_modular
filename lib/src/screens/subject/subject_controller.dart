@@ -37,7 +37,6 @@ class SubjectController extends GetxController {
     await validarInternet();
     if(connectivity.isConnected == true)
     {
-      await connectivity.getConnectivityReplica();
       return await _subjectProvider.findByUser(userSession.id ?? '0');
     }
     else

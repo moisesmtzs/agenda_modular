@@ -42,8 +42,7 @@ class ClaseController extends GetxController {
   }
 
   void getSubjects() async {
-    //GENERA REPLICA AL CREAR UN NUEVO REGISTRO//
-    await connectivity.getConnectivityReplica();
+    await validarInternet();
 
     if(connectivity.isConnected == true)
     {
@@ -85,26 +84,33 @@ class ClaseController extends GetxController {
         building: building,
       );
 
-      ResponseApi? responseApi = await claseProvider.create(clase);
-      if (responseApi?.success == true) {
-        Get.snackbar(responseApi?.message ?? '', 'Clase creada correctamente',
-            backgroundColor: AppColors.colors.secondary,
-            colorText: AppColors.colors.onSecondary);
-        Future.delayed(const Duration(milliseconds: 1000), () {
-          Get.offNamed('/home');
-        });
-      } else {
-        Get.snackbar('Datos no válidos', responseApi?.message ?? '',
-            backgroundColor: Colors.red[200], colorText: Colors.white);
+      await validarInternet();
+
+      if(connectivity.isConnected == true)
+      {
+        ResponseApi? responseApi = await claseProvider.create(clase);
+        //GENERA REPLICA AL CREAR UN NUEVO REGISTRO//
+        await connectivity.getConnectivityReplica();
+        if (responseApi?.success == true) {
+          Get.snackbar(responseApi?.message ?? '', 'Clase creada correctamente',
+              backgroundColor: AppColors.colors.secondary,
+              colorText: AppColors.colors.onSecondary);
+          Future.delayed(const Duration(milliseconds: 1000), () {
+            Get.offNamed('/home');
+          });
+        } else {
+          Get.snackbar('Datos no válidos', responseApi?.message ?? '',
+              backgroundColor: Colors.red[200], colorText: Colors.white);
+        }
+      }
+      else
+      {
+        await db.insertClase(clase);
       }
     }
   }
 
   bool isValidForms(String idSubject, String inicio, String fin, String days) {
-    // if (idSubject.isEmpty) {//INECESARIO, SIEMPRE TENDRA IM ID DE USUARIO
-    //   Get.snackbar("Datos no válidos", "Debes seleccionar una materia");
-    //   return false;
-    // }
     if (inicio.isEmpty) {
       Get.snackbar("Datos no válidos", "Debes seleccionar una hora de inicio");
       return false;
@@ -117,7 +123,6 @@ class ClaseController extends GetxController {
       Get.snackbar("Datos no válidos", "Debe seleccionar un dia");
       return false;
     }
-    //Verificamos si la hora de inicio es antes que la de salida
     int ini = int.parse(inicio.substring(11, 13));
     int fi = int.parse(fin.substring(11, 13));
     if (ini > fi) {
