@@ -95,19 +95,19 @@ class SubjectDetailController extends GetxController {
   final ClaseProvider _claseProvider = ClaseProvider();
   
 
-  Future<List<Clase?>> getClasesBySubject(String idSubject) async {
+  Future<List<Clase?>> getClasesBySubject(Subject subject) async {
     //GENERA LA REPLICA AL ELIMINAR UN REGISTRO//
     await connectivity.getConnectivityReplica();
     if(connectivity.isConnected == true)
     {
       return await _claseProvider.findByUserAndSubject(
-          userSession.id ?? '0', idSubject);
+          userSession.id ?? '0', subject.id.toString());
     }
     else
     {
-      print("AQUI VAN LAS CLASES DESDE LA BD LOCAL");
-      return await _claseProvider.findByUserAndSubject(
-          userSession.id ?? '0', idSubject);
+      List<Clase?> list = await db.getClasesBySubject(subject);
+      print(list.length);
+      return list;
     }
   }
 }

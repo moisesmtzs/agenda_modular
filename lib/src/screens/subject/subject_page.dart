@@ -14,6 +14,10 @@ class SubjectPage extends StatelessWidget {
   
   final SubjectController _subjectController = Get.put(SubjectController());
 
+  Future<void> _refresh() async{
+    await _subjectController.getSubjects();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,19 +33,33 @@ class SubjectPage extends StatelessWidget {
           if (snapshot.hasData) {
             //preguntamos si viene informacion
             if (snapshot.data!.isNotEmpty) {
-              return ListView.builder(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                physics: const ClampingScrollPhysics(),
-                itemCount: snapshot.data?.length ?? 0,
-                itemBuilder: (_, index) {
-                  return _subjectCard(snapshot.data![index]!, context);
-                }
+              return RefreshIndicator(
+                onRefresh: _refresh,
+                child: ListView.builder(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  itemCount: snapshot.data?.length ?? 0,
+                  itemBuilder: (_, index) {
+                    return _subjectCard(snapshot.data![index]!, context);
+                  }
+                ),
               );
+
             } else {
-              return Center(child: NoSubjectWidget(text: 'No hay materias agregadas'));
+              return Center(
+                child: SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  child: NoSubjectWidget(text: 'No hay materias agregadas')
+                )
+              );
             }
           } else {
-            return Center(child: NoSubjectWidget(text: 'No hay materias agregadas'));
+              return Center(
+                child: SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  child: NoSubjectWidget(text: 'No hay materias agregadas')
+                )
+              );
           }
         }
       ),

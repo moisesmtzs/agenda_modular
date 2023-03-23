@@ -44,7 +44,7 @@ class db
         );
 
         await db.execute(
-          "CREATE TABLE clase (id INTEGER PRIMARY KEY, id_user INTEGER, id_subject INTEGER, begin_hour TEXT, end_hour TEXT, days TEXT, classroom TEXT, building TEXT, created_at TEXT, updated_at TEXT)"
+          "CREATE TABLE clase (id INTEGER PRIMARY KEY, id_user INTEGER, id_subject INTEGER, subjectName TEXT, begin_hour TEXT, end_hour TEXT, days TEXT, classroom TEXT, building TEXT, created_at TEXT, updated_at TEXT)"
         );
 
         await db.execute(
@@ -285,7 +285,24 @@ class db
     //NOS ASEGURAMOS QUE LA BD ESTE CREADA//
     Database database = await openDB();
     //OBTENEMOS TODOS LOS ELEMENTOS DE LA TABLA INDICADA//
+    print(idSubject);
     final List<Map<String, dynamic>> subjectList  = await database.query('subject', where: 'id = ?', whereArgs: [idSubject]);
+    //RECORREMOS CADA ELEMENTO PARA CONSTRUIR EL OBJETO SUBJECT POR CADA UNO//
+    return Subject(
+      id: subjectList[0]['id'].toString(),
+      id_user: subjectList[0]['id_user'].toString(),
+      name: subjectList[0]['name'],
+      subject_code: subjectList[0]['subject_code'],
+      professor_name: subjectList[0]['professor_name'],
+    );
+  }
+
+  static Future<Subject> getOneSubjectByName(String? name) async
+  {
+    //NOS ASEGURAMOS QUE LA BD ESTE CREADA//
+    Database database = await openDB();
+    //OBTENEMOS TODOS LOS ELEMENTOS DE LA TABLA INDICADA//
+    final List<Map<String, dynamic>> subjectList  = await database.query('subject', where: 'name = ?', whereArgs: [name]);
     //RECORREMOS CADA ELEMENTO PARA CONSTRUIR EL OBJETO SUBJECT POR CADA UNO//
     return Subject(
       id: subjectList[0]['id'].toString(),
@@ -439,7 +456,8 @@ class db
     return List.generate(claseList.length, (i) => Clase(
       id: claseList[i]['id'].toString(),
       id_user: claseList[i]['id_user'].toString(),
-      id_subject: claseList[i]['id_subject'],
+      id_subject: claseList[i]['id_subject'].toString(),
+      subjName: claseList[i]['subjectName'],
       begin_hour: claseList[i]['begin_hour'],
       end_hour: claseList[i]['end_hour'],
       days: claseList[i]['days'],
@@ -454,7 +472,7 @@ class db
     Database database = await openDB();
 
     final List<Map<String, dynamic>> claseList = await database.query('clase', where: 'id = ?', whereArgs: [idClase]);
-    var created_at = claseList[0]['created_at'].toString();
+    String created_at = claseList[0]['created_at'];
   
     return created_at;
   }
@@ -470,7 +488,7 @@ class db
     return Clase(
       id: claseList[0]['id'].toString(),
       id_user: claseList[0]['id_user'].toString(),
-      id_subject: claseList[0]['id_subject'],
+      id_subject: claseList[0]['id_subject'].toString(),
       begin_hour: claseList[0]['begin_hour'],
       end_hour: claseList[0]['end_hour'],
       days: claseList[0]['days'],
@@ -479,18 +497,44 @@ class db
     );
   }
 
+  //OBTENER TODAS//
+  static Future<List<Clase?>> getClasesBySubject(Subject subject) async 
+  {
+    //NOS ASEGURAMOS QUE LA BD ESTE CREADA//
+    Database database = await openDB();
+    //OBTENEMOS TODOS LOS ELEMENTOS DE LA TABLA INDICADA//
+    Subject? subj = await getOneSubjectByName(subject.name);
+
+    final List<Map<String, dynamic>> claseList  = await database.query('clase', where: 'subjectName = ?', whereArgs: [subj.name]);
+    print(claseList.length);
+    //RECORREMOS CADA ELEMENTO PARA CONSTRUIR EL OBJETO SUBJECT POR CADA UNO//
+    return List.generate(claseList.length, (i) => Clase(
+      id: claseList[i]['id'].toString(),
+      id_user: claseList[i]['id_user'].toString(),
+      subjName: claseList[i]['subjectName'],
+      id_subject: claseList[i]['id_subject'].toString(),
+      begin_hour: claseList[i]['begin_hour'],
+      end_hour: claseList[i]['end_hour'],
+      days: claseList[i]['days'],
+      classroom: claseList[i]['classroom'],
+      building: claseList[i]['building'],
+    ));
+  }
+
   //OBTENER UNO//
   static Future<Clase?> getByIdDayBegin(String? beginhour, String? daysP) async 
   {
     //NOS ASEGURAMOS QUE LA BD ESTE CREADA//
     Database database = await openDB();
     //OBTENEMOS TODOS LOS ELEMENTOS DE LA TABLA INDICADA//
+    beginhour = beginhour!.substring(0,(beginhour!.length-4));
     final List<Map<String, dynamic>> claseList  = await database.query('clase', where: 'begin_hour = ? and days = ?', whereArgs: [beginhour, daysP]);
+  print(claseList.length);
     //RECORREMOS CADA ELEMENTO PARA CONSTRUIR EL OBJETO SUBJECT POR CADA UNO//
     return Clase(
       id: claseList[0]['id'].toString(),
       id_user: claseList[0]['id_user'].toString(),
-      id_subject: claseList[0]['id_subject'],
+      id_subject: claseList[0]['id_subject'].toString(),
       begin_hour: claseList[0]['begin_hour'],
       end_hour: claseList[0]['end_hour'],
       days: claseList[0]['days'],
@@ -520,7 +564,7 @@ class db
   }
 
   //INSERTAR SYNC//
-  static Future<int?> insertClaseSync(Clase newClase) async
+  static Future<int?> insertClaseSync(Clase newClase, String nombreMateria) async
   {
     //NOS ASEGURAMOS QUE LA BD ESTE CREADA//
     Database database = await openDB();
@@ -531,7 +575,7 @@ class db
     String updatedAt = today!['updated_at'];
 
     //CONSTRUIMOS EL SQL//
-    var sql = "INSERT INTO clase(id_user, id_subject, begin_hour, end_hour, days, classroom, building, created_at, updated_at) VALUES ( ${newClase.id_user}, '${newClase.id_subject}', '${newClase.begin_hour}', '${newClase.end_hour}', '${newClase.days}', '${newClase.classroom}', '${newClase.building}','${today}', '${today}')";
+    var sql = "INSERT INTO clase(id_user, id_subject, subjectName, begin_hour, end_hour, days, classroom, building, created_at, updated_at) VALUES ( ${newClase.id_user}, '${newClase.id_subject}', '$nombreMateria', '${newClase.begin_hour}', '${newClase.end_hour}', '${newClase.days}', '${newClase.classroom}', '${newClase.building}','$createdAt', '$updatedAt')";
     
     //EJECUTAMOS EL SQL//
     var result = await database.rawInsert(sql);
@@ -588,7 +632,7 @@ class db
     var result = await database.rawDelete(sql);
 
     //ALMACENAR LOS SQL//
-    var sqlSync = sqlBase + " and created_at = $oldClaseCreated";
+    var sqlSync = sqlBase + " and created_at = '$oldClaseCreated'";
     var sqlReplica = "INSERT INTO sql_commands values (\"${sqlSync}\")";
     var resultSync = await database.rawInsert(sqlReplica);
     
@@ -608,7 +652,6 @@ class db
   //-------------------------------------------------------------------------------------------------------------------//
 
 
-
   //-------------------------------------------------- <COMMANDS> -----------------------------------------------------//
   //LIMPIAR TODAS LAS TABLAS//
   static void clearAll() async 
@@ -618,8 +661,6 @@ class db
     deleteAllSubjects();
     deleteAllClases();
     deleteCommands();
-
-    createReplica();
   }
 
   //OBTENER TODOS LOS COMANDOS//
@@ -645,11 +686,10 @@ class db
 
   }
   //-------------------------------------------------------------------------------------------------------------------//
-
-  
 }
+
   //--------------------------------------------------- <REPLICA> -----------------------------------------------------//
-  void createReplica() async
+  Future createReplica() async
   {
       print("INICIANDO REPLICA");
 
@@ -663,20 +703,23 @@ class db
 
       //RECUPERAMOS LOS OBJETOS DEL PROVIDER//
 
+      //LIMPIAMOS BD REPLICA//
+      db.clearAll();
+
       //TAREAS//
       List<Task?> tasks = [];
       tasks = await tasksProvider.getByUserAndStatus(userSession.id ?? '0', "COMPLETADO");
 
       for(int i = 0; i < tasks.length; i++)
       {
-        db.insertTaskSync(tasks[i]!);
+        await db.insertTaskSync(tasks[i]!);
       }
 
       tasks = await tasksProvider.getByUserAndStatus(userSession.id ?? '0', "PENDIENTE");
 
       for(int i = 0; i < tasks.length; i++)
       {
-        db.insertTaskSync(tasks[i]!);
+        await db.insertTaskSync(tasks[i]!);
       }
 
       //MATERIAS//
@@ -685,17 +728,19 @@ class db
 
       for(int i = 0; i < subjects.length; i++)
       {
-        db.insertSubjectSync(subjects[i]!);
+        await db.insertSubjectSync(subjects[i]!);
       }
 
     //CLASE//
     List<Clase?> clases = [];
-      clases = await claseProvider.findByUser(userSession.id ?? '0');//aquiii
+    clases = await claseProvider.findByUser(userSession.id ?? '0');//aquiii
 
-      for(int i = 0; i < clases.length; i++)
-      {
-        db.insertClaseSync(clases[i]!);
-      }
+    for(int i = 0; i < clases.length; i++)
+    {
+      Subject? subjectActual = await subjectProvider.findById(clases[i]!.id_subject!);
+      String? nombreMateria = subjectActual?.name;
+      await db.insertClaseSync(clases[i]!,nombreMateria!);
+    }
 
     print("REPLICA FINALIZADA");
   }
@@ -717,11 +762,12 @@ class db
       for( int i = 0 ; i < command.length ; i++ )
       {
         await syncProvider.create(command[i]);
+        print("COMANDO: ${command[i].command.toString()}");
       }
 
       print(" <<<< SE SINCRONIZARON "+command.length.toString()+" COMANDOS. >>>>");
 
-      db.clearAll();
+      await createReplica();
 
       print("SINCRONIZACION FINALIZADA");
   }

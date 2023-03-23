@@ -118,7 +118,7 @@ class SubjectDetailPage extends StatelessWidget {
             ],
             
           ),
-          _listclass(context, idSubject),
+          _listclass(context, subject),
         ],
       ),
     );
@@ -126,11 +126,11 @@ class SubjectDetailPage extends StatelessWidget {
 
 
 
-  Widget _listclass(BuildContext context, idSubject) {
+  Widget _listclass(BuildContext context, subject) {
     return SizedBox(
       height: MediaQuery.of(context).size.height * 0.5,
       child: FutureBuilder(
-        future: _subjectDetailController.getClasesBySubject(idSubject),//OCUPO PASARLE EL ID DE CUANDO LO TOQUE
+        future: _subjectDetailController.getClasesBySubject(subject),
         builder: (context, AsyncSnapshot<List<Clase?>> snapshot) {
           if (snapshot.hasData) {
             //preguntamos si viene informacion

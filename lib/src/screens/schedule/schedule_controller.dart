@@ -29,6 +29,11 @@ class ScheduleController extends GetxController {
   DateTime? dia = DateTime(0001, 01, 01);
   DateTime fecha = DateTime(0001, 01, 01);
 
+  ScheduleController()
+  {
+    connectivity.getConnectivityReplica();
+  }
+
   //VALIDAR QUE EXISTE UNA CONEXION A INTERNET//
   Future validarInternet() async
   {
@@ -69,7 +74,7 @@ class ScheduleController extends GetxController {
     }
     else
     {
-      claseCalendario = await db.getByIdDayBegin(dias[dia!.weekday-1], fecha.toString());
+      claseCalendario = await db.getByIdDayBegin(fecha.toString(),dias[dia!.weekday-1]);
     }
     return claseCalendario;
   }
@@ -128,7 +133,8 @@ class ScheduleController extends GetxController {
       }
       else
       {
-        subj = await db.getOneSubjectAll(idSub);
+        print(listaDeClases[i]?.subjName);
+        subj = await db.getOneSubjectByName(listaDeClases[i]?.subjName);
       }
 
       //VALIDAR SI YA HAY UNA CLASE DE ESA MATERIA PARA PINTARLAS DEL MISMO COLOR//

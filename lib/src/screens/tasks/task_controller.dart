@@ -14,7 +14,7 @@ import 'package:agenda_app/src/ui/app_colors.dart';
 
 class TaskController extends GetxController {
   TaskController() {
-    connectivity.getConnectivity();
+    connectivity.getConnectivityReplica();
   }
 
   Future validarInternet() async {
@@ -43,7 +43,7 @@ class TaskController extends GetxController {
 
   Future<List<Task?>> getTasks(String status) async {
     List<Task?> tasks = [];
-    await validarInternet();
+    await connectivity.getConnectivity();
     if (connectivity.isConnected == true) {
       tasks = await _tasksProvider.getByUserAndStatus(userSession.id ?? '0', status);
     } else {

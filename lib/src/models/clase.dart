@@ -8,6 +8,7 @@ class Clase {
   String? id;
   String? id_user;
   String? id_subject;
+  String? subjName;
   String? begin_hour;
   String? end_hour;
   String? days;
@@ -19,6 +20,7 @@ class Clase {
     this.id,
     this.id_user,
     this.id_subject,
+    this.subjName,
     this.begin_hour,
     this.end_hour,
     this.days,
