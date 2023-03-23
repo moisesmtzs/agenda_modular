@@ -191,7 +191,7 @@ class _ClasePageState extends State<ClasePage> {
     return Column(
       children: <Widget>[
         ListTile(
-          title: const Text('lunes'),
+          title: const Text('Lunes'),
           leading: Radio<SingingCharacter>(
             activeColor: AppColors.colors.primary,
             value: SingingCharacter.lunes,
@@ -199,13 +199,13 @@ class _ClasePageState extends State<ClasePage> {
             onChanged: (SingingCharacter? value) {
               setState(() {
                 _character = value;
-                claseController.daysController = 'lunes';
+                claseController.daysController = 'Lunes';
               });
             },
           ),
         ),
         ListTile(
-          title: const Text('martes'),
+          title: const Text('Martes'),
           leading: Radio<SingingCharacter>(
             activeColor: AppColors.colors.primary,
             value: SingingCharacter.martes,
@@ -213,13 +213,13 @@ class _ClasePageState extends State<ClasePage> {
             onChanged: (SingingCharacter? value) {
               setState(() {
                 _character = value;
-                claseController.daysController = 'martes';
+                claseController.daysController = 'Martes';
               });
             },
           ),
         ),
         ListTile(
-          title: const Text('miercoles'),
+          title: const Text('Miércoles'),
           leading: Radio<SingingCharacter>(
             activeColor: AppColors.colors.primary,
             value: SingingCharacter.miercoles,
@@ -227,13 +227,13 @@ class _ClasePageState extends State<ClasePage> {
             onChanged: (SingingCharacter? value) {
               setState(() {
                 _character = value;
-                claseController.daysController = 'miercoles';
+                claseController.daysController = 'Miércoles';
               });
             },
           ),
         ),
         ListTile(
-          title: const Text('jueves'),
+          title: const Text('Jueves'),
           leading: Radio<SingingCharacter>(
             activeColor: AppColors.colors.primary,
             value: SingingCharacter.jueves,
@@ -241,13 +241,13 @@ class _ClasePageState extends State<ClasePage> {
             onChanged: (SingingCharacter? value) {
               setState(() {
                 _character = value;
-                claseController.daysController = 'jueves';
+                claseController.daysController = 'Jueves';
               });
             },
           ),
         ),
         ListTile(
-          title: const Text('viernes'),
+          title: const Text('Viernes'),
           leading: Radio<SingingCharacter>(
             activeColor: AppColors.colors.primary,
             value: SingingCharacter.viernes,
@@ -255,13 +255,13 @@ class _ClasePageState extends State<ClasePage> {
             onChanged: (SingingCharacter? value) {
               setState(() {
                 _character = value;
-                claseController.daysController = 'viernes';
+                claseController.daysController = 'Viernes';
               });
             },
           ),
         ),
         ListTile(
-          title: const Text('sabado'),
+          title: const Text('Sábado'),
           leading: Radio<SingingCharacter>(
             activeColor: AppColors.colors.primary,
             value: SingingCharacter.sabado,
@@ -269,7 +269,7 @@ class _ClasePageState extends State<ClasePage> {
             onChanged: (SingingCharacter? value) {
               setState(() {
                 _character = value;
-                claseController.daysController = 'sabado';
+                claseController.daysController = 'Sábado';
               });
             },
           ),
@@ -288,21 +288,23 @@ class _ClasePageState extends State<ClasePage> {
       child: Form(
         autovalidateMode: AutovalidateMode.onUserInteraction,
         child: TextFormField(
-            controller: claseController.clasroomController,
-            cursorRadius: const Radius.circular(8.0),
-            autocorrect: false,
-            keyboardType: TextInputType.number,
-            decoration: const InputDecoration(
-                hintText: "8",
-                labelText: "Numero de Salon",
-                prefixIcon: Icon(Icons.numbers)),
-            validator: (value) {
-              String pattern = r"\b[0-9]";
-              RegExp nameregExp = RegExp(pattern);
-              return nameregExp.hasMatch(value ?? '')
-                  ? null
-                  : 'Nombre no válido';
-            }),
+          controller: claseController.clasroomController,
+          cursorRadius: const Radius.circular(8.0),
+          autocorrect: false,
+          keyboardType: TextInputType.number,
+          decoration: const InputDecoration(
+            hintText: "8",
+            labelText: "Número de Salón",
+            prefixIcon: Icon(Icons.numbers)
+          ),
+          validator: (value) {
+            String pattern = r"\b[0-9]";
+            RegExp nameregExp = RegExp(pattern);
+            return nameregExp.hasMatch(value ?? '')
+                ? null
+                : 'Nombre no válido';
+          }
+        ),
       ),
     );
   }
@@ -338,7 +340,6 @@ class _ClasePageState extends State<ClasePage> {
 
   //-------------------------------------------------------------------------------
   Widget _registerButton() {
-    print("Se presiono el boton");
     return Container(
       width: double.infinity,
       height: 50,
@@ -355,7 +356,7 @@ class _ClasePageState extends State<ClasePage> {
         ),
         onPressed: () {
           //claseController.daysController = finaldays;
-          claseController.register(context);
+          claseController.register();
         },
       ),
     );

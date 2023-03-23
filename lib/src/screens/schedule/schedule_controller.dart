@@ -57,13 +57,13 @@ class ScheduleController extends GetxController {
   Future getClasesByIdDaysBegin() async {//retornamos una clase
 
     List<String> dias = <String>[
-      "lunes",//1
-      "martes",
-      "miercoles",
-      "jueves",
-      "viernes",
-      "sabado",
-      "domingo"
+      "Lunes",//1
+      "Martes",
+      "Miércoles",
+      "Jueves",
+      "Viernes",
+      "Sábado",
+      "Domingo"
     ];
 
     await validarInternet();
@@ -83,7 +83,7 @@ class ScheduleController extends GetxController {
     //OBTENER COLOR//
     final Random random = Random();
     List<Color> colors = getColors();
-    Subject? subj = new Subject();
+    Subject? subj = Subject();
 
     //LISTA DE CLASES A MOSTRAR//
     List<Meeting> meetings = [];
@@ -114,13 +114,13 @@ class ScheduleController extends GetxController {
       String idSub = listaDeClases[i]!.id_subject.toString();
       //OBTENER DIA//
       String sDay = listaDeClases[i]!.days.toString();
-      if(sDay.toLowerCase() == 'lunes') sDay = "MO";
-      else if(sDay.toLowerCase() == 'martes') sDay = "TU";
-      else if(sDay.toLowerCase() == 'miercoles') sDay = "WE";
-      else if(sDay.toLowerCase() == 'jueves') sDay = "TH";
-      else if(sDay.toLowerCase() == 'viernes') sDay = "FR";
-      else if(sDay.toLowerCase() == 'sabado') sDay = "SA";
-      else if(sDay.toLowerCase() == 'domingo') sDay = "SU";
+      if(sDay == 'Lunes') sDay = "MO";
+      else if(sDay == 'Martes') sDay = "TU";
+      else if(sDay == 'Miércoles') sDay = "WE";
+      else if(sDay == 'Jueves') sDay = "TH";
+      else if(sDay == 'Viernes') sDay = "FR";
+      else if(sDay == 'Sábado') sDay = "SA";
+      else if(sDay == 'Domingo') sDay = "SU";
       int difHour = end_hour.hour-begin_hour.hour;
       int difMin = end_hour.minute-begin_hour.minute;
 

@@ -10,9 +10,8 @@ class ClaseUpdatePage extends StatelessWidget {
   ClaseUpdatePage({Key? key, required this.clase}) : super(key: key);
 
   late Clase? clase;
-  late ClaseUpdateController claseUpdateController =
-      Get.put(ClaseUpdateController(clase!));
-  //var valueInicial = "";
+  late ClaseUpdateController claseUpdateController = Get.put(ClaseUpdateController(clase!));
+  
   ClaseController claseController = Get.put(ClaseController());
 
   @override
@@ -25,20 +24,18 @@ class ClaseUpdatePage extends StatelessWidget {
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           children: [
             ElevatedButton.icon(
-              icon: Icon(Icons.check_rounded,
-                  size: 30, color: AppColors.colors.onPrimary),
-              label: Text('Actualizar Clase',
-                  style: TextStyle(
-                      fontSize: 20, color: AppColors.colors.onPrimary)),
-              style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all(AppColors.colors.primary),
-                  padding: MaterialStateProperty.all(
-                      const EdgeInsets.symmetric(horizontal: 50, vertical: 10)),
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
+              icon: Icon(Icons.check_rounded, size: 30, color: AppColors.colors.onPrimary),
+              label: Text('Actualizar Clase', style: TextStyle( fontSize: 20, color: AppColors.colors.onPrimary)),
+              style: ButtonStyle(backgroundColor: MaterialStateProperty.all(AppColors.colors.primary),
+                padding: MaterialStateProperty.all(
+                  const EdgeInsets.symmetric(horizontal: 50, vertical: 10)
+                ),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(18.0),
-                  ))),
+                  )
+                )
+              ),
               onPressed: () {
                 claseUpdateController.updateClase(context);
               },

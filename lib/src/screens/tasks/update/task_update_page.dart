@@ -67,8 +67,15 @@ class TaskUpdatePage extends StatelessWidget {
           children: [
             TextFormField(
               controller: taskUpdateController.nameController,
+              focusNode: taskUpdateController.nameFocus,
               cursorRadius: const Radius.circular(8.0),
               maxLength: 180,
+              onTapOutside: (event) {
+                FocusScope.of(Get.context!).unfocus();
+              },
+              onFieldSubmitted: (value) {
+                FocusScope.of(Get.context!).requestFocus(taskUpdateController.descriptionFocus);
+              },
               decoration: const InputDecoration(
                 hintText: "Hacer maqueta",
                 labelText: "Nombre de la tarea",
@@ -103,10 +110,17 @@ class TaskUpdatePage extends StatelessWidget {
           children: [
             TextFormField(
               controller: taskUpdateController.descriptionController,
+              focusNode: taskUpdateController.descriptionFocus,
               maxLines: 3,
               maxLength: 255,
               textAlign: TextAlign.justify,
               cursorRadius: const Radius.circular(8.0),
+              onTapOutside: (event) {
+                FocusScope.of(Get.context!).unfocus();
+              },
+              onFieldSubmitted: (value) {
+                FocusScope.of(Get.context!).unfocus();
+              },
               decoration: const InputDecoration(
                 hintText: "Maqueta de 25x25",
                 labelText: "Descripción de la tarea",
@@ -161,7 +175,11 @@ class TaskUpdatePage extends StatelessWidget {
         isExpanded: true,
         dropdownColor: AppColors.colors.primaryContainer,
         borderRadius: BorderRadius.circular(12),
-        icon: const Icon(Icons.arrow_drop_down_circle_rounded),
+        icon: const Visibility(visible: false, child: Icon(Icons.arrow_drop_down_circle_rounded)),
+        underline: Container(
+          alignment: Alignment.centerRight,
+          child: const Icon(Icons.arrow_drop_down_circle),
+        ),
         value: taskUpdateController.subjectSelected.value,
         items: _dropDownSubjects(),
         onChanged: (String? value) {
@@ -185,7 +203,11 @@ class TaskUpdatePage extends StatelessWidget {
         isExpanded: true,
         dropdownColor: AppColors.colors.primaryContainer,
         borderRadius: BorderRadius.circular(12),
-        icon: const Icon(Icons.arrow_drop_down_circle_rounded),
+        icon: const Visibility(visible: false, child: Icon(Icons.arrow_drop_down_circle_rounded)),
+        underline: Container(
+          alignment: Alignment.centerRight,
+          child: const Icon(Icons.arrow_drop_down_circle),
+        ),
         value: taskUpdateController.typeSelected.value,
         items: _dropDownItems(taskUpdateController.typeList),
         onChanged: (String? value) {
@@ -199,7 +221,7 @@ class TaskUpdatePage extends StatelessWidget {
     List<DropdownMenuItem<String>> list = [];
     for (var type in types) {
       list.add(DropdownMenuItem(
-        child: Text(type),
+        child: Text(type, style: TextStyle( color: AppColors.colors.onPrimaryContainer )),
         value: type,
       ));
     }
@@ -210,7 +232,7 @@ class TaskUpdatePage extends StatelessWidget {
     List<DropdownMenuItem<String>> list = [];
     for (var subject in taskUpdateController.data) {
       list.add(DropdownMenuItem(
-        child: Text(subject!.name ?? ''),
+        child: Text(subject!.name ?? '', style: TextStyle( color: AppColors.colors.onPrimaryContainer )),
         value: subject.name,
       ));
     }

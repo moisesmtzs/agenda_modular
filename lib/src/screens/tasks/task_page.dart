@@ -272,25 +272,27 @@ class _TaskPageState extends State<TaskPage> {
           ),
           const SizedBox(height: 20),
           Text(
-              (task?.name != '')
-                  ? task?.name ?? ''
-                  : "Sin nombre a tarea asignado",
-              style:
-                  const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+            (task?.name != '') ? task?.name ?? '' : "Sin nombre a tarea asignado",
+            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)
+          ),
           const SizedBox(height: 20),
           Text(
-              (task?.description != '')
-                  ? task?.description ?? ''
-                  : "Sin descripción a tarea asignada",
-              style:
-                  const TextStyle(fontSize: 15, fontWeight: FontWeight.w400)),
+            (task?.description != '') ? task?.description ?? '' : "Sin descripción a tarea asignada",
+            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w400)
+          ),
           const SizedBox(height: 20),
-          Text(
-              (task?.deliveryDate != '')
-                  ? 'Fecha de entrega: $datetime'
-                  : "Sin fecha de entrega asignada",
-              style:
-                  const TextStyle(fontSize: 15, fontWeight: FontWeight.w400)),
+          Row(
+            children: [
+              const Text(
+                "Fecha de entrega: ",
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)
+              ),
+              Text(
+                (task?.deliveryDate != '') ? datetime : "Sin fecha de entrega asignada",
+                style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w400)
+              ),
+            ],
+          ),
         ],
       ),
     );

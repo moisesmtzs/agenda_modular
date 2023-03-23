@@ -202,17 +202,12 @@ class SubjectDetailPage extends StatelessWidget {
         const SizedBox(height: 10),
         Row(
           children: [
-            const Text(
-              'Dia: '
-            ),
-            Text(
-              ( clase?.days != '' ) ? '$day' : 'Sin día asignado',
-            ),
+            const Text('Día: '),
+            Text(( clase?.days != '' ) ? '$day' : 'Sin día asignado',),
           ],
         ),
         Row(
           children: [
-            // const SizedBox(height: 10),
             Text(
               (clase?.begin_hour != '')? 'Horario: $beginHour' : '',
               
@@ -225,12 +220,10 @@ class SubjectDetailPage extends StatelessWidget {
         ),
         Row(
           children: [
-            // const SizedBox(height: 10),
             Text(
-              (clase?.classroom != '')? 'Salon: $building' : '',
+              (clase?.classroom != '')? 'Salón: $building' : '',
               
             ),
-            // const SizedBox(height: 10),
             Text(
               (clase?.building != '')? '$classroom' : '',
               

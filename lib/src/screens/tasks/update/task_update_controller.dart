@@ -39,6 +39,9 @@ class TaskUpdateController extends GetxController {
   TextEditingController nameController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
 
+  FocusNode nameFocus = FocusNode();
+  FocusNode descriptionFocus = FocusNode();
+
   List<String> typeList = <String>['Actividad', 'Examen', 'Tarea'].obs;
   var typeSelected = ''.obs;
 

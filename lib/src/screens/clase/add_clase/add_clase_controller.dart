@@ -38,7 +38,7 @@ class ClaseController extends GetxController {
     connectivity.getConnectivity();
     getSubjects();
     subjects.refresh();
-    daysController = "lunes";
+    daysController = "Lunes";
   }
 
   void getSubjects() async {
@@ -64,7 +64,7 @@ class ClaseController extends GetxController {
 
   ClaseProvider claseProvider = ClaseProvider();
 
-  void register(BuildContext context) async {
+  void register() async {
     String idUser = userSession.id as String;
     String? idSubject = idsubject.string;
     String inicio = "0001-01-01 " + begineController.toString() + ":00";

@@ -97,11 +97,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
         maxLength: 255,
         textAlign: TextAlign.justify,
         cursorRadius: const Radius.circular(8.0),
-        onTap: () {
-          // Get.delete<HomeController>();
-        },
         onTapOutside: (event) {
-          // Get.delete<HomeController>();
           FocusScope.of(Get.context!).unfocus();
         },
         onFieldSubmitted: (value) {

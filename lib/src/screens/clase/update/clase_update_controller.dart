@@ -39,12 +39,12 @@ class ClaseUpdateController extends GetxController {
   //RxList<Subject?> subjects = <Subject?>[].obs;
 
   List<String> daysList = <String>[
-    'lunes',
-    'martes',
-    'miercoles',
-    'jueves',
-    'viernes',
-    'sabado'
+    'Lunes',
+    'Martes',
+    'Miércoles',
+    'Jueves',
+    'Viernes',
+    'Sábado'
   ].obs;
 
   
@@ -140,20 +140,24 @@ class ClaseUpdateController extends GetxController {
         //GENERA REPLICA AL CREAR UN NUEVO REGISTRO//
         await connectivity.getConnectivityReplica();
         if (responseApi!.success!) {
-          Get.snackbar(responseApi.message ?? '',
-              'La clase ha sido actualizada satisfactoriamente',
-              backgroundColor: AppColors.colors.secondary,
-              colorText: AppColors.colors.onSecondary);
+          Get.snackbar(
+            responseApi.message ?? '',
+            'La clase ha sido actualizada satisfactoriamente',
+            backgroundColor: AppColors.colors.secondary,
+            colorText: AppColors.colors.onSecondary
+          );
           Future.delayed(const Duration(milliseconds: 1000), () {
             Navigator.pop(context);
             Navigator.pop(context);
           });
           Get.offNamed('/subject');
         } else {
-          Get.snackbar(responseApi.message ?? '',
-              'Ha ocurrido un error al actualizar la clase',
-              backgroundColor: AppColors.colors.errorContainer,
-              colorText: AppColors.colors.onErrorContainer);
+          Get.snackbar(
+            responseApi.message ?? '',
+            'Ha ocurrido un error al actualizar la clase',
+            backgroundColor: AppColors.colors.errorContainer,
+            colorText: AppColors.colors.onErrorContainer
+          );
         }
       } else {
         await db.updateClase(clase);
