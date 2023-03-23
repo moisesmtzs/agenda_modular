@@ -193,7 +193,6 @@ class TaskUpdatePage extends StatelessWidget {
         },
       ),)
     );
-    
   }
 
   List<DropdownMenuItem<String>> _dropDownItems(List<String> types) {

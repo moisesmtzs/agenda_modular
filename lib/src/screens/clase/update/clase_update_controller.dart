@@ -120,8 +120,8 @@ class ClaseUpdateController extends GetxController {
   }
 
   void updateClase(BuildContext context) async {
-    String? begin_hour = "0001-01-01 " + selectedBegin.value + ":00";
-    String? end_hour = "0001-01-01 " + selectedEnd.value + ":00";
+    String? begin_hour = selectedBegin.value ;
+    String? end_hour = selectedEnd.value;
     String? days = selectedDay.value;
     String classroom = clasroomController.text;
     String building = buildingController.text;

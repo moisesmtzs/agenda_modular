@@ -73,18 +73,19 @@ class ClaseUpdatePage extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
             icon: const Icon(Icons.arrow_drop_down_circle_rounded),
 
-            //value: claseUpdateController.selectedBegin.value.substring(12,16),//asigno variable desde el controller
-            value: "07:00",
+            value: claseUpdateController.selectedBegin.value.substring(11,16),//asigno variable desde el controller
             items: _dropDownItems(claseUpdateController.hoursList),
             onChanged: (String? value) {
-              claseUpdateController.selectedBegin.value = value!;
+              claseUpdateController.selectedBegin.value = "0001-01-01 " + value! + ":00";
             },
           ),
         )
     );
   }
 
+
   Widget _end() {
+    //valueInicial = claseUpdateController.selectedBegin.value.substring(11,16).toString();
     return Container(
         margin: const EdgeInsets.symmetric(horizontal: 25),
         padding: const EdgeInsets.all(10),
@@ -98,14 +99,39 @@ class ClaseUpdatePage extends StatelessWidget {
             dropdownColor: AppColors.colors.primaryContainer,
             borderRadius: BorderRadius.circular(12),
             icon: const Icon(Icons.arrow_drop_down_circle_rounded),
-            value: "07:00",
+
+            value: claseUpdateController.selectedEnd.value.substring(11,16),//asigno variable desde el controller
             items: _dropDownItems(claseUpdateController.hoursList),
             onChanged: (String? value) {
-              claseUpdateController.selectedEnd.value = value!;
+              claseUpdateController.selectedEnd.value = "0001-01-01 " + value! + ":00";
             },
           ),
-        ));
+        )
+    );
   }
+
+  // Widget _end() {
+  //   return Container(
+  //       margin: const EdgeInsets.symmetric(horizontal: 25),
+  //       padding: const EdgeInsets.all(10),
+  //       decoration: BoxDecoration(
+  //           color: AppColors.colors.inversePrimary,
+  //           borderRadius: BorderRadius.circular(15)),
+  //       child: Obx(
+  //         () => DropdownButton(
+  //           hint: const Text('Hora Fin'),
+  //           isExpanded: true,
+  //           dropdownColor: AppColors.colors.primaryContainer,
+  //           borderRadius: BorderRadius.circular(12),
+  //           icon: const Icon(Icons.arrow_drop_down_circle_rounded),
+  //           value: "07:00",
+  //           items: _dropDownItems(claseUpdateController.hoursList),
+  //           onChanged: (String? value) {
+  //             claseUpdateController.selectedEnd.value = value!;
+  //           },
+  //         ),
+  //       ));
+  // }
 
 
   List<DropdownMenuItem<String>> _dropDownItems(List<String> types) {
@@ -122,25 +148,36 @@ class ClaseUpdatePage extends StatelessWidget {
   
   Widget _day() {
     return Container(
-        margin: const EdgeInsets.symmetric(horizontal: 25),
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-            color: AppColors.colors.inversePrimary,
-            borderRadius: BorderRadius.circular(15)),
-        child: Obx(
-          () => DropdownButton(
-            hint: const Text('Dia'),
-            isExpanded: true,
-            dropdownColor: AppColors.colors.primaryContainer,
-            borderRadius: BorderRadius.circular(12),
-            icon: const Icon(Icons.arrow_drop_down_circle_rounded),
-            //value: "Lunes",
-            items: _dropDownItems(claseUpdateController.daysList),
-            onChanged: (String? value) {
-              claseUpdateController.selectedDay.value = value!;
-            },
-          ),
-        ));
+      margin: const EdgeInsets.symmetric(horizontal: 25),
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: AppColors.colors.inversePrimary,
+        borderRadius: BorderRadius.circular(15)
+      ),
+      child: Obx(() => DropdownButton(
+        hint: const Text('Dia'),
+        isExpanded: true,
+        dropdownColor: AppColors.colors.primaryContainer,
+        borderRadius: BorderRadius.circular(12),
+        icon: const Icon(Icons.arrow_drop_down_circle_rounded),
+        value: claseUpdateController.selectedDay.value,
+        items: _dropDownItemsDays(claseUpdateController.daysList),
+        onChanged: (String? value) {
+          claseUpdateController.selectedDay.value = value!;
+        },
+      ),)
+    );
+  }
+
+  List<DropdownMenuItem<String>> _dropDownItemsDays(List<String> types) {
+    List<DropdownMenuItem<String>> list = [];
+    for (var type in types) {
+      list.add(DropdownMenuItem(
+        child: Text(type),
+        value: type,
+      ));
+    }
+    return list;
   }
 
   Widget _clasroom() {
