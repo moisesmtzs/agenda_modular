@@ -30,6 +30,7 @@ class Connect {
       final result = await InternetAddress.lookup('google.com'); 
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) { 
         createSync();
+        isConnected = true;
       } else {
         print('NO HAY CONEXION DISPONIBLE PARA REALIZAR UNA REPLICA'); 
         isConnected = false;

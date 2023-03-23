@@ -43,6 +43,7 @@ class AddTaskController extends GetxController {
 
   var value = DateTime.now().toString().obs;
   DateTime _selectedDate = DateTime.now();
+  bool dateChanged = false;
 
   List<String> typeList = <String>['Actividad', 'Examen', 'Tarea'].obs;
   var typeSelected = ''.obs;
@@ -156,7 +157,7 @@ class AddTaskController extends GetxController {
       );
       return false;
     }
-    if ( date.isEmpty ) {
+    if ( !dateChanged ) {
       Get.snackbar(
         "Datos no válidos", 
         "Debes ingresar una fecha de entrega",
@@ -197,6 +198,7 @@ class AddTaskController extends GetxController {
     if(picked != null && picked != _selectedDate) {
       value.value = picked.toString();
       _selectedDate = picked;
+      dateChanged = true;
     } 
   }
 

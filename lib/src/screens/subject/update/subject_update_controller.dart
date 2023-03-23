@@ -67,6 +67,7 @@ class SubjectUpdateController extends GetxController {
             backgroundColor: AppColors.colors.secondary,
             colorText: AppColors.colors.onSecondary
           );
+          Get.offNamed('/home');
           Future.delayed(const Duration(milliseconds: 1000), () {
             Navigator.pop(context);
             Navigator.pop(context);
@@ -95,6 +96,7 @@ class SubjectUpdateController extends GetxController {
             backgroundColor: AppColors.colors.secondary,
             colorText: AppColors.colors.onSecondary
           );
+          Get.offNamed('/home');
           Future.delayed(const Duration(milliseconds: 1000), () {
             Navigator.pop(context);
             Navigator.pop(context);

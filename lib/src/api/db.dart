@@ -602,13 +602,13 @@ class db
 
     //CONSTRUIMOS EL SQL//
     var sqlBase = "UPDATE clase SET begin_hour = '${clase.begin_hour}', end_hour = '${clase.end_hour}', days = '${clase.days}', classroom = '${clase.classroom}', building = '${clase.building}', updated_at = '$today' WHERE id_user = ${clase.id_user}";
-    var sql = sqlBase + "and id = ${clase.id} ";
+    var sql = sqlBase + " and id = ${clase.id} ";
 
     //EJECUTAMOS EL SQL//
     var result = await database.rawUpdate(sql);
 
     //ALMACENAR LOS SQL//
-    String? createdAt = await getOneSubject(clase.id);
+    String? createdAt = await getOneClase(clase.id);
     var sqlSync = sqlBase + " and created_at = '$createdAt'";
     var sqlReplica = "INSERT INTO sql_commands values (\"${sqlSync}\")";
     await database.rawInsert(sqlReplica); 
@@ -622,7 +622,7 @@ class db
     Database database = await openDB();
 
     //CONSTRUIMOS EL SQL//
-    var sqlBase = "DELETE FROM clase WHERE id_user = ${clase!.id_user}";
+    var sqlBase = "DELETE FROM clase WHERE id_user = ${clase!.id_user} ";
     var sql = sqlBase + " and id = ${clase.id} ";
 
     //OBTENEMOS LA FECHA DE CREACION ORIGINAL//

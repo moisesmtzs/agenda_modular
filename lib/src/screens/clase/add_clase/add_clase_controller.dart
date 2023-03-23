@@ -105,7 +105,19 @@ class ClaseController extends GetxController {
       }
       else
       {
-        await db.insertClase(clase);
+        int? res = await db.insertClase(clase);
+        if(res != 0)
+        {
+          Get.snackbar('Clase agregadada', 'Clase creada correctamente',
+              backgroundColor: AppColors.colors.secondary,
+              colorText: AppColors.colors.onSecondary);
+              Get.offNamed('/home');
+        }
+        else
+        {
+          Get.snackbar('Datos no válidos', '',
+              backgroundColor: Colors.red[200], colorText: Colors.white);
+        }
       }
     }
   }

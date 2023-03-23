@@ -160,7 +160,26 @@ class ClaseUpdateController extends GetxController {
           );
         }
       } else {
-        await db.updateClase(clase);
+        int? res = await db.updateClase(clase);
+        if(res != 0)
+        {
+            Get.snackbar(
+            'Clase actualizada',
+            'La clase ha sido actualizada satisfactoriamente',
+            backgroundColor: AppColors.colors.secondary,
+            colorText: AppColors.colors.onSecondary
+          );
+        }
+        else
+        {
+          Get.snackbar(
+            'Clase no actualizada',
+            'Ha ocurrido un error al actualizar la clase',
+            backgroundColor: AppColors.colors.errorContainer,
+            colorText: AppColors.colors.onErrorContainer
+          );
+        }
+        Get.offNamed('/subject');
       }
     }
   }

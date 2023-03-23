@@ -351,13 +351,15 @@ class _ClasePageState extends State<ClasePage> {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
           child: const Text(
-            'Registrar Materia',
+            'Registrar Clase',
           ),
         ),
-        onPressed: () {
-          //claseController.daysController = finaldays;
-          claseController.register();
-        },
+        onPressed: claseController.connectivity.isConnected == true 
+          ? () {
+            //claseController.daysController = finaldays;
+            claseController.register();
+            }
+          : null
       ),
     );
   }

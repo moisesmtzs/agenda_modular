@@ -1772,30 +1772,37 @@ class IA_Controller
         if(_text.toUpperCase() == "LUNES")
         {
           isDay = true;
+          _text = "Lunes";
         }
         else if(_text.toUpperCase() == "MARTES")
         {
           isDay = true;
+          _text = "Martes";
         }
         else if(_text.toUpperCase() == "MIÉRCOLES")
         {
           isDay = true;
+          _text = "Miércoles";
         }
         else if(_text.toUpperCase() == "JUEVES")
         {
           isDay = true;
+          _text = "Jueves";
         }
         else if(_text.toUpperCase() == "VIERNES")
         {
           isDay = true;
+          _text = "Viernes";
         }
         else if(_text.toUpperCase() == "SABADO")
         {
           isDay = true;
+          _text = "Sabado";
         }
         else if(_text.toUpperCase() == "DOMINGO")
         {
           isDay = true;
+          _text = "Domingo";
         }
         //PENDIENTE//
         if(isDay)
@@ -2022,30 +2029,37 @@ class IA_Controller
         if(_text.toUpperCase() == "LUNES")
         {
           isDay = true;
+          _text = "Lunes";
         }
         else if(_text.toUpperCase() == "MARTES")
         {
           isDay = true;
+          _text = "Martes";
         }
         else if(_text.toUpperCase() == "MIÉRCOLES")
         {
           isDay = true;
+          _text = "Miércoles";
         }
         else if(_text.toUpperCase() == "JUEVES")
         {
           isDay = true;
+          _text = "Jueves";
         }
         else if(_text.toUpperCase() == "VIERNES")
         {
           isDay = true;
+          _text = "Viernes";
         }
         else if(_text.toUpperCase() == "SABADO")
         {
           isDay = true;
+          _text = "Sabado";
         }
         else if(_text.toUpperCase() == "DOMINGO")
         {
           isDay = true;
+          _text = "Domingo";
         }
         //PENDIENTE//
         if(isDay)
