@@ -23,16 +23,11 @@ class ClaseUpdateController extends GetxController {
   Connect connectivity = Connect();
 
   //VALIDAR QUE EXISTE UNA CONEXION A INTERNET//
-  Future validarInternet() async
-  {
+  Future validarInternet() async {
     await connectivity.getConnectivity();
   }
 
   User userSession = User.fromJson(GetStorage().read('user') ?? {});
-
-  // var idsubject = ''.obs;
-  // var begin = ''.obs;
-  // var end = ''.obs;
 
   String? begineController;
   String? endController;
@@ -41,7 +36,7 @@ class ClaseUpdateController extends GetxController {
   TextEditingController buildingController = TextEditingController();
 
   ClaseProvider claseProvider = ClaseProvider();
-  RxList<Subject?> subjects = <Subject?>[].obs;
+  //RxList<Subject?> subjects = <Subject?>[].obs;
 
   List<String> daysList = <String>[
     'lunes',
@@ -51,6 +46,9 @@ class ClaseUpdateController extends GetxController {
     'viernes',
     'sabado'
   ].obs;
+
+  
+
 
   List<String> hoursList = <String>[
     '07:00',
@@ -89,7 +87,6 @@ class ClaseUpdateController extends GetxController {
   var selectedBegin = ''.obs; //hora de inicio
   var selectedEnd = ''.obs; //hora de fin
   var selectedDay = ''.obs; //dia seleccionado
-  
 
   var value = DateTime.now().toString().obs;
 
@@ -97,7 +94,6 @@ class ClaseUpdateController extends GetxController {
   RxList<Clase?> data = <Clase?>[].obs;
 
   Future<List<Clase?>> getClase() async {
-
     await validarInternet();
 
     if (connectivity.isConnected == true) {
@@ -111,7 +107,7 @@ class ClaseUpdateController extends GetxController {
     for (var s in claseList) {
       data.add(s);
     }
-    
+
     return claseList;
   }
 
@@ -139,8 +135,7 @@ class ClaseUpdateController extends GetxController {
 
       await validarInternet();
 
-      if(connectivity.isConnected == true)
-      {
+      if (connectivity.isConnected == true) {
         ResponseApi? responseApi = await claseProvider.updateClase(clase);
         //GENERA REPLICA AL CREAR UN NUEVO REGISTRO//
         await connectivity.getConnectivityReplica();
@@ -160,9 +155,7 @@ class ClaseUpdateController extends GetxController {
               backgroundColor: AppColors.colors.errorContainer,
               colorText: AppColors.colors.onErrorContainer);
         }
-      }
-      else
-      {
+      } else {
         await db.updateClase(clase);
       }
     }

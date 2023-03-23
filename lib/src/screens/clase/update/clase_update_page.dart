@@ -7,11 +7,12 @@ import 'package:agenda_app/src/models/clase.dart';
 import 'package:agenda_app/src/ui/app_colors.dart';
 
 class ClaseUpdatePage extends StatelessWidget {
-
   ClaseUpdatePage({Key? key, required this.clase}) : super(key: key);
-  
+
   late Clase? clase;
-  late ClaseUpdateController claseUpdateController = Get.put(ClaseUpdateController(clase!));
+  late ClaseUpdateController claseUpdateController =
+      Get.put(ClaseUpdateController(clase!));
+  //var valueInicial = "";
   ClaseController claseController = Get.put(ClaseController());
 
   @override
@@ -25,17 +26,19 @@ class ClaseUpdatePage extends StatelessWidget {
           children: [
             ElevatedButton.icon(
               icon: Icon(Icons.check_rounded,
-              size: 30, color: AppColors.colors.onPrimary),
-              label: Text('Actualizar Clase', style: TextStyle(fontSize: 20, color: AppColors.colors.onPrimary)),
+                  size: 30, color: AppColors.colors.onPrimary),
+              label: Text('Actualizar Clase',
+                  style: TextStyle(
+                      fontSize: 20, color: AppColors.colors.onPrimary)),
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(AppColors.colors.primary),
-                padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 50, vertical: 10)),
-                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
+                  backgroundColor:
+                      MaterialStateProperty.all(AppColors.colors.primary),
+                  padding: MaterialStateProperty.all(
+                      const EdgeInsets.symmetric(horizontal: 50, vertical: 10)),
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(18.0),
-                  )
-                )
-              ),
+                  ))),
               onPressed: () {
                 claseUpdateController.updateClase(context);
               },
@@ -50,90 +53,62 @@ class ClaseUpdatePage extends StatelessWidget {
             _end(),
             const SizedBox(height: 20),
             _day(),
-          ]
-      ),
+          ]),
     );
   }
 
   Widget _begin() {
+    //valueInicial = claseUpdateController.selectedBegin.value.substring(11,16).toString();
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 25),
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: AppColors.colors.inversePrimary,
-        borderRadius: BorderRadius.circular(15)
-      ),
-      child: Obx(() => DropdownButton(
-        hint: const Text('Hora Inicio'),
-        isExpanded: true,
-        dropdownColor: AppColors.colors.primaryContainer,
-        borderRadius: BorderRadius.circular(12),
-        icon: const Icon(Icons.arrow_drop_down_circle_rounded),
-        // //value: claseUpdateController.selectedBegin.value.substring(11,16).toString(),
+        margin: const EdgeInsets.symmetric(horizontal: 25),
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+            color: AppColors.colors.inversePrimary,
+            borderRadius: BorderRadius.circular(15)),
+        child: Obx(
+          () => DropdownButton(
+            hint: const Text('Hora Inicio'),
+            isExpanded: true,
+            dropdownColor: AppColors.colors.primaryContainer,
+            borderRadius: BorderRadius.circular(12),
+            icon: const Icon(Icons.arrow_drop_down_circle_rounded),
 
-        // items: _dropDownItems(claseUpdateController.hoursList),
-        // onChanged: (String? value) {
-        //   claseUpdateController.selectedBegin.value = value!;
-        // },
-        value: "07:00",
-        items: _dropDownItems(claseUpdateController.hoursList),
-        onChanged: (String? value) {
-          claseUpdateController.selectedBegin.value = value!;
-        },
-      ),)
-      
+            //value: claseUpdateController.selectedBegin.value.substring(12,16),//asigno variable desde el controller
+            value: "07:00",
+            items: _dropDownItems(claseUpdateController.hoursList),
+            onChanged: (String? value) {
+              claseUpdateController.selectedBegin.value = value!;
+            },
+          ),
+        )
     );
   }
 
   Widget _end() {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 25),
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: AppColors.colors.inversePrimary,
-        borderRadius: BorderRadius.circular(15)
-      ),
-      child: Obx(() => DropdownButton(
-        hint: const Text('Hora Fin'),
-        isExpanded: true,
-        dropdownColor: AppColors.colors.primaryContainer,
-        borderRadius: BorderRadius.circular(12),
-        icon: const Icon(Icons.arrow_drop_down_circle_rounded),
-        value: "07:00",
-        items: _dropDownItems(claseUpdateController.hoursList),
-        onChanged: (String? value) {
-          claseUpdateController.selectedEnd.value = value!;
-        },
-      ),)
-      
-    );
+        margin: const EdgeInsets.symmetric(horizontal: 25),
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+            color: AppColors.colors.inversePrimary,
+            borderRadius: BorderRadius.circular(15)),
+        child: Obx(
+          () => DropdownButton(
+            hint: const Text('Hora Fin'),
+            isExpanded: true,
+            dropdownColor: AppColors.colors.primaryContainer,
+            borderRadius: BorderRadius.circular(12),
+            icon: const Icon(Icons.arrow_drop_down_circle_rounded),
+            value: "07:00",
+            items: _dropDownItems(claseUpdateController.hoursList),
+            onChanged: (String? value) {
+              claseUpdateController.selectedEnd.value = value!;
+            },
+          ),
+        ));
   }
 
-  Widget _day() {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 25),
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: AppColors.colors.inversePrimary,
-        borderRadius: BorderRadius.circular(15)
-      ),
-      child: Obx(() => DropdownButton(
-        hint: const Text('Dia'),
-        isExpanded: true,
-        dropdownColor: AppColors.colors.primaryContainer,
-        borderRadius: BorderRadius.circular(12),
-        icon: const Icon(Icons.arrow_drop_down_circle_rounded),
-        //value: "Lunes",
-        items: _dropDownItems(claseUpdateController.daysList),
-        onChanged: (String? value) {
-          claseUpdateController.selectedDay.value = value!;
-        },
-      ),)
-      
-    );
-  }
 
-  List<DropdownMenuItem<String>> _dropDownItems(List<String> types) {//dropdown de las horas
+  List<DropdownMenuItem<String>> _dropDownItems(List<String> types) {
     List<DropdownMenuItem<String>> list = [];
     for (var type in types) {
       list.add(DropdownMenuItem(
@@ -144,100 +119,29 @@ class ClaseUpdatePage extends StatelessWidget {
     return list;
   }
 
-
-
-
-  // SingingCharacter? _character = SingingCharacter.lunes;
-  // Widget _day() {
-  //   return Column(
-  //     children: <Widget>[
-  //       ListTile(
-  //         title: const Text('lunes'),
-  //         leading: Radio<SingingCharacter>(
-  //           activeColor: AppColors.colors.primary,
-  //           value: SingingCharacter.lunes,
-  //           groupValue: _character,
-  //           onChanged: (SingingCharacter? value) {
-  //             setState(() {
-  //               _character = value;
-  //               claseUpdateController.daysController = 'lunes';
-  //             });
-  //           },
-  //         ),
-  //       ),
-  //       ListTile(
-  //         title: const Text('martes'),
-  //         leading: Radio<SingingCharacter>(
-  //           activeColor: AppColors.colors.primary,
-  //           value: SingingCharacter.martes,
-  //           groupValue: _character,
-  //           onChanged: (SingingCharacter? value) {
-  //             setState(() {
-  //               _character = value;
-  //               claseUpdateController.daysController = 'martes';
-  //             });
-  //           },
-  //         ),
-  //       ),
-  //       ListTile(
-  //         title: const Text('miercoles'),
-  //         leading: Radio<SingingCharacter>(
-  //           activeColor: AppColors.colors.primary,
-  //           value: SingingCharacter.miercoles,
-  //           groupValue: _character,
-  //           onChanged: (SingingCharacter? value) {
-  //             setState(() {
-  //               _character = value;
-  //               claseUpdateController.daysController = 'miercoles';
-  //             });
-  //           },
-  //         ),
-  //       ),
-  //       ListTile(
-  //         title: const Text('jueves'),
-  //         leading: Radio<SingingCharacter>(
-  //           activeColor: AppColors.colors.primary,
-  //           value: SingingCharacter.jueves,
-  //           groupValue: _character,
-  //           onChanged: (SingingCharacter? value) {
-  //             setState(() {
-  //               _character = value;
-  //               claseUpdateController.daysController = 'jueves';
-  //             });
-  //           },
-  //         ),
-  //       ),
-  //       ListTile(
-  //         title: const Text('viernes'),
-  //         leading: Radio<SingingCharacter>(
-  //           activeColor: AppColors.colors.primary,
-  //           value: SingingCharacter.viernes,
-  //           groupValue: _character,
-  //           onChanged: (SingingCharacter? value) {
-  //             setState(() {
-  //               _character = value;
-  //               claseUpdateController.daysController = 'viernes';
-  //             });
-  //           },
-  //         ),
-  //       ),
-  //       ListTile(
-  //         title: const Text('sabado'),
-  //         leading: Radio<SingingCharacter>(
-  //           activeColor: AppColors.colors.primary,
-  //           value: SingingCharacter.sabado,
-  //           groupValue: _character,
-  //           onChanged: (SingingCharacter? value) {
-  //             setState(() {
-  //               _character = value;
-  //               claseUpdateController.daysController = 'sabado';
-  //             });
-  //           },
-  //         ),
-  //       ),
-  //     ],
-  //   );
-  // }
+  
+  Widget _day() {
+    return Container(
+        margin: const EdgeInsets.symmetric(horizontal: 25),
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+            color: AppColors.colors.inversePrimary,
+            borderRadius: BorderRadius.circular(15)),
+        child: Obx(
+          () => DropdownButton(
+            hint: const Text('Dia'),
+            isExpanded: true,
+            dropdownColor: AppColors.colors.primaryContainer,
+            borderRadius: BorderRadius.circular(12),
+            icon: const Icon(Icons.arrow_drop_down_circle_rounded),
+            //value: "Lunes",
+            items: _dropDownItems(claseUpdateController.daysList),
+            onChanged: (String? value) {
+              claseUpdateController.selectedDay.value = value!;
+            },
+          ),
+        ));
+  }
 
   Widget _clasroom() {
     return Container(

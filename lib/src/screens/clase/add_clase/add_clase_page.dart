@@ -106,7 +106,6 @@ class _ClasePageState extends State<ClasePage> {
   }
 
   List<DropdownMenuItem<String>> _dropDownItems() {
-    //Recuperamos las categorias para mostrar en un dropdown
     List<DropdownMenuItem<String>> list = [];
     for (var subject in claseController.subjects) {
       list.add(DropdownMenuItem(
@@ -134,11 +133,11 @@ class _ClasePageState extends State<ClasePage> {
         value: claseController.begineController,
         icon: const Visibility(
             visible: false, child: Icon(Icons.arrow_drop_down_circle)),
-        underline: Container(
-            alignment: Alignment.centerRight,
-            child: const Icon(Icons.arrow_drop_down_circle)),
-        items: items
-            .map((String hora) => DropdownMenuItem<String>(
+            underline: Container(
+              alignment: Alignment.centerRight,
+              child: const Icon(Icons.arrow_drop_down_circle)
+            ),
+        items: items.map((String hora) => DropdownMenuItem<String>(
                   value: hora,
                   child: Text(hora),
                 ))
