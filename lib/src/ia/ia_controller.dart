@@ -30,7 +30,7 @@ class IA_Controller
   double _confidence = 1.0; //CONFIABILIDAD//
 
   
-  String _stext = "¿En que puedo ayudarte?"; //MENSAJE A ANALIZAR//
+  String _stext = "¿En qué puedo ayudarte?"; //MENSAJE A ANALIZAR//
   String _text = ""; //MENSAJE AL USUARIO//
   
   VoiceRosalind _voice = new VoiceRosalind(); //ENCARGADO DE HABLAR//
@@ -68,7 +68,7 @@ class IA_Controller
   final TasksProvider task_provider =  Get.put(TasksProvider());
   final ClaseProvider clase_provider = Get.put(ClaseProvider());
 
-  //CONEXION//
+  //conexión//
   Connect connectivy = Connect();
   
   //ESTADOS//
@@ -105,7 +105,7 @@ class IA_Controller
   //ANALIZAR SI EL COMANDO ES VALIDO//
   void isCommand(String textSpeak) async 
   {
-    connectivy.getConnectivity();
+    await connectivy.getConnectivity();
     if(connectivy.isConnected == false)
     {
       _voice.speak("Necesitas estar conectado a Internet para utilizar la IA");
@@ -160,7 +160,6 @@ class IA_Controller
         //BUSCAMOS EL COMANDO EN LA BD//
         String searchCommand = _text.toUpperCase();
         List<ia_task?> bd_exist = await ia_provider.getByCommand(searchCommand);
-        debugPrint("SIZE: "+bd_exist.length.toString());
         //SI EL COMANDO EXISTE//
         if(bd_exist.length>0)
         {
@@ -174,7 +173,7 @@ class IA_Controller
             NewTask = new Task();
             NewTask.idUser = userSession.id;    
             _voice.speak("Se agregará una nueva Tarea. ¿Cuál es el nombre de la tarea?");
-            _stext = "¿Cual es el nombre de la tarea?";
+            _stext = "¿Cuál es el nombre de la tarea?";
           }
           //MODIFICAR TAREA//
           else if(bd_exist[0]!.obj=="1" && bd_exist[0]!.type=="2")
@@ -185,8 +184,8 @@ class IA_Controller
             actualProcess=1;
             NewTask = new Task();
             NewTask.idUser = userSession.id;    
-            _voice.speak("Se modificara una Tarea. ¿Cuál es el nombre de la Tarea?");
-            _stext = "¿Cual es el nombre de la Tarea?";
+            _voice.speak("Se modificará una Tarea. ¿Cuál es el nombre de la Tarea?");
+            _stext = "¿Cuál es el nombre de la tarea?";
           }
           //ELIMINAR TAREA//
           else if(bd_exist[0]!.obj=="1" && bd_exist[0]!.type=="3")
@@ -197,8 +196,8 @@ class IA_Controller
             actualProcess=1;
             NewTask = new Task();
             NewTask.idUser = userSession.id;    
-            _voice.speak("Se eliminara una Tarea. ¿Cuál es el nombre de la tarea?");
-            _stext = "¿Cual es el nombre de la tarea?";
+            _voice.speak("Se eliminará una Tarea. ¿Cuál es el nombre de la tarea?");
+            _stext = "¿Cuál es el nombre de la tarea?";
           }
           //INSERTAR MATERIA//
           else if(bd_exist[0]!.obj=="2" && bd_exist[0]!.type=="1")
@@ -210,7 +209,7 @@ class IA_Controller
             NewSubject = new Subject();
             NewSubject.id_user = userSession.id;    
             _voice.speak("Se agregará una nueva Materia. ¿Cuál es el nombre de la Materia?");
-            _stext = "¿Cual es el nombre de la materia?";
+            _stext = "¿Cuál es el nombre de la materia?";
           }
           //MODIFICAR MATERIA//
           else if(bd_exist[0]!.obj=="2" && bd_exist[0]!.type=="2")
@@ -221,8 +220,8 @@ class IA_Controller
             actualProcess=1;
             NewSubject = new Subject();
             NewSubject.id_user = userSession.id;    
-            _voice.speak("Se modificara una Materia. ¿Cuál es el nombre de la Materia?");
-            _stext = "¿Cual es el nombre de la Materia?";
+            _voice.speak("Se modificará una Materia. ¿Cuál es el nombre de la Materia?");
+            _stext = "¿Cuál es el nombre de la Materia?";
           }
           //ELIMINAR MATERIA//
           else if(bd_exist[0]!.obj=="2" && bd_exist[0]!.type=="3")
@@ -233,8 +232,8 @@ class IA_Controller
             actualProcess=1;
             NewSubject = new Subject();
             NewSubject.id_user = userSession.id;    
-            _voice.speak("Se eliminara una Materia. ¿Cuál es el nombre de la Materia?");
-            _stext = "¿Cual es el nombre de la Materia?";
+            _voice.speak("Se eliminará una Materia. ¿Cuál es el nombre de la Materia?");
+            _stext = "¿Cuál es el nombre de la Materia?";
           }
           //INSERTAR CLASE//
           else if(bd_exist[0]!.obj=="3" && bd_exist[0]!.type=="1")
@@ -245,8 +244,8 @@ class IA_Controller
             actualProcess=1;
             NewClase = new Clase();
             NewClase.id_user = userSession.id;    
-            _voice.speak("Se agregará una nueva Clase. ¿De que Materia es la Clase?");
-            _stext = "¿De que Materia es la Clase?";
+            _voice.speak("Se agregará una nueva Clase. ¿De qué Materia es la Clase?");
+            _stext = "¿De qué Materia es la Clase?";
           }
           //ELIMINAR CLASE//
           else if(bd_exist[0]!.obj=="3" && bd_exist[0]!.type=="3")
@@ -257,7 +256,7 @@ class IA_Controller
             actualProcess=1;
             NewClase = new Clase();
             NewClase.id_user = userSession.id;    
-            _voice.speak("Se eliminara Clase. Te pedire la Hora y los Minutos de la Hora de Inicio por separado. ¿A qué Hora es la Clase?");
+            _voice.speak("Se eliminará Clase. Te pediré la Hora y los Minutos de la Hora de Inicio por separado. ¿A qué Hora es la Clase?");
             _stext = "¿A qué Hora es la Clase?";
             _text = "";
           } 
@@ -324,7 +323,7 @@ class IA_Controller
               NewTask = new Task();
               NewTask.idUser = userSession.id;    
               _voice.speak("Se agregará una nueva Tarea. ¿Cuál es el nombre de la tarea?");
-              _stext = "¿Cual es el nombre de la tarea?";
+              _stext = "¿Cuál es el nombre de la tarea?";
               _text = "";
             }
             //MODIFICAR TAREA//
@@ -336,8 +335,8 @@ class IA_Controller
               actualProcess=1;
               NewTask = new Task();
               NewTask.idUser = userSession.id;       
-              _voice.speak("Se modificara una Tarea. ¿Cuál es el nombre de la Tarea?");
-              _stext = "¿Cual es el nombre de la Tarea?";
+              _voice.speak("Se modificará una Tarea. ¿Cuál es el nombre de la Tarea?");
+              _stext = "¿Cuál es el nombre de la tarea?";
               _text = "";
             }
             //ELIMINAR TAREA//
@@ -349,8 +348,8 @@ class IA_Controller
               actualProcess=1;
               NewTask = new Task();
               NewTask.idUser = userSession.id;    
-              _voice.speak("Se eliminara una Tarea. ¿Cuál es el nombre de la tarea?");
-              _stext = "¿Cual es el nombre de la tarea?";
+              _voice.speak("Se eliminará una Tarea. ¿Cuál es el nombre de la tarea?");
+              _stext = "¿Cuál es el nombre de la tarea?";
               _text = "";
             }
             //INSERTAR MATERIA//
@@ -363,7 +362,7 @@ class IA_Controller
               NewSubject = new Subject();
               NewSubject.id_user = userSession.id;    
               _voice.speak("Se agregará una nueva Materia. ¿Cuál es el nombre de la Materia?");
-              _stext = "¿Cual es el nombre de la materia?";
+              _stext = "¿Cuál es el nombre de la materia?";
               _text = "";
             }
             //MODIFICAR MATERIA//
@@ -375,8 +374,8 @@ class IA_Controller
               actualProcess=1;
               NewSubject = new Subject();
               NewSubject.id_user = userSession.id;    
-              _voice.speak("Se modificara una Materia. ¿Cuál es el nombre de la Materia?");
-              _stext = "¿Cual es el nombre de la Materia?";
+              _voice.speak("Se modificará una Materia. ¿Cuál es el nombre de la Materia?");
+              _stext = "¿Cuál es el nombre de la Materia?";
               _text = "";
             }
             //ELIMINAR MATERIA//
@@ -388,8 +387,8 @@ class IA_Controller
               actualProcess=1;
               NewSubject = new Subject();
               NewSubject.id_user = userSession.id;    
-              _voice.speak("Se eliminara una Materia. ¿Cuál es el nombre de la Materia?");
-              _stext = "¿Cual es el nombre de la Materia?";
+              _voice.speak("Se eliminará una Materia. ¿Cuál es el nombre de la Materia?");
+              _stext = "¿Cuál es el nombre de la Materia?";
               _text = "";
             }
             //INSERTAR CLASE//
@@ -401,7 +400,7 @@ class IA_Controller
               actualProcess=1;
               NewClase = new Clase();
               NewClase.id_user = userSession.id;    
-              _voice.speak("Se eliminara Clase. Te pedire la Hora y los Minutos de la Hora de Inicio por separado. ¿A qué Hora es la Clase?");
+              _voice.speak("Se eliminará Clase. Te pediré la Hora y los Minutos de la Hora de Inicio por separado. ¿A qué Hora es la Clase?");
               _stext = "¿A qué Hora es la Clase?";
               _text = "";
             }
@@ -414,13 +413,9 @@ class IA_Controller
               actualProcess=1;
               NewClase = new Clase();
               NewClase.id_user = userSession.id;    
-              _voice.speak("Se eliminara Clase. Te pedire la Hora y los Minutos de la Hora de Inicio por separado. ¿A qué Hora es la Clase?");
+              _voice.speak("Se eliminará Clase. Te pediré la Hora y los Minutos de la Hora de Inicio por separado. ¿A qué Hora es la Clase?");
               _stext = "¿A qué Hora es la Clase?";
               _text = "";
-            }
-            else
-            {
-              _voice.speak("NO ENTRE A NINGUN IF");
             }
           }
           //SI HAY MAS DE UNA SIMILITUD
@@ -431,7 +426,6 @@ class IA_Controller
             waitAnswer=0;
             //PRIMER DESCARTE//
             searchNewCommand();
-
           }
           //SI NO HAY SIMILITUDES//
           else
@@ -448,7 +442,7 @@ class IA_Controller
       }
       else
       {
-        _voice.speak("Lo siento, no estan permitidas palabras antisonantes. Intenta de Nuevo");
+        _voice.speak("Lo siento, no están permitidas palabras altisonantes. Intenta de Nuevo");
         resetIA();
       } 
     } 
@@ -479,7 +473,6 @@ class IA_Controller
       {
         if(posCommands.isNotEmpty)
         {
-          debugPrint("EL SIZE ES: "+posCommands.length.toString());
           descartList.add(posCommands[0]);
           posCommands.removeAt(0);
           waitAnswer=0;
@@ -488,7 +481,6 @@ class IA_Controller
             posCommands.removeAt(0);
           }
           searchNewCommand();
-          debugPrint(posCommands.toString());
         }
         else
         {
@@ -515,8 +507,8 @@ class IA_Controller
           actualProcess=1;
           NewTask = new Task();
           NewTask.idUser = userSession.id;    
-          _voice.speak("¿Cual es el nombre de la tarea?");
-          _stext = "¿Cual es el nombre de la tarea?";
+          _voice.speak("¿Cuál es el nombre de la tarea?");
+          _stext = "¿Cuál es el nombre de la tarea?";
           _text = "";
         }
         //MODIFICAR MATERIA//
@@ -535,8 +527,8 @@ class IA_Controller
           actualProcess=1;
           NewTask = new Task();
           NewTask.idUser = userSession.id;       
-          _voice.speak("¿Cual es el nombre de la Tarea?");
-          _stext = "¿Cual es el nombre de la Tarea?";
+          _voice.speak("¿Cuál es el nombre de la tarea?");
+          _stext = "¿Cuál es el nombre de la tarea?";
           _text = "";
         }
         //ELIMINAR TAREA//
@@ -555,8 +547,8 @@ class IA_Controller
           actualProcess=1;
           NewTask = new Task();
           NewTask.idUser = userSession.id;    
-          _voice.speak("¿Cual es el nombre de la tarea?");
-          _stext = "¿Cual es el nombre de la tarea?";
+          _voice.speak("¿Cuál es el nombre de la tarea?");
+          _stext = "¿Cuál es el nombre de la tarea?";
           _text = "";
         }
         //INSERTAR MATERIA//
@@ -569,7 +561,7 @@ class IA_Controller
           NewSubject = new Subject();
           NewSubject.id_user = userSession.id;    
           _voice.speak("Se agregará una nueva Materia. ¿Cuál es el nombre de la Materia?");
-          _stext = "¿Cual es el nombre de la materia?";
+          _stext = "¿Cuál es el nombre de la materia?";
           _text = "";
         }
         //MODIFICAR MATERIA//
@@ -588,8 +580,8 @@ class IA_Controller
           actualProcess=1;
           NewSubject = new Subject();
           NewSubject.id_user = userSession.id;     
-          _voice.speak("¿Cual es el nombre de la Materia?");
-          _stext = "¿Cual es el nombre de la Materia?";
+          _voice.speak("¿Cuál es el nombre de la Materia?");
+          _stext = "¿Cuál es el nombre de la Materia?";
           _text = "";
         }
         //ELIMINAR MATERIA//
@@ -608,8 +600,8 @@ class IA_Controller
           actualProcess = 1;
           NewSubject = new Subject();
           NewSubject.id_user = userSession.id;     
-          _voice.speak("¿Cual es el nombre de la Materia?");
-          _stext = "¿Cual es el nombre de la Materia?";
+          _voice.speak("¿Cuál es el nombre de la Materia?");
+          _stext = "¿Cuál es el nombre de la Materia?";
           _text = "";
         }
         //INSERTAR CLASE//
@@ -628,8 +620,8 @@ class IA_Controller
           actualProcess=1;
           NewClase = new Clase();
           NewClase.id_user = userSession.id;    
-          _voice.speak("Se agregará una nueva Clase. ¿De que Materia es la Clase?");
-          _stext = "¿De que Materia es la Clase?";
+          _voice.speak("Se agregará una nueva Clase. ¿De qué Materia es la Clase?");
+          _stext = "¿De qué Materia es la Clase?";
           _text = "";
         }
         //ELIMINAR CLASE//
@@ -648,14 +640,14 @@ class IA_Controller
           actualProcess=1;
           NewClase = new Clase();
           NewClase.id_user = userSession.id;    
-          _voice.speak("Se eliminara Clase. Te pedire la Hora y los Minutos de la Hora de Inicio por separado. ¿A qué Hora es la Clase?");
+          _voice.speak("Se eliminará Clase. Te pediré la Hora y los Minutos de la Hora de Inicio por separado. ¿A qué Hora es la Clase?");
           _stext = "¿A qué Hora es la Clase?";
           _text = "";   
         }
       }
       else
       {
-        _voice.speak("Lo siento, solo puedes reponder Si o No");
+        _voice.speak("Lo siento, solo puedes responder Sí o No");
       }
     }
     else
@@ -808,7 +800,7 @@ class IA_Controller
   void resetIA() 
   {
     _text = ""; 
-    _stext = "¿En que puedo ayudarte?";
+    _stext = "¿En qué puedo ayudarte?";
     commandsBD = [];
     posCommands = []; 
     descartList = []; 
@@ -887,8 +879,8 @@ class IA_Controller
       if(actualProcess == 1)
       {
         NewTask.name = _text;
-        _voice.speak("¿Cual es la descripción de la tarea?");
-        _stext = "¿Cual es la descripción de la tarea?";
+        _voice.speak("¿Cuál es la descripción de la tarea?");
+        _stext = "¿Cuál es la descripción de la tarea?";
         _text = "";
         actualProcess++;
       }
@@ -896,9 +888,9 @@ class IA_Controller
       else if(actualProcess == 2)
       {
         NewTask.description = _text;
-        _voice.speak("¿Cual es la fecha de entrega de la tarea?");
-        _voice.speak("Se claro con la fecha, especifica dia y mes.");
-        _stext = "¿Cual es la fecha de entrega de la tarea? (Se claro con la fecha, especifica dia y mes)";
+        _voice.speak("¿Cuál es la fecha de entrega de la tarea?");
+        _voice.speak("Sé claro con la fecha, específica, día y mes.");
+        _stext = "¿Cuál es la fecha de entrega de la tarea? (Sé claro con la fecha, específica, día y mes.)";
         _text = "";
         actualProcess++;
       }
@@ -926,8 +918,8 @@ class IA_Controller
           }
         }
         createDate(words);
-        _voice.speak("¿De que materia?");
-        _stext = "¿De que materia?";
+        _voice.speak("¿De qué materia?");
+        _stext = "¿De qué materia?";
         _text = "";
         actualProcess++;
       }
@@ -950,8 +942,8 @@ class IA_Controller
         List<Subject?> ActualSubject = await subject_provider.getByName(validSubject, userSession.id.toString());
         if(ActualSubject.length==0)
         {
-          _voice.speak("Lo siento, no tienes una materia registrada con ese nombre, intenta con otra o verifica su ortografia.");
-          _stext = "¿De que materia?";
+          _voice.speak("Lo siento, no tienes una materia registrada con ese nombre, intenta con otra o verifica su ortografía.");
+          _stext = "¿De qué materia?";
           _text = "";
         }
         else
@@ -1008,7 +1000,7 @@ class IA_Controller
           }
           else
           {
-            _voice.speak("Hubo un problema al guardar la Tarea. Verifica los datos o tu conexion a Internet.");
+            _voice.speak("Hubo un problema al guardar la Tarea. Verifica los datos o tu conexióna Internet.");
           }
           resetIA();
         }
@@ -1020,7 +1012,7 @@ class IA_Controller
         }
         else
         {
-          _voice.speak("Solo son validas las opciones Guardar o Cancelar.");
+          _voice.speak("Solo son válidas las opciones Guardar o Cancelar.");
           _stext = "El Nombre es: "+NewTask.name.toString() + "\nLa Descripcion es: "+NewTask.description.toString()+"\nLa Fecha es: "+NewTask.deliveryDate.toString()
                  + "\nLa Materia es: "+NewTask.subject.toString() + "\nEl Tipo es: "+NewTask.type.toString();
                  _text = "";
@@ -1041,7 +1033,7 @@ class IA_Controller
           taskDb = searchTask[0];
           String? TaskName = taskDb?.name.toString();
           _voice.speak("Existe la Tarea, ¿Qué deseas modificar?"); 
-          _stext = "Se modificara la Tarea: "+ TaskName!;
+          _stext = "Se modificará la Tarea: "+ TaskName!;
           _text = "";
           actualProcess=2;
         }
@@ -1058,8 +1050,8 @@ class IA_Controller
         //NOMBRE//
         if(aux == "NOMBRE")
         {
-          _voice.speak("¿Cual es el nuevo Nombre de la Tarea?");
-          _stext = "¿Cual es el nuevo Nombre de la Tarea?";
+          _voice.speak("¿Cuál es el nuevo Nombre de la Tarea?");
+          _stext = "¿Cuál es el nuevo Nombre de la Tarea?";
           _text = "";
           actualProcess++;
           modCount = 1;
@@ -1067,8 +1059,8 @@ class IA_Controller
         //DESCRIPCIÓN//
         else if(aux == "DESCRIPCIÓN")
         {
-          _voice.speak("¿Cual es la nueva Descripción de la Tarea?");
-          _stext = "¿Cual es el la nueva Descripción de la Tarea?";
+          _voice.speak("¿Cuál es la nueva Descripción de la Tarea?");
+          _stext = "¿Cuál es el la nueva Descripción de la Tarea?";
           _text = "";
           actualProcess++;
           modCount = 2;
@@ -1076,8 +1068,8 @@ class IA_Controller
         //FECHA//
         else if(aux == "FECHA" || aux=="FECHA DE ENTREGA")
         {
-          _voice.speak("¿Cual es la nueva Fecha de Entrega de la Tarea? (Especifica solo dia y mes)");
-          _stext = "¿Cual es la nueva Fecha de Entrega de la Tarea?";
+          _voice.speak("¿Cuál es la nueva Fecha de Entrega de la Tarea? (Especifica solo dia y mes)");
+          _stext = "¿Cuál es la nueva Fecha de Entrega de la Tarea?";
           _text = "";
           actualProcess++;
           modCount = 3;
@@ -1085,8 +1077,8 @@ class IA_Controller
         //MATERIA//
         else if(aux == "MATERIA")
         {
-          _voice.speak("¿Cual es la nueva Materia de la Tarea?");
-          _stext = "¿Cual es la nueva Materia de la Tarea?";
+          _voice.speak("¿Cuál es la nueva Materia de la Tarea?");
+          _stext = "¿Cuál es la nueva Materia de la Tarea?";
           _text = "";
           actualProcess++;
           modCount = 4;
@@ -1094,8 +1086,8 @@ class IA_Controller
         //TIPO//
         else if(aux == "TIPO")
         {
-          _voice.speak("¿Cual es el nuevo Tipo de la Tarea?");
-          _stext = "¿Cual es el nuevo Tipo de la Tarea?";
+          _voice.speak("¿Cuál es el nuevo Tipo de la Tarea?");
+          _stext = "¿Cuál es el nuevo Tipo de la Tarea?";
           _text = "";
           actualProcess++;
           modCount = 5;
@@ -1103,8 +1095,8 @@ class IA_Controller
         //ESTATUS//
         else if(aux == "ESTATUS")
         {
-          _voice.speak("¿Cual es el nuevo Estatus de la Tarea?");
-          _stext = "¿Cual es el nuevo Estatus de la Tarea?";
+          _voice.speak("¿Cuál es el nuevo Estatus de la Tarea?");
+          _stext = "¿Cuál es el nuevo Estatus de la Tarea?";
           _text = "";
           actualProcess++;
           modCount = 6;
@@ -1121,7 +1113,7 @@ class IA_Controller
         {
           String? OldName = NewTask.name;
           taskDb!.name = _text;
-          _voice.speak("Se modificara el Nombre de la Tarea. Di Guardar para confirmar los cambios o Cancelar para descartarlos.");
+          _voice.speak("Se modificará el Nombre de la Tarea. Di Guardar para confirmar los cambios o Cancelar para descartarlos.");
           _stext = "Antes: "+OldName!+"\nNuevo: "+taskDb!.name!;
           _text = "";
           actualProcess++;
@@ -1129,7 +1121,7 @@ class IA_Controller
         else if(modCount == 2)
         {
           taskDb!.description = _text;
-          _voice.speak("Se modificara la Descripción de la Tarea. Di Guardar para confirmar los cambios o Cancelar para descartarlos.");
+          _voice.speak("Se modificará la Descripción de la Tarea. Di Guardar para confirmar los cambios o Cancelar para descartarlos.");
           _stext = "Nueva Descripcion: "+taskDb!.description!;
           _text = "";
           actualProcess++;
@@ -1158,7 +1150,7 @@ class IA_Controller
           }
           createDate(words);
           taskDb!.deliveryDate = NewTask.deliveryDate;
-          _voice.speak("Se modificara la Fecha de Entrega de la Tarea. Di Guardar para confirmar los cambios o Cancelar para descartarlos.");
+          _voice.speak("Se modificará la Fecha de Entrega de la Tarea. Di Guardar para confirmar los cambios o Cancelar para descartarlos.");
           _stext = "Nueva Fecha: "+NewTask.deliveryDate.toString();
           _text = "";
           actualProcess++;
@@ -1183,13 +1175,13 @@ class IA_Controller
           if(ActualSubject.length==0)
           {
             _voice.speak("Lo siento, no tienes una materia registrada con ese nombre, intenta con otra o verifica su ortografía.");
-            _stext = "¿De que materia?";
+            _stext = "¿De qué materia?";
             _text = "";
           }
           else
           {
             taskDb!.subject = validSubject;
-            _voice.speak("Se modificara la Materia de la Tarea. Di Guardar para confirmar los cambios o Cancelar para descartarlos.");
+            _voice.speak("Se modificará la Materia de la Tarea. Di Guardar para confirmar los cambios o Cancelar para descartarlos.");
             _stext = "Nueva Materia: "+taskDb!.subject!;
             _text = "";
             actualProcess++;
@@ -1213,7 +1205,7 @@ class IA_Controller
             {
               taskDb!.type="Tarea";
             }
-            _voice.speak("Se modificara el Tipo de la Tarea. Di Guardar para confirmar los cambios o Cancelar para descartarlos.");
+            _voice.speak("Se modificará el Tipo de la Tarea. Di Guardar para confirmar los cambios o Cancelar para descartarlos.");
             _stext = "Nuevo Tipo: "+taskDb!.type!;
             _text = "";
             actualProcess++;
@@ -1231,15 +1223,15 @@ class IA_Controller
           if(aux == "PENDIENTE" || aux == "COMPLETADA")
           {
             taskDb!.status = aux;
-            _voice.speak("Se modificara el Estatus de la Tarea. Di Guardar para confirmar los cambios o Cancelar para descartarlos.");
+            _voice.speak("Se modificará el Estatus de la Tarea. Di Guardar para confirmar los cambios o Cancelar para descartarlos.");
             _stext = "Nuevo Estatus: "+taskDb!.status!;
             _text = "";
             actualProcess++;
           }
           else
           {
-            _voice.speak("Solo son validas las opciones Pendiente o Completada.");
-            _stext = "Solo son validas las opciones Pendiente o Completada.";
+            _voice.speak("Solo son válidas las opciones Pendiente o Completada.");
+            _stext = "Solo son válidas las opciones Pendiente o Completada.";
             _text = "";
           }      
         }      
@@ -1254,11 +1246,11 @@ class IA_Controller
           ResponseApi? responseApi = await task_provider.updateTask(taskDb!);
           if (responseApi?.success == true)
           {
-            _voice.speak("Se modifico la Tarea");
+            _voice.speak("Se modificó la Tarea");
           }
           else
           {
-            _voice.speak("Hubo un problema al modificar la Tarea. Verifica los datos o tu conexion a Internet.");
+            _voice.speak("Hubo un problema al modificar la Tarea. Verifica los datos o tu conexión a Internet.");
           }
           resetIA();
         }
@@ -1270,8 +1262,8 @@ class IA_Controller
         }
         else
         {
-          _voice.speak("Solo son validas las opciones Guardar o Cancelar.");
-          _stext = "Solo son validas las opciones Guardar o Cancelar.";
+          _voice.speak("Solo son válidas las opciones Guardar o Cancelar.");
+          _stext = "Solo son válidas las opciones Guardar o Cancelar.";
           _text = "";
         }
       }
@@ -1289,8 +1281,8 @@ class IA_Controller
           {
             taskDb = searchTask[0];
             String? subjectName = taskDb?.name.toString();
-            _voice.speak("Existe la tarea, ¿Estas seguro de que quieres eliminarla?"); 
-            _stext = "Se eliminara la Tarea: "+ subjectName!;
+            _voice.speak("Existe la tarea, ¿Estás seguro de que quieres eliminarla?"); 
+            _stext = "Se eliminará la Tarea: "+ subjectName!;
             _text = "";
             actualProcess=2;
           }
@@ -1312,13 +1304,13 @@ class IA_Controller
             }
             else
             {
-              _voice.speak("Hubo un problema al Eliminar la Tarea. Verifica los datos o tu conexion a Internet.");
+              _voice.speak("Hubo un problema al Eliminar la Tarea. Verifica los datos o tu conexión a Internet.");
             }
             resetIA();
           }
           else if(_text.toUpperCase() == "NO")
           {
-            _voice.speak("No se eliminara la Tarea.");
+            _voice.speak("No se eliminará la Tarea.");
             resetIA();
           }
           else
@@ -1334,17 +1326,17 @@ class IA_Controller
       if(actualProcess == 1)
       {
         NewSubject.name = _text;
-        _voice.speak("¿Cual es el codigo de la materia?");
-        _stext = "¿Cual es el codigo de la materia?";
+        _voice.speak("¿Cuál es el código de la materia?");
+        _stext = "¿Cuál es el código de la materia?";
         _text = "";
         actualProcess++;
       }
-      //CODIGO DE LA MATERIA//
+      //código DE LA MATERIA//
       else if(actualProcess == 2)
       {
         NewSubject.subject_code = _text;
-        _voice.speak("¿Cual es el nombre del profesor?");
-        _stext = "¿Cual es el nombre del profesor?";
+        _voice.speak("¿Cuál es el nombre del profesor?");
+        _stext = "¿Cuál es el nombre del profesor?";
         _text = "";
         actualProcess++;
       }
@@ -1353,7 +1345,7 @@ class IA_Controller
       {
         NewSubject.professor_name = _text;
         _voice.speak("A continuación, te muestro la información de la materia, si es correcta di Guardar para registrarla o Cancelar para descartarla.");
-        _stext = "El Nombre es: "+NewSubject.name.toString() + "\nEl Codigo de la Materia es: "+NewSubject.subject_code.toString()+"\nLa Fecha es: "+NewSubject.professor_name.toString();
+        _stext = "El Nombre es: "+NewSubject.name.toString() + "\nEl código de la Materia es: "+NewSubject.subject_code.toString()+"\nLa Fecha es: "+NewSubject.professor_name.toString();
         _text = "";
         actualProcess++;
       }
@@ -1369,7 +1361,7 @@ class IA_Controller
           }
           else
           {
-            _voice.speak("Hubo un problema al Guardar la Materia. Verifica los datos o tu conexion a Internet.");
+            _voice.speak("Hubo un problema al Guardar la Materia. Verifica los datos o tu conexión a Internet.");
           }
           resetIA();
         }
@@ -1381,8 +1373,8 @@ class IA_Controller
         }
         else
         {
-          _voice.speak("Solo son validas las opciones Guardar o Cancelar.");
-          _stext = "El Nombre es: "+NewSubject.name.toString() + "\nEl Codigo de la Materia es: "+NewSubject.subject_code.toString()+"\nEl profesor es: "+NewSubject.professor_name.toString();
+          _voice.speak("Solo son válidas las opciones Guardar o Cancelar.");
+          _stext = "El Nombre es: "+NewSubject.name.toString() + "\nEl código de la Materia es: "+NewSubject.subject_code.toString()+"\nEl profesor es: "+NewSubject.professor_name.toString();
           _text = "";
         }
       }
@@ -1401,7 +1393,7 @@ class IA_Controller
             subjectDB = searchSubject[0];
             String? subjectName = subjectDB?.name.toString();
             _voice.speak("Existe la Materia, ¿Qué deseas modificar?"); 
-            _stext = "Se modificara la Materia: "+ subjectName!;
+            _stext = "Se modificará la Materia: "+ subjectName!;
             _text = "";
             actualProcess=2;
           }
@@ -1418,17 +1410,17 @@ class IA_Controller
           //NOMBRE//
           if(aux == "NOMBRE")
           {
-            _voice.speak("¿Cual es el nuevo Nombre de la Materia?");
-            _stext = "¿Cual es el nuevo Nombre de la Materia?";
+            _voice.speak("¿Cuál es el nuevo Nombre de la Materia?");
+            _stext = "¿Cuál es el nuevo Nombre de la Materia?";
             _text = "";
             actualProcess++;
             modCount = 1;
           }
-          //CODIGO//
+          //código//
           else if(aux == "CÓDIGO")
           {
-            _voice.speak("¿Cual es el nuevo Código de la Materia?");
-            _stext = "¿Cual es el nuevo Código de la Materia?";
+            _voice.speak("¿Cuál es el nuevo Código de la Materia?");
+            _stext = "¿Cuál es el nuevo Código de la Materia?";
             _text = "";
             actualProcess++;
             modCount = 2;
@@ -1436,8 +1428,8 @@ class IA_Controller
           //PROFESOR//
           else if(aux == "PROFESOR")
           {
-            _voice.speak("¿Cual es el nuevo Profesor de la Materia?");
-            _stext = "¿Cual es el nuevo Profesor de la Materia?";
+            _voice.speak("¿Cuál es el nuevo Profesor de la Materia?");
+            _stext = "¿Cuál es el nuevo Profesor de la Materia?";
             _text = "";
             actualProcess++;
             modCount = 3;
@@ -1454,7 +1446,7 @@ class IA_Controller
           {
             String? OldName = NewSubject.name;
             subjectDB!.name = _text;
-            _voice.speak("Se modificara el Nombre de la materia. Di Guardar para confirmar los cambios o Cancelar para descartarlos.");
+            _voice.speak("Se modificará el Nombre de la materia. Di Guardar para confirmar los cambios o Cancelar para descartarlos.");
             _stext = "Antes: "+OldName!+"\nNuevo: "+subjectDB!.name!;
             _text = "";
             actualProcess++;
@@ -1463,7 +1455,7 @@ class IA_Controller
           {
             String? OldCode = NewSubject.subject_code;
             subjectDB!.subject_code = _text;
-            _voice.speak("Se modificara el Código de la materia. Di Guardar para confirmar los cambios o Cancelar para descartarlos.");
+            _voice.speak("Se modificará el Código de la materia. Di Guardar para confirmar los cambios o Cancelar para descartarlos.");
             _stext = "Antes: "+OldCode!+"\nNuevo: "+subjectDB!.subject_code!;
             _text = "";
             actualProcess++;
@@ -1472,7 +1464,7 @@ class IA_Controller
           {
             String? OldProf = NewSubject.professor_name;
             subjectDB!.professor_name = _text;
-            _voice.speak("Se modificara el Profesor de la materia. Di Guardar para confirmar los cambios o Cancelar para descartarlos.");
+            _voice.speak("Se modificará el Profesor de la materia. Di Guardar para confirmar los cambios o Cancelar para descartarlos.");
             _stext = "Antes: "+OldProf!+"\nNuevo: "+subjectDB!.professor_name!;
             _text = "";
             actualProcess++;
@@ -1488,24 +1480,24 @@ class IA_Controller
             ResponseApi? responseApi = await subject_provider.updateSubject(subjectDB!);
             if (responseApi?.success == true)
             {
-              _voice.speak("Se modifico la Materia");
+              _voice.speak("Se modificó la Materia");
             }
             else
             {
-              _voice.speak("Hubo un problema al Modificar la Materia. Verifica los datos o tu conexion a Internet.");
+              _voice.speak("Hubo un problema al Modificar la Materia. Verifica los datos o tu conexión a Internet.");
             }
             resetIA();
           }
           else if(_text.toUpperCase() == "CANCELAR")
           {
-            _voice.speak("No se ha modifico la Materia");
+            _voice.speak("No se ha modificó la Materia");
             NewSubject = new Subject();
             resetIA();
           }
           else
           {
-            _voice.speak("Solo son validas las opciones Guardar o Cancelar.");
-            _stext = "Solo son validas las opciones Guardar o Cancelar.";
+            _voice.speak("Solo son válidas las opciones Guardar o Cancelar.");
+            _stext = "Solo son válidas las opciones Guardar o Cancelar.";
             _text = "";
           }
         }
@@ -1523,8 +1515,8 @@ class IA_Controller
           {
             subjectDB = searchSubject[0];
             String? subjectName = subjectDB?.name.toString();
-            _voice.speak("Existe la Materia, ¿Estas seguro de que quieres eliminarla?"); 
-            _stext = "Se eliminara la Materia: "+ subjectName!;
+            _voice.speak("Existe la Materia, ¿Estás seguro de que quieres eliminarla?"); 
+            _stext = "Se eliminará la Materia: "+ subjectName!;
             _text = "";
             actualProcess=2;
           }
@@ -1546,13 +1538,13 @@ class IA_Controller
             }
             else
             {
-              _voice.speak("Hubo un problema al Eliminar la Materia. Verifica los datos o tu conexion a Internet.");
+              _voice.speak("Hubo un problema al Eliminar la Materia. Verifica los datos o tu conexión a Internet.");
             }
             resetIA();
           }
           else if(_text.toUpperCase() == "NO")
           {
-            _voice.speak("No se eliminara la Materia.");
+            _voice.speak("No se eliminará la Materia.");
             resetIA();
           }
           else
@@ -1584,14 +1576,14 @@ class IA_Controller
         if(ActualSubject.length==0)
         {
           _voice.speak("Lo siento, no tienes una materia registrada con ese nombre, intenta con otra o verifica su ortografía.");
-          _stext = "¿De que Materia es la Clase?";
+          _stext = "¿De qué Materia es la Clase?";
           _text = "";
         }
         else
         {
           NameMateria = ActualSubject[0]!.name!;
           NewClase.id_subject = ActualSubject[0]!.id;
-          _voice.speak("Te pedire hora y minutos por separado. ¿Cuál es la Hora de Inicio en formato 24 horas?");
+          _voice.speak("Te pediré hora y minutos por separado. ¿Cuál es la Hora de Inicio en formato 24 horas?");
           _stext = "¿Cuál es la Hora de Inicio?";
           _text = "";
           actualProcess++;
@@ -1613,7 +1605,7 @@ class IA_Controller
         var num = int.tryParse(_text);
         if(_text.length > 2)
         {
-          _voice.speak("Lo siento, utiliza solo numeros no mayores a 2 digitos");
+          _voice.speak("Lo siento, utiliza solo números no mayores a 2 dígitos");
           _stext = "¿Cuál es la Hora de Inicio?";
           _text = "";
         }
@@ -1632,8 +1624,8 @@ class IA_Controller
         else
         {
           Hora = _text;
-          _voice.speak("¿Con cuantos minutos la Hora de Inicio?");
-          _stext = "¿Con cuantos minutos la Hora de Inicio?";
+          _voice.speak("¿Con cuántos minutos la Hora de Inicio?");
+          _stext = "¿Con cuántos minutos la Hora de Inicio?";
           _text = "";
           actualProcess++;
         }
@@ -1653,20 +1645,20 @@ class IA_Controller
         var num = int.tryParse(_text);
         if(_text.length > 2)
         {
-          _voice.speak("Lo siento, utiliza solo numeros no mayores a 2 digitos");
-          _stext = "¿Con cuantos minutos la Hora de Inicio?";
+          _voice.speak("Lo siento, utiliza solo números no mayores a 2 dígitos");
+          _stext = "¿Con cuántos minutos la Hora de Inicio?";
           _text = "";
         }
         else if(num == null)
         {
           _voice.speak("Lo siento, no es un numero válido");
-          _stext = "¿Con cuantos minutos la Hora de Inicio?";
+          _stext = "¿Con cuántos minutos la Hora de Inicio?";
           _text = "";
         }
         else if(num > 59 || num < 0)
         {
           _voice.speak("Lo siento, los minutos no puede ser mayores a 59 ni menores a 0");
-          _stext = "¿Con cuantos minutos la Hora de Inicio?";
+          _stext = "¿Con cuántos minutos la Hora de Inicio?";
           _text = "";
         }
         else
@@ -1676,7 +1668,7 @@ class IA_Controller
           beginHourString = beginHour.hour.toString() + ":" + beginHour.minute.toString();
           NewClase.begin_hour = beginHour.toString();
           debugPrint(beginHour.toString());
-          _voice.speak("Te pedire hora y minutos por separado. ¿Cuál es la Hora de Fin en formato 24 horas?");
+          _voice.speak("Te pediré hora y minutos por separado. ¿Cuál es la Hora de Fin en formato 24 horas?");
           _stext = "¿Cuál es la Hora de Fin?";
           _text = "";
           actualProcess++;
@@ -1697,7 +1689,7 @@ class IA_Controller
         var num = int.tryParse(_text);
         if(_text.length > 2)
         {
-          _voice.speak("Lo siento, utiliza solo números no mayores a 2 digitos");
+          _voice.speak("Lo siento, utiliza solo números no mayores a 2 dígitos");
           _stext = "¿Cuál es la Hora de Fin?";
           _text = "";
         }
@@ -1716,8 +1708,8 @@ class IA_Controller
         else
         {
           Hora = _text;
-          _voice.speak("¿Con cuantos minutos la Hora de Fin?");
-          _stext = "¿Con cuantos minutos la Hora de Fin?";
+          _voice.speak("¿Con cuántos minutos la Hora de Fin?");
+          _stext = "¿Con cuántos minutos la Hora de Fin?";
           _text = "";
           actualProcess++;
         }
@@ -1737,20 +1729,20 @@ class IA_Controller
         var num = int.tryParse(_text);
         if(_text.length > 2)
         {
-          _voice.speak("Lo siento, utiliza solo números no mayores a 2 digitos");
-          _stext = "¿Con cuantos minutos la Hora de Fin?";
+          _voice.speak("Lo siento, utiliza solo números no mayores a 2 dígitos");
+          _stext = "¿Con cuántos minutos la Hora de Fin?";
           _text = "";
         }
         else if(num == null)
         {
           _voice.speak("Lo siento, no es un número válido");
-          _stext = "¿Con cuantos minutos la Hora de Fin?";
+          _stext = "¿Con cuántos minutos la Hora de Fin?";
           _text = "";
         }
         else if(num > 59 || num < 0)
         {
           _voice.speak("Lo siento, los minutos no puede ser mayores a 59 ni menores a 0");
-          _stext = "¿Con cuantos minutos la Hora de Fin?";
+          _stext = "¿Con cuántos minutos la Hora de Fin?";
           _text = "";
         }
         else
@@ -1833,7 +1825,7 @@ class IA_Controller
           }
           else
           {
-            _voice.speak("Hubo un problema al guardar la Clase. Verifica los datos o tu conexion a Internet.");
+            _voice.speak("Hubo un problema al guardar la Clase. Verifica los datos o tu conexión a Internet.");
           }
           resetIA();
         }
@@ -1845,7 +1837,7 @@ class IA_Controller
         }
         else
         {
-          _voice.speak("Solo son validas las opciones Guardar o Cancelar.");
+          _voice.speak("Solo son válidas las opciones Guardar o Cancelar.");
           _stext = "La Materia es: "+NameMateria + "\nEl Dia es: "+NewClase.days.toString()+"\nLa Hora Inicio es: "+beginHourString+"\nLa Hora Fin es: "+endHourString;
           _text = "";
         }
@@ -1870,7 +1862,7 @@ class IA_Controller
         var num = int.tryParse(_text);
         if(_text.length > 2)
         {
-          _voice.speak("Lo siento, utiliza solo numeros no mayores a 2 digitos");
+          _voice.speak("Lo siento, utiliza solo números no mayores a 2 dígitos");
           _stext = "¿Cuál es la Hora de Inicio?";
           _text = "";
         }
@@ -1889,8 +1881,8 @@ class IA_Controller
         else
         {
           Hora = _text;
-          _voice.speak("¿Con cuantos minutos la Hora de Inicio?");
-          _stext = "¿Con cuantos minutos la Hora de Inicio?";
+          _voice.speak("¿Con cuántos minutos la Hora de Inicio?");
+          _stext = "¿Con cuántos minutos la Hora de Inicio?";
           _text = "";
           actualProcess++;
         }
@@ -1910,20 +1902,20 @@ class IA_Controller
         var num = int.tryParse(_text);
         if(_text.length > 2)
         {
-          _voice.speak("Lo siento, utiliza solo numeros no mayores a 2 digitos");
-          _stext = "¿Con cuantos minutos la Hora de Inicio?";
+          _voice.speak("Lo siento, utiliza solo números no mayores a 2 dígitos");
+          _stext = "¿Con cuántos minutos la Hora de Inicio?";
           _text = "";
         }
         else if(num == null)
         {
           _voice.speak("Lo siento, no es un numero válido");
-          _stext = "¿Con cuantos minutos la Hora de Inicio?";
+          _stext = "¿Con cuántos minutos la Hora de Inicio?";
           _text = "";
         }
         else if(num > 59 || num < 0)
         {
           _voice.speak("Lo siento, la hora no puede ser mayor a 59 ni menor a 0");
-          _stext = "¿Con cuantos minutos la Hora de Inicio?";
+          _stext = "¿Con cuántos minutos la Hora de Inicio?";
           _text = "";
         }
         else
@@ -1932,7 +1924,7 @@ class IA_Controller
           DateTime beginHour = DateTime(0001,1,1,int.parse(Hora),int.parse(Minutos));
           beginHourString = beginHour.hour.toString() + ":" + beginHour.minute.toString();
           NewClase.begin_hour = beginHour.toString();
-          _voice.speak("Te pedire hora y minutos por separado. ¿Cuál es la Hora de Fin en formato 24 horas?");
+          _voice.speak("Te pediré hora y minutos por separado. ¿Cuál es la Hora de Fin en formato 24 horas?");
           _stext = "¿Cuál es la Hora de Fin?";
           _text = "";
           actualProcess++;
@@ -1954,7 +1946,7 @@ class IA_Controller
         var num = int.tryParse(_text);
         if(_text.length > 2)
         {
-          _voice.speak("Lo siento, utiliza solo números no mayores a 2 digitos");
+          _voice.speak("Lo siento, utiliza solo números no mayores a 2 dígitos");
           _stext = "¿Cuál es la Hora de Fin?";
           _text = "";
         }
@@ -1973,8 +1965,8 @@ class IA_Controller
         else
         {
           Hora = _text;
-          _voice.speak("¿Con cuantos minutos la Hora de Fin?");
-          _stext = "¿Con cuantos minutos la Hora de Fin?";
+          _voice.speak("¿Con cuántos minutos la Hora de Fin?");
+          _stext = "¿Con cuántos minutos la Hora de Fin?";
           _text = "";
           actualProcess++;
         }
@@ -1994,20 +1986,20 @@ class IA_Controller
         var num = int.tryParse(_text);
         if(_text.length > 2)
         {
-          _voice.speak("Lo siento, utiliza solo números no mayores a 2 digitos");
-          _stext = "¿Con cuantos minutos la Hora de Fin?";
+          _voice.speak("Lo siento, utiliza solo números no mayores a 2 dígitos");
+          _stext = "¿Con cuántos minutos la Hora de Fin?";
           _text = "";
         }
         else if(num == null)
         {
           _voice.speak("Lo siento, no es un número válido");
-          _stext = "¿Con cuantos minutos la Hora de Fin?";
+          _stext = "¿Con cuántos minutos la Hora de Fin?";
           _text = "";
         }
         else if(num > 59 || num < 0)
         {
           _voice.speak("Lo siento, la hora no puede ser mayor a 59 ni menor a 0");
-          _stext = "¿Con cuantos minutos la Hora de Fin?";
+          _stext = "¿Con cuántos minutos la Hora de Fin?";
           _text = "";
         }
         else
@@ -2093,7 +2085,7 @@ class IA_Controller
             }
             else
             {
-              _voice.speak("Hubo un problema al Eliminar la Clase. Verifica los datos o tu conexion a Internet.");
+              _voice.speak("Hubo un problema al Eliminar la Clase. Verifica los datos o tu conexión a Internet.");
             }
             resetIA();     
           }
@@ -2111,7 +2103,7 @@ class IA_Controller
         }
         else
         {
-          _voice.speak("Solo son validas las opciones Guardar o Cancelar.");
+          _voice.speak("Solo son válidas las opciones Guardar o Cancelar.");
           _stext = "La Materia es: "+NameMateria + "\nEl Dia es: "+NewClase.days.toString()+"\nLa Hora Inicio es: "+beginHourString+"\nLa Hora Fin es: "+endHourString;
           _text = "";
         }
