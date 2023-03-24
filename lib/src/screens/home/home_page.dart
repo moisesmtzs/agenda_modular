@@ -56,7 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.black, size: 30.0),
         title: const Text(
-          'Task Manager',
+          'Task on Time',
           style: TextStyle(
               color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
         ),
