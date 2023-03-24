@@ -9,9 +9,7 @@ import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:agenda_app/src/screens/schedule/schedule_controller.dart';
 import 'package:agenda_app/src/screens/clase/detail/clase_detail_controller.dart';
 
-
 import 'package:agenda_app/src/models/clase.dart';
-
 import '../../widgets/no_schedule_widget.dart';
 import '../../widgets/no_task_widget.dart';
 

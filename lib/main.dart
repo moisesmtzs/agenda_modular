@@ -16,7 +16,7 @@ User userSession = User.fromJson(GetStorage().read('user') ?? {});
 void main() async {
   await GetStorage.init();
   Get.put<MyDrawerController>(MyDrawerController());
-   Get.put<HomeController>(HomeController());
+  Get.put<HomeController>(HomeController());
   
   runApp(MyApp());
 }
@@ -33,7 +33,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     var getMaterialApp = GetMaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Agenda App',
+        title: 'Task on Time',
         initialRoute: userSession.id != null ? '/home' : '/',
         navigatorKey: Get.key,
         defaultTransition: Transition.rightToLeft,
