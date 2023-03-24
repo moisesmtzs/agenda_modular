@@ -4,8 +4,8 @@
     <uses-permission android:name="android.permission.INTERNET"/>
 
    <application
-        android:label="Agenda"
-        android:icon="@mipmap/ic_launcher"
+        android:label="Task on Time"
+        android:icon="@mipmap/launchee_icon"
         android:usesCleartextTraffic="true">
         <activity
             android:name=".MainActivity"
