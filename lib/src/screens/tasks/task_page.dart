@@ -284,6 +284,19 @@ class _TaskPageState extends State<TaskPage> {
           Row(
             children: [
               const Text(
+                "Materia: ",
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)
+              ),
+              Text(
+                (task?.subject != '') ? task?.subject ?? '' : "No hay materia asignada",
+                style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w400)
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          Row(
+            children: [
+              const Text(
                 "Fecha de entrega: ",
                 style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)
               ),
