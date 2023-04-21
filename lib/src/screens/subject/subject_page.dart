@@ -35,7 +35,13 @@ class SubjectPage extends StatelessWidget {
             if (snapshot.data!.isNotEmpty) {
               return RefreshIndicator(
                 onRefresh: _refresh,
-                child: ListView.builder(
+                child: GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    childAspectRatio: 1.5,
+                  ),
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                   physics: const AlwaysScrollableScrollPhysics(),
                   itemCount: snapshot.data?.length ?? 0,
@@ -92,43 +98,36 @@ class SubjectPage extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Container(
-          margin: const EdgeInsets.only(top: 10, bottom: 30),
-          width: double.infinity,
-          height: 100,
+          margin: const EdgeInsets.only(top: 10, bottom: 20),
           decoration: _cardBorders(),
-          child: Stack(
-            alignment: Alignment.topLeft, 
-            children: [
-              Positioned(
-                left: 15,
-                top: 40,
-                child: _subjectText(subject?.name ?? '')
-              ),
-            ]
-          )
+          child: _subjectText(subject?.name ?? '')
         )
       )
     );
   }
 
   Widget _subjectText(String subjectName) {
-    return SizedBox(
-      width: 350,
+    return FittedBox(
       child: Container(
-        margin: const EdgeInsets.only(right: 25),
+        margin: const EdgeInsets.symmetric(horizontal: 10),
+        alignment: Alignment.centerLeft,
         child: Text(
           (subjectName != '')
               ? subjectName
               : "Sin nombre a materia asignado",
-          maxLines: 3,
           overflow: TextOverflow.ellipsis,
+          maxLines: 3,
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            color: AppColors.colors.onPrimary,
+          ),
         )
       )
     );
   }
 
   BoxDecoration _cardBorders() => BoxDecoration(
-    color: AppColors.colors.surface,
+    color: AppColors.colors.primary,
     borderRadius: BorderRadius.circular(25),
     boxShadow: const [
       BoxShadow(
