@@ -101,7 +101,8 @@ class SubjectDetailController extends GetxController {
     if(connectivity.isConnected == true)
     {
       return await _claseProvider.findByUserAndSubject(
-          userSession.id ?? '0', subject.id.toString());
+          //userSession.id ?? '0', subject.id.toString());
+          userSession.id ?? '0', subject.name.toString());
     }
     else
     {

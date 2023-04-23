@@ -42,10 +42,11 @@ class ClaseProvider extends GetConnect {
 
 
   Future<List<Clase?>> findByUserAndSubject(
-      String idUser, String idSubject) async {
+      //String idUser, String idSubject) async {
+      String idUser, String subject) async {
     try {
       Uri _url = Uri.http(Environment.API_URL_OLD,
-          '/api/clase/findByUserAndSubject/$idUser/$idSubject');
+          '/api/clase/findByUserAndSubject/$idUser/$subject');
 
       Map<String, String> headers = {
         'Content-Type': 'application/json',

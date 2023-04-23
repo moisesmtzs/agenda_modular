@@ -140,7 +140,7 @@ class _ClasePageState extends State<ClasePage> {
     for (var subject in claseController.subjects) {
       list.add(DropdownMenuItem(
         child: Text(subject?.name ?? ''),
-        value: subject?.id,
+        value: subject?.name,//----
       ));
       //debugPrint(subjects?.name.toString());
     }

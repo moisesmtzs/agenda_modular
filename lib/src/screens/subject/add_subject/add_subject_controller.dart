@@ -42,7 +42,7 @@ class AddSubjectController extends GetxController {
   void register(BuildContext context) async {
     String idUser = userSession.id as String;
     String name = nameClassController.text;
-    name = name.replaceFirst(name[0], name[0].toUpperCase());
+    //name = name.replaceFirst(name[0], name[0].toUpperCase());
     String code = codeClassController.text.trim();
     String profesor = profesorClassController.text;
 

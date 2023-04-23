@@ -173,7 +173,7 @@ class ClaseUpdateController extends GetxController {
             Navigator.pop(context);
             Navigator.pop(context);
           });
-          Get.offNamed('/subject');
+          Get.offNamed('/home');
         } else {
           Get.snackbar(responseApi.message ?? '',
               'Ha ocurrido un error al actualizar la clase',
@@ -193,7 +193,7 @@ class ClaseUpdateController extends GetxController {
               backgroundColor: AppColors.colors.errorContainer,
               colorText: AppColors.colors.onErrorContainer);
         }
-        Get.offNamed('/subject');
+        Get.offNamed('/home');
       }
     }
   }

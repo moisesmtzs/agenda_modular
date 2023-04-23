@@ -456,7 +456,7 @@ class db
     return List.generate(claseList.length, (i) => Clase(
       id: claseList[i]['id'].toString(),
       id_user: claseList[i]['id_user'].toString(),
-      id_subject: claseList[i]['id_subject'].toString(),
+      subject: claseList[i]['subject'].toString(),
       subjName: claseList[i]['subjectName'],
       begin_hour: claseList[i]['begin_hour'],
       end_hour: claseList[i]['end_hour'],
@@ -488,7 +488,7 @@ class db
     return Clase(
       id: claseList[0]['id'].toString(),
       id_user: claseList[0]['id_user'].toString(),
-      id_subject: claseList[0]['id_subject'].toString(),
+      subject: claseList[0]['subject'].toString(),
       begin_hour: claseList[0]['begin_hour'],
       end_hour: claseList[0]['end_hour'],
       days: claseList[0]['days'],
@@ -512,7 +512,7 @@ class db
       id: claseList[i]['id'].toString(),
       id_user: claseList[i]['id_user'].toString(),
       subjName: claseList[i]['subjectName'],
-      id_subject: claseList[i]['id_subject'].toString(),
+      subject: claseList[i]['subject'].toString(),
       begin_hour: claseList[i]['begin_hour'],
       end_hour: claseList[i]['end_hour'],
       days: claseList[i]['days'],
@@ -534,7 +534,7 @@ class db
     return Clase(
       id: claseList[0]['id'].toString(),
       id_user: claseList[0]['id_user'].toString(),
-      id_subject: claseList[0]['id_subject'].toString(),
+      subject: claseList[0]['subject'].toString(),
       begin_hour: claseList[0]['begin_hour'],
       end_hour: claseList[0]['end_hour'],
       days: claseList[0]['days'],
@@ -554,7 +554,7 @@ class db
     final DateTime displayDate = displayFormater.parse(today);
     final String formatted = displayFormater.format(displayDate);
     //CONSTRUIMOS EL SQL//
-    var sql = "INSERT INTO clase(id_user, id_subject, begin_hour, end_hour, days, classroom, building, created_at, updated_at) VALUES ( ${newClase.id_user}, '${newClase.id_subject}', '${newClase.begin_hour}', '${newClase.end_hour}', '${newClase.days}', '${newClase.classroom}', '${newClase.building}','${formatted}', '${formatted}')";
+    var sql = "INSERT INTO clase(id_user, id_subject, begin_hour, end_hour, days, classroom, building, created_at, updated_at) VALUES ( ${newClase.id_user}, '${newClase.subject}', '${newClase.begin_hour}', '${newClase.end_hour}', '${newClase.days}', '${newClase.classroom}', '${newClase.building}','${formatted}', '${formatted}')";
     //EJECUTAMOS EL SQL//
     var result = await database.rawInsert(sql);
     //ALMACENAR LOS SQL//
@@ -575,7 +575,7 @@ class db
     String updatedAt = today!['updated_at'];
 
     //CONSTRUIMOS EL SQL//
-    var sql = "INSERT INTO clase(id_user, id_subject, subjectName, begin_hour, end_hour, days, classroom, building, created_at, updated_at) VALUES ( ${newClase.id_user}, '${newClase.id_subject}', '$nombreMateria', '${newClase.begin_hour}', '${newClase.end_hour}', '${newClase.days}', '${newClase.classroom}', '${newClase.building}','$createdAt', '$updatedAt')";
+    var sql = "INSERT INTO clase(id_user, subject, subjectName, begin_hour, end_hour, days, classroom, building, created_at, updated_at) VALUES ( ${newClase.id_user}, '${newClase.subject}', '$nombreMateria', '${newClase.begin_hour}', '${newClase.end_hour}', '${newClase.days}', '${newClase.classroom}', '${newClase.building}','$createdAt', '$updatedAt')";
     
     //EJECUTAMOS EL SQL//
     var result = await database.rawInsert(sql);
@@ -737,7 +737,7 @@ class db
 
     for(int i = 0; i < clases.length; i++)
     {
-      Subject? subjectActual = await subjectProvider.findById(clases[i]!.id_subject!);
+      Subject? subjectActual = await subjectProvider.findById(clases[i]!.subject!);
       String? nombreMateria = subjectActual?.name;
       await db.insertClaseSync(clases[i]!,nombreMateria!);
     }

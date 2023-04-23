@@ -76,7 +76,7 @@ class ClaseController extends GetxController {
     if (isValidForms(idSubject, inicio, fin, days!)) {
       Clase clase = Clase(
         id_user: idUser,
-        id_subject: idSubject,
+        subject: idSubject,
         begin_hour: inicio,
         end_hour: fin,
         days: days,

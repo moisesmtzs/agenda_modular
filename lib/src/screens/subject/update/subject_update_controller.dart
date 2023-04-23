@@ -45,7 +45,7 @@ class SubjectUpdateController extends GetxController {
 
   void updateSubject(BuildContext context) async {
     String name = nameController.text;
-    name = name.replaceFirst(name[0], name[0].toUpperCase());
+    //name = name.replaceFirst(name[0], name[0].toUpperCase());
     String subject_code = codeController.text.trim();
     String professor_name = professorController.text;
 

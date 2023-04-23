@@ -1582,7 +1582,7 @@ class IA_Controller
         else
         {
           NameMateria = ActualSubject[0]!.name!;
-          NewClase.id_subject = ActualSubject[0]!.id;
+          NewClase.subject = ActualSubject[0]!.id;//----
           _voice.speak("Te pediré hora y minutos por separado. ¿Cuál es la Hora de Inicio en formato 24 horas?");
           _stext = "¿Cuál es la Hora de Inicio?";
           _text = "";

@@ -7,7 +7,7 @@ String claseToJson(Clase data) => json.encode(data.toJson());
 class Clase {
   String? id;
   String? id_user;
-  String? id_subject;
+  String? subject;
   String? subjName;
   String? begin_hour;
   String? end_hour;
@@ -19,7 +19,7 @@ class Clase {
   Clase({
     this.id,
     this.id_user,
-    this.id_subject,
+    this.subject,
     this.subjName,
     this.begin_hour,
     this.end_hour,
@@ -31,7 +31,7 @@ class Clase {
   factory Clase.fromJson(Map<String, dynamic> json) => Clase(
         id: json["id"],
         id_user: json["id_user"],
-        id_subject: json["id_subject"],
+        subject: json["subject"],
         begin_hour: json["begin_hour"],
         end_hour: json["end_hour"],
         days: json["days"],
@@ -42,7 +42,7 @@ class Clase {
   Map<String, dynamic> toJson() => {
         "id": id,
         "id_user": id_user,
-        "id_subject": id_subject,
+        "subject": subject,
         "begin_hour": begin_hour,
         "end_hour": end_hour,
         "days": days,
