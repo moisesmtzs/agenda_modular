@@ -100,7 +100,7 @@ class ClaseDetailPage extends StatelessWidget {
         Text(
             (clase?.classroom != '')
                 ? 'Salon: $classroom'
-                : "Sin csalon asignado",
+                : "Sin salon asignado",
             style: const TextStyle(fontSize: 20),
           ),
       ]),

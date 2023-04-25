@@ -78,6 +78,7 @@ class ScheduleController extends GetxController {
     final Random random = Random();
     List<Color> colors = getColors();
     Subject? subj = Subject();
+    String nombre;
 
     //LISTA DE CLASES A MOSTRAR//
     List<Meeting> meetings = [];
@@ -95,13 +96,12 @@ class ScheduleController extends GetxController {
     for (int i = 0; i < listaDeClases.length; i++) {
       //GUARDAMOS LA CLASE//
       clases.add([
-        listaDeClases[i]!.subject.toString(), 
+        listaDeClases[i]!.subject.toString(),
         listaDeClases[i]!.begin_hour.toString(),
         listaDeClases[i]!.end_hour.toString(),
         listaDeClases[i]!.days.toString()
       ]);
-      DateTime begin_hour =
-          DateTime.parse(listaDeClases[i]!.begin_hour.toString());
+      DateTime begin_hour = DateTime.parse(listaDeClases[i]!.begin_hour.toString());
       DateTime end_hour = DateTime.parse(listaDeClases[i]!.end_hour.toString());
       String idSub = listaDeClases[i]!.subject.toString(); //----aqui ya tiene el nombre, no es neceasrio buscarlo
       //OBTENER DIA//
@@ -126,7 +126,7 @@ class ScheduleController extends GetxController {
       await validarInternet();
 
       if (connectivity.isConnected == true) {
-        subj = await _subjectProvider.findById(idSub);
+        subj = subj = await _subjectProvider.findById(idSub);
       } else {
         print(listaDeClases[i]?.subjName);
         subj = await db.getOneSubjectByName(listaDeClases[i]?.subjName);
@@ -145,7 +145,8 @@ class ScheduleController extends GetxController {
 
       //GENERAR RECUADRO//
       Meeting claseView = Meeting(
-          subj!.name ?? " ",
+          //subj!.name ?? " ",
+          idSub,
           DateTime(DateTime.now().year, 01, 01, begin_hour.hour),
           DateTime(DateTime.now().year, 01, 01, begin_hour.hour + difHour,
               begin_hour.minute + difMin),
