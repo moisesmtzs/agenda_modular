@@ -20,7 +20,7 @@ class SubjectController extends GetxController {
 
   SubjectController()
   {
-    connectivity.getConnectivityReplica();
+    connectivity.getConnectivity();
   }
 
   //VALIDAR QUE EXISTE UNA CONEXION A INTERNET//

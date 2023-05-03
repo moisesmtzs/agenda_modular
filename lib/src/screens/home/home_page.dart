@@ -353,7 +353,7 @@ class MenuPage extends GetView<MyDrawerController> {
                   ),
                   const SizedBox(height: 15),
                   Text(
-                    homeController.userSession.name ?? 'Moises',
+                    homeController.userSession.name ?? 'Usuario',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
@@ -364,7 +364,7 @@ class MenuPage extends GetView<MyDrawerController> {
                   ),
                   // const SizedBox(height: 5),
                   Text(
-                    homeController.userSession.email ?? 'Correo',
+                    homeController.userSession.email ?? 'Email',
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
                     style: TextStyle(
@@ -384,20 +384,27 @@ class MenuPage extends GetView<MyDrawerController> {
             ),
             const SizedBox(height: 25),
             ListTile(
-                contentPadding: const EdgeInsets.symmetric(horizontal: 20),
-                onTap: () => homeController.goToTaskPage(context),
-                title: Text('Mis Tareas',
-                    style: TextStyle(color: Colors.indigo[300], fontSize: 16)),
-                trailing:
-                    Icon(Icons.task, color: Colors.indigo[300], size: 27)),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+              onTap: () => homeController.goToTaskPage(context),
+              title: Text(
+                'Mis Tareas',
+                style: TextStyle(color: Colors.indigo[300], fontSize: 16)
+              ),
+              trailing: Icon(Icons.task, color: Colors.indigo[300], size: 27)
+            ),
             const SizedBox(height: 15),
             ListTile(
-                contentPadding: const EdgeInsets.symmetric(horizontal: 20),
-                onTap: () => homeController.goToSchedulePage(),
-                title: Text('Mi Horario',
-                    style: TextStyle(color: Colors.indigo[300], fontSize: 16)),
-                trailing: Icon(Icons.schedule_rounded,
-                    color: Colors.indigo[300], size: 27)),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+              onTap: () => homeController.goToSchedulePage(),
+              title: Text(
+                'Mi Horario',
+                style: TextStyle(color: Colors.indigo[300], fontSize: 16)
+              ),
+              trailing: Icon(
+                Icons.schedule_rounded,
+                color: Colors.indigo[300], size: 27
+              )
+            ),
             const SizedBox(height: 15),
             ListTile(
                 contentPadding: const EdgeInsets.symmetric(horizontal: 20),

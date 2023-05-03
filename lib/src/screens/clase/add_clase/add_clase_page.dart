@@ -384,12 +384,14 @@ class _ClasePageState extends State<ClasePage> {
             'Registrar Clase',
           ),
         ),
-        onPressed: claseController.connectivity.isConnected == true 
-          ? () {
-            //claseController.daysController = finaldays;
-            claseController.register();
-            }
-          : null
+        onPressed: () => {
+          claseController.register()
+        } 
+          // ? () {
+          //   //claseController.daysController = finaldays;
+          //   claseController.register();
+          //   }
+          // : null
       ),
     );
   }

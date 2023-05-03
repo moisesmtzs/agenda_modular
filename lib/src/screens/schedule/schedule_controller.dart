@@ -30,7 +30,7 @@ class ScheduleController extends GetxController {
   DateTime fecha = DateTime(0001, 01, 01);
 
   ScheduleController() {
-    connectivity.getConnectivityReplica();
+    connectivity.getConnectivity();
   }
 
   //VALIDAR QUE EXISTE UNA CONEXION A INTERNET//
@@ -125,17 +125,10 @@ class ScheduleController extends GetxController {
       //RECUPERAR NOMBRE//
       await validarInternet();
 
-      if (connectivity.isConnected == true) {
-        subj = subj = await _subjectProvider.findById(idSub);
-      } else {
-        print(listaDeClases[i]?.subjName);
-        subj = await db.getOneSubjectByName(listaDeClases[i]?.subjName);
-      }
-
       //VALIDAR SI YA HAY UNA CLASE DE ESA MATERIA PARA PINTARLAS DEL MISMO COLOR//
       Color backgroundColor = Colors.white;
       for (int i = 0; i < meetings.length; i++) {
-        if (subj!.name == meetings[i].eventName) {
+        if (subj.name == meetings[i].eventName) {
           backgroundColor = meetings[i].background;
         }
       }

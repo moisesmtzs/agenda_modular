@@ -156,8 +156,9 @@ class ClaseUpdateController extends GetxController {
       clase.begin_hour = begin_hour;
       clase.end_hour = end_hour;
       clase.days = days;
+      clase.building = building;
+      clase.classroom = classroom;
       
-
       await validarInternet();
 
       if (connectivity.isConnected == true) {
@@ -173,7 +174,7 @@ class ClaseUpdateController extends GetxController {
             Navigator.pop(context);
             Navigator.pop(context);
           });
-          Get.offNamed('/home');
+          Get.offNamedUntil('/home', (route) => false);
         } else {
           Get.snackbar(responseApi.message ?? '',
               'Ha ocurrido un error al actualizar la clase',
@@ -187,13 +188,14 @@ class ClaseUpdateController extends GetxController {
               'La clase ha sido actualizada satisfactoriamente',
               backgroundColor: AppColors.colors.secondary,
               colorText: AppColors.colors.onSecondary);
+          Get.offNamedUntil('/home', (route) => false);
         } else {
           Get.snackbar('Clase no actualizada',
               'Ha ocurrido un error al actualizar la clase',
               backgroundColor: AppColors.colors.errorContainer,
               colorText: AppColors.colors.onErrorContainer);
         }
-        Get.offNamed('/home');
+        // Get.offNamed('/home');
       }
     }
   }
