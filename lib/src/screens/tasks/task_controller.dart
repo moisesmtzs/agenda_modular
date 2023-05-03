@@ -14,7 +14,7 @@ import 'package:agenda_app/src/ui/app_colors.dart';
 
 class TaskController extends GetxController {
   TaskController() {
-    connectivity.getConnectivity();
+    connectivity.getConnectivityReplica();
   }
 
   Future validarInternet() async {

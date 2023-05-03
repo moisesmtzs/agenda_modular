@@ -11,6 +11,8 @@ import 'package:agenda_app/src/models/response_api.dart';
 import 'package:agenda_app/src/models/user.dart';
 import 'package:agenda_app/src/providers/usersProvider.dart';
 
+import '../../models/connectivity.dart';
+
 class UpdateProfileController extends GetxController {
 
   User userSession = User.fromJson(GetStorage().read('user') ?? {});
@@ -27,8 +29,10 @@ class UpdateProfileController extends GetxController {
   TextEditingController nameController = TextEditingController();
   TextEditingController lastNameController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
+  Connect connectivity = Connect();
 
   UpdateProfileController() {
+    connectivity.getConnectivityReplica();
     nameController.text = userSession.name ?? '';
     lastNameController.text = userSession.lastname ?? '';
     phoneController.text = userSession.phone ?? '';

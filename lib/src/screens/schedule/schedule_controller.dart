@@ -30,7 +30,7 @@ class ScheduleController extends GetxController {
   DateTime fecha = DateTime(0001, 01, 01);
 
   ScheduleController() {
-    connectivity.getConnectivity();
+    connectivity.getConnectivityReplica();
   }
 
   //VALIDAR QUE EXISTE UNA CONEXION A INTERNET//

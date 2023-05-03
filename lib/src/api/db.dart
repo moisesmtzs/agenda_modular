@@ -391,12 +391,16 @@ class db
 
     //TRIGGER//
     var sqlTask = "UPDATE tasks SET subject = '${newSubject.name}' WHERE subject = '$nameOld'";
+    
+    var sqlClaseUpdate = "UPDATE clase SET subject = '${newSubject.name}' WHERE subject = '$nameOld'";
 
     //EJECUTAMOS EL SQL//
     var result = await database.rawUpdate(sql);
 
     //EJECUTAMOS EL TRIGGER//
-    var resultTrigger = await database.rawUpdate(sqlTask);
+    await database.rawUpdate(sqlTask);
+    
+    await database.rawUpdate(sqlClaseUpdate);
 
     //ALMACENAR LOS SQL//
     String? createdAt = await getOneSubject(newSubject.id);
@@ -582,7 +586,6 @@ class db
 
     return result;
   }
-
 
   static Future<Map<String, dynamic>?> findDatesClase(Clase newClase) async{
     ClaseProvider claseProvider = ClaseProvider();
